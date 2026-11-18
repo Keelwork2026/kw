@@ -41,6 +41,7 @@ jobs:
       - run: pnpm install --frozen-lockfile=false
       - run: pnpm lint
       - run: pnpm typecheck
+      - run: pnpm check
       - run: pnpm test
       - run: pnpm test:template
       - run: pnpm build

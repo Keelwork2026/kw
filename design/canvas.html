@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Keelwork — Ultramarine &amp; Acid design canvas</title>
+<style>
+  :root {
+    --bg: #fbf8f4; --surface: #ffffff; --surface-2: #f4f1ec; --border: #e8e2d9;
+    --text: #0b1f3a; --muted: #5b6577; --accent: #3d2bff; --accent-2: #007f86; --accent-3: #0b78a0;
+    --highlight: #c6f43a; --danger: #c2321f; --success: #0b7a4b;
+    --sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+    --display: "Space Grotesk", "Inter", ui-sans-serif, sans-serif;
+    --serif: "Instrument Serif", ui-serif, Georgia, serif;
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #e9e4dc; color: var(--text); font-family: var(--sans); }
+  header.canvas { padding: 32px 40px 8px; }
+  header.canvas h1 { font-family: var(--display); font-size: 40px; letter-spacing: -0.05em; margin: 0; }
+  header.canvas p { color: var(--muted); margin: 6px 0 0; }
+  .swatches { display: flex; flex-wrap: wrap; gap: 10px; padding: 16px 40px 8px; }
+  .sw { width: 128px; border-radius: 16px; overflow: hidden; background: var(--surface); border: 1px solid var(--border); font-size: 11px; }
+  .sw i { display: block; height: 52px; }
+  .sw span { display: block; padding: 6px 8px; font-family: var(--mono); }
+  .board-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(560px, 1fr)); gap: 32px; padding: 24px 40px 64px; }
+  .artboard { background: var(--bg); border-radius: 18px; box-shadow: 0 30px 60px -30px rgba(11,31,58,.35); overflow: hidden; }
+  .artboard > .label { font: 600 12px var(--mono); color: var(--muted); padding: 10px 14px; background: #fff; border-bottom: 1px solid var(--border); }
+  .frame { padding: 22px; min-height: 360px; position: relative; overflow: hidden; }
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 0 18px; border-radius: 999px; font: 600 14px var(--sans); border: 0; white-space: nowrap; }
+  .btn-primary { background: var(--text); color: #fff; }
+  .btn-gradient { background: linear-gradient(135deg, #3d2bff, #007f86); color: #fff; box-shadow: 0 10px 30px -12px rgba(61,43,255,.55); }
+  .btn-secondary { background: #fff; color: var(--text); border: 1px solid var(--border); }
+  .pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; font: 600 11px var(--sans); }
+  .card { background: #fff; border: 1px solid var(--border); border-radius: 24px; padding: 18px; }
+  .panel { background: #fff; border: 1px solid var(--border); border-radius: 20px; padding: 14px; }
+  .grad { background: linear-gradient(95deg, var(--accent), var(--accent-2), var(--accent-3)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .logo { display: inline-flex; align-items: center; gap: 8px; font: 700 17px var(--display); letter-spacing: -0.03em; }
+  .logo i { width: 26px; height: 26px; border-radius: 9px; background: conic-gradient(from 200deg, #3d2bff, #007f86, #0b78a0, #2f7bff, #3d2bff); }
+  .tile { width: 36px; height: 36px; border-radius: 12px; display: grid; place-items: center; font: 700 13px var(--display); }
+  .muted { color: var(--muted); }
+  .input { width: 100%; min-height: 48px; border-radius: 16px; border: 1px solid var(--border); background: #fff; padding: 0 14px; font: 15px var(--sans); color: var(--muted); display: flex; align-items: center; }
+  .blob { position: absolute; border-radius: 50%; filter: blur(40px); opacity: .35; }
+  h2, h3 { font-family: var(--display); letter-spacing: -0.04em; margin: 0; }
+  .serif { font-family: var(--serif); font-style: italic; font-weight: 400; }
+  .mono { font-family: var(--mono); }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  td, th { text-align: left; padding: 6px 4px; border-top: 1px solid var(--border); }
+  @media (prefers-reduced-motion: no-preference) { .caret { animation: blink 1s step-end infinite; } }
+  @keyframes blink { 50% { opacity: 0; } }
+</style>
+</head>
+<body>
+<header class="canvas">
+  <h1>Ultramarine <span class="serif">&amp;</span> Acid</h1>
+  <p>Warm paper, navy ink, an ultramarine → lagoon → cyan gradient and a small acid-chartreuse highlight. Six artboards: Main, Nav, Auth, Builder, Dashboard, Pricing.</p>
+</header>
+<div class="swatches" aria-label="Palette">
+  <div class="sw"><i style="background:#fbf8f4"></i><span>--bg #fbf8f4</span></div>
+  <div class="sw"><i style="background:#0b1f3a"></i><span>--text #0b1f3a</span></div>
+  <div class="sw"><i style="background:#3d2bff"></i><span>--accent #3d2bff</span></div>
+  <div class="sw"><i style="background:#007f86"></i><span>--accent-2 #007f86</span></div>
+  <div class="sw"><i style="background:#0b78a0"></i><span>--accent-3 #0b78a0</span></div>
+  <div class="sw"><i style="background:#c6f43a"></i><span>--highlight #c6f43a</span></div>
+  <div class="sw"><i style="background:#e8e2d9"></i><span>--border #e8e2d9</span></div>
+  <div class="sw"><i style="background:linear-gradient(135deg,#3d2bff,#007f86)"></i><span>.btn-gradient</span></div>
+</div>
+
+<main class="board-grid">
+  <!-- Main -->
+  <section class="artboard" aria-label="Main artboard">
+    <div class="label">01 · Main — hero</div>
+    <div class="frame" style="text-align:center;min-height:420px">
+      <div class="blob" style="width:220px;height:220px;background:#3d2bff;left:-60px;top:-40px"></div>
+      <div class="blob" style="width:260px;height:260px;background:#007f86;right:-80px;top:20px"></div>
+      <div class="blob" style="width:140px;height:140px;background:#c6f43a;left:45%;bottom:20px"></div>
+      <div style="position:relative">
+        <span class="pill" style="background:#fff;border:1px solid var(--border)"><span class="pill" style="background:var(--highlight);color:var(--text);padding:2px 8px">New</span>Agents now test their own work</span>
+        <h2 style="font-size:58px;line-height:.92;margin-top:22px;letter-spacing:-.055em">Build something <span class="grad">gorgeous</span></h2>
+        <p class="muted" style="max-width:380px;margin:14px auto 0">Turn ideas into real apps and websites by chatting with AI. Design it, ship it, own every line.</p>
+        <div class="card" style="margin:20px auto 0;max-width:440px;text-align:left;border-radius:26px">
+          <div class="muted" style="min-height:52px">A booking app for my yoga studio with class passes<span class="caret">▍</span></div>
+          <div style="display:flex;justify-content:space-between;align-items:center"><small class="muted">Nothing is built until you approve.</small><span class="btn btn-gradient">Start building</span></div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:14px;flex-wrap:wrap">
+          <span class="pill" style="background:#fff;border:1px solid var(--border)"><i style="width:9px;height:9px;border-radius:50%;background:#3d2bff"></i>Booking app</span>
+          <span class="pill" style="background:#fff;border:1px solid var(--border)"><i style="width:9px;height:9px;border-radius:50%;background:#007f86"></i>Portfolio</span>
+          <span class="pill" style="background:#fff;border:1px solid var(--border)"><i style="width:9px;height:9px;border-radius:50%;background:#14a36b"></i>Online shop</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nav -->
+  <section class="artboard" aria-label="Nav artboard">
+    <div class="label">02 · Nav — announcement bar, sticky nav, Product mega-menu</div>
+    <div style="background:linear-gradient(90deg,#3d2bff,#0b78a0,#007f86);color:#fff;font:600 12px var(--sans);text-align:center;padding:8px">New · Agents now test their own work — try it free →</div>
+    <div class="frame" style="padding-top:12px">
+      <div style="display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);padding-bottom:12px">
+        <span class="logo"><i></i>Keelwork</span>
+        <span style="font:600 13px var(--sans)">Product ▾</span><span style="font:600 13px var(--sans)">Solutions ▾</span><span style="font:600 13px var(--sans)">Resources ▾</span><span style="font:600 13px var(--sans)">Pricing</span>
+        <span style="margin-left:auto" class="btn btn-secondary">Log in</span><span class="btn btn-primary">Get started</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 170px;gap:12px;margin-top:12px" class="card">
+        <div>
+          <small class="muted" style="font-weight:600;letter-spacing:.06em;text-transform:uppercase">Everything in one workspace</small>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
+            <div style="display:flex;gap:8px"><span class="tile" style="background:#ecebff;color:#2f22d6">AI</span><div><b style="font-size:13px">AI Builder</b><br><small class="muted">Describe, approve, build.</small></div></div>
+            <div style="display:flex;gap:8px"><span class="tile" style="background:#e0f4f3;color:#007c7c">Ds</span><div><b style="font-size:13px">Design Studio</b><br><small class="muted">Click to restyle.</small></div></div>
+            <div style="display:flex;gap:8px"><span class="tile" style="background:#e3f1f7;color:#0b6f8f">Db</span><div><b style="font-size:13px">Database &amp; Auth</b><br><small class="muted">Real tables and logins.</small></div></div>
+            <div style="display:flex;gap:8px"><span class="tile" style="background:#e7f0ff;color:#1d4ed8">Ag</span><div><b style="font-size:13px">AI Agents <span class="pill" style="background:var(--highlight);padding:1px 6px">New</span></b><br><small class="muted">Specialists that review.</small></div></div>
+            <div style="display:flex;gap:8px"><span class="tile" style="background:#fff6d6;color:#8a6100">Au</span><div><b style="font-size:13px">Automations</b><br><small class="muted">Emails, webhooks, schedules.</small></div></div>
+            <div style="display:flex;gap:8px"><span class="tile" style="background:#e6fbf1;color:#0b7a4b">Ts</span><div><b style="font-size:13px">Testing &amp; Security</b><br><small class="muted">Tested before it ships.</small></div></div>
+          </div>
+          <p class="muted" style="font-size:12px;border-top:1px solid var(--border);padding-top:8px;margin:10px 0 0">Start free. Your code always lives in your own GitHub. <b style="color:var(--accent)">Compare plans →</b></p>
+        </div>
+        <div style="border-radius:20px;padding:14px;color:#fff;background:linear-gradient(150deg,#3d2bff,#007f86);display:flex;flex-direction:column;justify-content:flex-end"><span class="pill" style="background:rgba(255,255,255,.2);color:#fff;width:fit-content">New</span><b style="font:700 18px var(--display);margin-top:8px">Agents now test their own work</b></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Auth -->
+  <section class="artboard" aria-label="Auth artboard">
+    <div class="label">03 · Auth — sign up</div>
+    <div class="frame" style="display:grid;place-items:center;min-height:420px">
+      <div class="blob" style="width:200px;height:200px;background:#3d2bff;left:-40px;top:-40px"></div>
+      <div class="blob" style="width:220px;height:220px;background:#007f86;right:-60px;bottom:-60px"></div>
+      <div class="card" style="width:330px;position:relative">
+        <span class="logo" style="justify-content:center;width:100%"><i></i>Keelwork</span>
+        <h3 style="font-size:26px;margin-top:14px">Start building <span class="serif">for free</span></h3>
+        <p class="muted" style="font-size:13px;margin:4px 0 12px">No credit card. Your code, always.</p>
+        <div style="display:grid;gap:6px"><span class="btn btn-secondary">Continue with Google</span><span class="btn btn-secondary">Continue with Microsoft</span><span class="btn btn-secondary">Continue with GitHub</span></div>
+        <p class="muted" style="text-align:center;font-size:11px;margin:10px 0">or</p>
+        <label style="font:600 13px var(--sans)">Email</label><div class="input" style="margin:4px 0 8px">you@studio.com</div>
+        <label style="font:600 13px var(--sans)">Password (10+ characters)</label><div class="input" style="margin:4px 0 12px">••••••••••</div>
+        <span class="btn btn-gradient" style="width:100%">Create account</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Builder -->
+  <section class="artboard" aria-label="Builder artboard">
+    <div class="label">04 · Builder — chat, plan, task board, live preview</div>
+    <div class="frame" style="padding:16px">
+      <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
+        <span class="pill" style="background:#0b1f3a;color:#fff">Build</span><span class="pill" style="border:1px solid var(--border)">Code</span><span class="pill" style="border:1px solid var(--border)">Database</span><span class="pill" style="border:1px solid var(--border)">Tests</span><span class="pill" style="border:1px solid var(--border)">Security</span><span class="pill" style="border:1px solid var(--border)">Deploy</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:10px">
+        <div style="display:grid;gap:10px">
+          <div class="panel" style="font-size:12px">
+            <div style="background:#0b1f3a;color:#fff;border-radius:14px;padding:8px 10px;margin-left:30px">Add a waitlist with email confirmation</div>
+            <div style="background:var(--surface-2);border-radius:14px;padding:8px 10px;margin-top:6px;margin-right:30px">Plan ready: 2 pages, 1 table, 1 automation.</div>
+          </div>
+          <div class="card" style="padding:14px;font-size:12px"><h3 style="font-size:16px">Plan</h3><p class="muted">Pages: Home, Waitlist · Data: signups · Automations: confirmation email</p><span class="btn btn-gradient" style="min-height:36px">Approve and build</span></div>
+        </div>
+        <div style="display:grid;gap:10px">
+          <div class="panel" style="font-size:12px"><b>Build</b> <span class="pill" style="background:#ecebff;color:#2f22d6">running</span>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px"><div>Database Engineer<br><span class="pill" style="background:#e6fbf1;color:#0b7a4b">done</span></div><div>Frontend Developer<br><span class="pill" style="background:#ecebff;color:#2f22d6">running</span></div></div></div>
+          <div class="panel" style="font-size:12px"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#0b7a4b"></span> Live preview of your app
+            <div style="background:#eef0ff;color:#1f1a8f;border-radius:12px;padding:6px 8px;margin-top:6px">&lt;h1&gt; “Join the waitlist” · <span class="mono">app/page.tsx:4</span></div>
+            <div style="border:1px solid var(--border);border-radius:12px;height:70px;margin-top:6px;background:#fff;display:grid;place-items:center"><b style="font-family:var(--display);outline:2px solid #3d2bff;padding:2px 6px">Join the waitlist</b></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Dashboard -->
+  <section class="artboard" aria-label="Dashboard artboard">
+    <div class="label">05 · Dashboard</div>
+    <div class="frame" style="display:grid;grid-template-columns:150px 1fr;gap:12px;padding:0">
+      <aside style="background:#fff;border-right:1px solid var(--border);padding:14px;font-size:12px;display:grid;gap:6px;align-content:start">
+        <span class="logo"><i></i>Keelwork</span><div class="input" style="min-height:34px;font-size:12px">Studio Co ▾</div>
+        <span>Dashboard</span><span class="muted">My Projects</span><span class="muted">AI Builder</span><span class="muted">Database Studio</span><span class="muted">Deployment Centre</span><span class="muted">Billing and Usage</span>
+      </aside>
+      <div style="padding:16px 16px 16px 4px">
+        <h3 style="font-size:24px">Hello, Studio Co</h3>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px">
+          <div class="panel"><small class="muted">Active members</small><b style="display:block;font:700 22px var(--display)">4</b></div>
+          <div class="panel"><small class="muted">Projects</small><b style="display:block;font:700 22px var(--display)">3</b></div>
+          <div class="panel"><small class="muted">Credits · Pro</small><b style="display:block;font:700 22px var(--display)">$18.42</b></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px;font-size:12px">
+          <div class="panel"><b>Open incidents</b><p class="muted" style="margin:4px 0 0">Production deployment failed ×2</p></div>
+          <div class="panel"><b>Live in production</b><p class="mono" style="margin:4px 0 0;font-size:11px">kw-studio-3f1c2b8e.acme.workers.dev</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pricing -->
+  <section class="artboard" aria-label="Pricing artboard">
+    <div class="label">06 · Pricing</div>
+    <div class="frame">
+      <h3 style="text-align:center;font-size:34px">Simple, <span class="serif">honest</span> pricing</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;font-size:11px">
+        <div class="card" style="padding:12px"><b style="font:700 15px var(--display)">Free</b><b style="display:block;font:700 22px var(--display);margin:6px 0">$0</b>2 seats · 3 projects · $2 credits</div>
+        <div style="border-radius:24px;padding:2px;background:linear-gradient(135deg,#3d2bff,#007f86)"><div class="card" style="padding:12px;border:0;height:100%"><b style="font:700 15px var(--display)">Pro</b> <span class="pill" style="background:var(--highlight)">Popular</span><b style="display:block;font:700 22px var(--display);margin:6px 0">[PRICE]</b>5 seats · 20 projects · $20 credits</div></div>
+        <div class="card" style="padding:12px"><b style="font:700 15px var(--display)">Business</b><b style="display:block;font:700 22px var(--display);margin:6px 0">[PRICE]</b>50 seats · 200 projects · $100 credits</div>
+        <div class="card" style="padding:12px"><b style="font:700 15px var(--display)">Enterprise</b><b style="display:block;font:700 22px var(--display);margin:6px 0">Custom</b>Unlimited · support you approve</div>
+      </div>
+      <p class="muted" style="text-align:center;font-size:11px;margin-top:10px">Prices in [CURRENCY]. [DISCOUNT]</p>
+    </div>
+  </section>
+</main>
+</body>
+</html>
