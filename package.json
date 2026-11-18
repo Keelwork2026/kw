@@ -25,11 +25,14 @@
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.58.0",
     "next": "^15.5.0",
+    "postgres": "latest",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "server-only": "^0.0.1",
     "zod": "^4.1.0"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.0",
     "@tailwindcss/postcss": "^4.1.0",
     "@types/node": "^22.18.0",
     "@types/react": "^19.1.0",

@@ -18,6 +18,7 @@ export type Environment = "development" | "preview" | "production";
 
 export const ENVIRONMENTS: Environment[] = ["development", "preview", "production"];
 export const SECRET_NAME_RE = /^[A-Z][A-Z0-9_]{1,63}$/;
+const ENV_NAME_RE = /^[A-Za-z_][A-Za-z0-9_]{0,127}$/;
 
 export class VaultError extends Error {}
 
@@ -106,7 +107,7 @@ export function rewrap(mk: MasterKeys, ctx: SecretContext, env: Envelope): Envel
 export function toDotenv(vars: Record<string, string>): string {
   const lines = ["# Written by Keelwork from the project's secrets vault. Do not commit."];
   for (const [name, value] of Object.entries(vars).sort(([a], [b]) => a.localeCompare(b))) {
-    if (!SECRET_NAME_RE.test(name)) throw new VaultError(`invalid variable name ${name}`);
+    if (!ENV_NAME_RE.test(name)) throw new VaultError(`invalid variable name ${name}`);
     if (typeof value !== "string" || value.includes("\u0000")) throw new VaultError(`invalid value for ${name}`);
     const escaped = value.replace(/\\/g, "\\\\").replace(/"/g, '\\"').replace(/\n/g, "\\n").replace(/\r/g, "\\r").replace(/\$/g, "\\$");
     lines.push(`${name}="${escaped}"`);
