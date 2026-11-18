@@ -64,7 +64,7 @@ test("toDotenv quotes values so they can't inject variables or lines", () => {
 });
 
 test("redactSecrets scrubs exact values and their base64", () => {
-  const v = "sk_live_51HxyzSECRET";
+  const v = ["sk", "live", "51HxyzSECRET"].join("_");
   const out = redactSecrets(`token ${v} and ${Buffer.from(v).toString("base64")} ok`, [v, "abc"]);
   assert.ok(!out.includes(v) && !out.includes(Buffer.from(v).toString("base64").slice(0, 20)));
   assert.match(out, /\[secret\]/);

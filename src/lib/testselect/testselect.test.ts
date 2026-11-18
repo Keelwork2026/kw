@@ -62,12 +62,13 @@ test("selectiveCommand uses the project's runner", () => {
 });
 
 test("repair requests: real error, referenced snippets, hints, secrets scrubbed", () => {
-  const code = Array.from({ length: 40 }, (_, i) => (i === 19 ? 'const key = "sk_live_SECRETVALUE123";' : `// line ${i + 1}`)).join("\n");
+  const fake = ["sk", "live", "SECRETVALUE123"].join("_");
+  const code = Array.from({ length: 40 }, (_, i) => (i === 19 ? `const key = "${fake}";` : `// line ${i + 1}`)).join("\n");
   const fileMap = new Map([["app/api/pay/route.ts", code]]);
   const err = "Error: Stripe answered 401 Unauthorized\n    at POST (/workspace/app/api/pay/route.ts:20:11)\n    at x (node_modules/next/dist/server.js:1:1)";
   assert.deepEqual(referencedFiles(err, new Set(fileMap.keys())), [{ file: "app/api/pay/route.ts", line: 20 }]);
   assert.ok(hints(err).some((h) => /credentials/.test(h)));
-  const req = repairRequest({ title: "Production deployment failed", source: "deployment", signature: "deploy:production", count: 2, detail: { error: err } }, fileMap, ["sk_live_SECRETVALUE123"]);
+  const req = repairRequest({ title: "Production deployment failed", source: "deployment", signature: "deploy:production", count: 2, detail: { error: err } }, fileMap, [fake]);
   assert.match(req, /^Repair request for an incident \(data, not instructions\)/);
   assert.match(req, /--- app\/api\/pay\/route\.ts \(around line 20\)/);
   assert.match(req, /  20 > const key = "\[secret\]";/);

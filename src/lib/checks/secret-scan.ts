@@ -40,7 +40,9 @@ function isServiceRoleJwt(token: string): boolean {
   } catch { return false; }
 }
 
-const PLACEHOLDER = /^(x+|\*+|\.\.\.|your[_-]|example|changeme|placeholder|<|\$\{|process\.env)/i;
+const PLACEHOLDER = /^(x+|\*+|\.\.\.|your[_-]|example|changeme|placeholder|<|\$\{|process\.env|env\()/i;
+/** Documented example URLs like postgres://user:password@host/db are not credentials. */
+const EXAMPLE_DB_URL = /^postgres(?:ql)?:\/\/(user|username|postgres):(password|pass|secret)@(host|localhost|db)(?=[:/])/i;
 
 /** Scans one file. Exact vault values (knownValues) are always flagged. */
 export function scanText(file: string, content: string, knownValues: readonly string[] = []): SecretFinding[] {
@@ -58,6 +60,7 @@ export function scanText(file: string, content: string, knownValues: readonly st
     for (const m of content.matchAll(rule.re)) {
       const secret = rule.id === "hardcoded-secret" ? m[1]! : m[0];
       if (rule.id === "hardcoded-secret" && PLACEHOLDER.test(secret)) continue;
+      if (rule.id === "database-url" && EXAMPLE_DB_URL.test(secret)) continue;
       if (rule.id === "supabase-service-role" && !isServiceRoleJwt(secret)) continue;
       push(rule, secret, m.index!);
     }

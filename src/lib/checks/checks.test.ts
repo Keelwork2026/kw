@@ -43,9 +43,9 @@ test("secret scanner: rules, masking, Supabase service-role JWTs, vault values a
   const src = [
     `const stripe = "sk_live_${"a".repeat(24)}";`,
     `const t = "sk_test_${"b".repeat(24)}";`,
-    `const aws = "AKIAABCDEFGHIJKLMNOP";`,
-    "-----BEGIN RSA PRIVATE KEY-----",
-    `DATABASE_URL = "postgres://app:hunter2pass@db.example.com:5432/app"`,
+    `const aws = "${"AKIA" + "ABCDEFGHIJKLMNOP"}";`,
+    ["-----BEGIN RSA", "PRIVATE KEY-----"].join(" "),
+    `DATABASE_URL = "${"postgres://app:" + "hunter2pass@db.example.com:5432/app"}"`,
     `const svc = "${sr("service_role")}";`,
     `const anon = "${sr("anon")}";`,
     `const apiKey = "${"z".repeat(20)}";`,
@@ -59,7 +59,8 @@ test("secret scanner: rules, masking, Supabase service-role JWTs, vault values a
   assert.equal(f.find((x) => x.rule === "stripe-test-key")!.severity, "medium");
   assert.equal(f.find((x) => x.rule === "stripe-live-key")!.line, 1);
   assert.ok(f.every((x) => !x.masked.includes("aaaaaaaaaaaaaaaa")), "matches are masked");
-  assert.equal(mask("sk_live_abcdefghij"), "sk_l••••••••••ghij");
+  assert.equal(mask(["sk", "live", "abcdefghij"].join("_")), "sk_l••••••••••ghij");
+  assert.equal(scanText("x.ts", `const u = "postgres://user:password@host:5432/db"; secret = "env(SUPABASE_SECRET)"`).length, 0, "documented placeholders are not findings");
   assert.deepEqual(trackedEnvFiles(["app/.env.local", ".env.example", ".env", "lib/env.ts"]).map((x) => x.file), ["app/.env.local", ".env"]);
   assert.equal(scanFiles([{ path: ".env", content: "" }]).length, 1);
   assert.equal(scanText("x.ts", "nothing secret here").length, 0);

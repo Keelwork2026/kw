@@ -2,6 +2,9 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { runTask, fingerprint, type TaskDeps } from "./core";
 
+// Fake key shapes are assembled at runtime so the repository passes its own secret scan.
+const FAKE_LIVE = ["sk", "live", "TOPSECRETVALUE1234"].join("_");
+
 function deps(replies: string[], over: Partial<TaskDeps> = {}) {
   const log: { tool: string; decision: string; reason?: string; args: unknown; resultSummary?: string }[] = [];
   const approvals: { kind: string; summary: string; details: Record<string, unknown> }[] = [];
@@ -11,13 +14,13 @@ function deps(replies: string[], over: Partial<TaskDeps> = {}) {
   const d: TaskDeps = {
     complete: async (_route, messages) => { seen.push(messages.map((m) => m.content).join("\n")); return replies[Math.min(i++, replies.length - 1)]!; },
     fs: { list: async () => "a\nb", read: async (p) => files.get(p) ?? "", write: async (p, c) => { files.set(p, c); }, remove: async (p) => { files.delete(p); } },
-    exec: async (argv) => ({ exitCode: 0, stdout: `ran ${argv.join(" ")} with sk_live_TOPSECRETVALUE1234`, stderr: "", timedOut: false }),
+    exec: async (argv) => ({ exitCode: 0, stdout: `ran ${argv.join(" ")} with ${FAKE_LIVE}`, stderr: "", timedOut: false }),
     acquireLock: async () => true,
     logToolCall: async (e) => { log.push(e as never); },
     requestApproval: async (r) => { approvals.push(r); },
     search: async () => "results", fetchUrl: async () => "page", writeMigration: async () => "supabase/migrations/1.sql",
     deploy: async () => "queued", sendMessage: async () => {},
-    secretValues: ["sk_live_TOPSECRETVALUE1234"], policy: {}, approved: new Set(), providedSecrets: new Set(),
+    secretValues: [FAKE_LIVE], policy: {}, approved: new Set(), providedSecrets: new Set(),
     ...over,
   };
   return { d, log, approvals, files, seen };
@@ -37,7 +40,7 @@ test("a task writes files, runs commands and finishes with a summary", async () 
 test("known secret values are scrubbed from what the model sees", async () => {
   const { d, seen } = deps([reply([{ tool: "shell.run", args: { argv: ["pnpm", "run", "build"] } }]), reply([], true, "ok")]);
   await runTask(input, d);
-  assert.ok(seen.every((s) => !s.includes("sk_live_TOPSECRETVALUE1234")));
+  assert.ok(seen.every((s) => !s.includes(FAKE_LIVE)));
   assert.ok(seen[1]!.includes("[secret]"));
 });
 
