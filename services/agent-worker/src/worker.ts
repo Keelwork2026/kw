@@ -81,7 +81,7 @@ type RunRow = { id: string; project_id: string; org_id: string; plan_id: string 
 
 async function processRun(ctx: WorkerContext, run: RunRow) {
   const { db, broker } = ctx;
-  const { data: project } = await db.from("projects").select("id, org_id, name, backend, deploy_target, template_key").eq("id", run.project_id).single();
+  const { data: project } = await db.from("projects").select("id, org_id, name, backend, deploy_target, template_key, marketplace_version_id").eq("id", run.project_id).single();
   if (!project) throw new Error("project not found");
   const backend: BackendId = isBackend(project.backend) ? project.backend : "supabase";
   const { data: planRow } = await db.from("plans").select("content").eq("id", run.plan_id).single();
@@ -96,13 +96,21 @@ async function processRun(ctx: WorkerContext, run: RunRow) {
     await db.from("sandboxes").upsert({ project_id: project.id, org_id: project.org_id, status: "running", container: sandbox }, { onConflict: "project_id" });
     const hasGit = await broker.exec(sandbox, ["git", "rev-parse", "--is-inside-work-tree"]).then((r) => r.exitCode === 0).catch(() => false);
     if (!hasGit) {
-      const files = adaptTemplate(await loadTemplate("next-supabase"), {
-        backend, deployTarget: isDeployTarget(project.deploy_target) ? project.deploy_target : "cloudflare", projectName: project.name,
-      });
+      // Marketplace installs are seeded from the reviewed, immutable version; everything else from the starter.
+      let base: Map<string, string>;
+      if (project.marketplace_version_id) {
+        const { data: v } = await db.from("marketplace_versions").select("files").eq("id", project.marketplace_version_id).single();
+        base = new Map(Object.entries((v?.files ?? {}) as Record<string, string>));
+      } else {
+        base = adaptTemplate(await loadTemplate("next-supabase"), {
+          backend, deployTarget: isDeployTarget(project.deploy_target) ? project.deploy_target : "cloudflare", projectName: project.name,
+        });
+      }
+      const files = base;
       for (const [path, content] of files) await broker.writeFile(sandbox, path, content);
       await broker.exec(sandbox, ["git", "init"]);
       await broker.exec(sandbox, ["git", "add", "-A"]);
-      await broker.exec(sandbox, ["git", ...GIT_AUTHOR, "commit", "-m", "Keelwork starter template"]);
+      await broker.exec(sandbox, ["git", ...GIT_AUTHOR, "commit", "-m", project.marketplace_version_id ? "Keelwork marketplace template" : "Keelwork starter template"]);
     }
     const graph = buildTaskGraph(parsed.plan);
     const { data: inserted, error } = await db.from("tasks").insert(graph.map((t) => ({
