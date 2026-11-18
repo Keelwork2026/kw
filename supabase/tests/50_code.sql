@@ -7,6 +7,7 @@ select kwtest.mk_user('c.viewer@example.com');
 select kwtest.login('c.owner@example.com');
 set role authenticated;
 select kwtest.set('org', public.create_organization('Code Org')::text);
+select kwtest.plan(kwtest.uuid('org'), 'enterprise');
 select kwtest.set('proj', public.create_project(kwtest.uuid('org'), 'Code')::text);
 select kwtest.set('arch', public.create_project(kwtest.uuid('org'), 'Old')::text);
 select kwtest.set('tm', public.create_invitation(kwtest.uuid('org'), 'c.member@example.com', 'member'));

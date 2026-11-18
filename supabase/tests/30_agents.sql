@@ -10,6 +10,7 @@ select kwtest.mk_user('a.outsider@example.com');
 select kwtest.login('a.owner@example.com');
 set role authenticated;
 select kwtest.set('org', public.create_organization('Agents Org')::text);
+select kwtest.plan(kwtest.uuid('org'), 'enterprise');
 select kwtest.set('tm', public.create_invitation(kwtest.uuid('org'), 'a.member@example.com', 'member'));
 select kwtest.set('tv', public.create_invitation(kwtest.uuid('org'), 'a.viewer@example.com', 'viewer'));
 select kwtest.set('proj', public.create_project(kwtest.uuid('org'), 'Builder')::text);

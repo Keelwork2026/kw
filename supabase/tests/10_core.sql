@@ -22,6 +22,7 @@ select kwtest.ok(exists (select 1 from public.audit_events where action = 'org.c
 select kwtest.login('alice@example.com');
 set role authenticated;
 select kwtest.set('acme', public.create_organization('Acme Inc')::text);
+select kwtest.plan(kwtest.uuid('acme'), 'enterprise');
 select kwtest.ok(kwtest.get('acme') is not null, 'create_organization returns an id');
 select kwtest.eq((select count(*) from public.organizations where id = kwtest.uuid('acme'))::int, 1, 'owner sees the new organization');
 select kwtest.throws('insert into public.organizations(name, slug) values (''x'', ''x'')', 'permission denied', 'clients cannot insert organizations directly');

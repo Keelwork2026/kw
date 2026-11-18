@@ -181,4 +181,12 @@ begin
   perform set_config('request.jwt.claims', '', false);
 end $$;
 
+-- Puts a test organization on a plan (used so limits don't interfere with
+-- checks that aren't about limits).
+create or replace function kwtest.plan(p_org uuid, p_plan text) returns void
+language plpgsql security definer set search_path = '' as $$
+begin
+  execute 'update public.org_billing set plan_key = $1 where org_id = $2' using p_plan, p_org;
+end $$;
+
 grant execute on all functions in schema kwtest to anon, authenticated, service_role;
