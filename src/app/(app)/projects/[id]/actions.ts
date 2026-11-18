@@ -37,10 +37,10 @@ export async function requestPlan(_prev: ActionResult, form: FormData): Promise<
   if (!can("project.write")) return fail("You can't write to this project.");
   const { data: thread } = await supabase.from("threads").select("id").eq("project_id", project.id).order("created_at").limit(1).single();
   if (!thread) return fail("This project has no chat thread.");
-  return planFromThread(project.id, thread.id, project.org_id, userId, project.backend);
+  return planFromThread(project.id, thread.id, project.org_id, userId, project.backend, str(form, "route") === "reason" ? "reason" : "plan");
 }
 
-async function planFromThread(projectId: string, threadId: string, orgId: string, userId: string, backend: string): Promise<ActionResult> {
+async function planFromThread(projectId: string, threadId: string, orgId: string, userId: string, backend: string, route: "plan" | "reason" = "plan"): Promise<ActionResult> {
   const { catalog, error: catErr } = serverCatalog();
   if (!catalog) return { ok: true, message: catErr ? `Your message is saved, but AI is misconfigured: ${catErr}` : "Your message is saved. AI isn't configured on this installation, so no plan can be made yet." };
   const limited = await limitOrMessage("aiMessage", userId);
@@ -57,7 +57,7 @@ async function planFromThread(projectId: string, threadId: string, orgId: string
   try {
     const gw = gatewayFor({ orgId, projectId, userId });
     const res = await gw.complete({
-      route: "plan",
+      route,
       json: true,
       maxOutputTokens: 4000,
       messages: planMessages({ description: last.content as string, history: convo, backendRules: isBackend(backend) ? backendRules(backend) : undefined }),
