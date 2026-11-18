@@ -14,7 +14,7 @@
     "typecheck": "tsc --noEmit",
     "test": "tsx --test 'src/**/*.test.ts' 'services/**/*.test.ts'",
     "test:db": "bash scripts/test-db.sh",
-    "test:template": "cd templates/next-supabase && tsx --test 'tests/**/*.test.ts'",
+    "test:template": "cd templates/next-supabase && node --test 'tests/*.test.ts'",
     "drill": "bash scripts/backup-restore-drill.sh",
     "broker": "tsx services/sandbox-broker/server.ts",
     "proxy": "tsx services/preview-proxy/proxy.ts",

@@ -38,6 +38,7 @@ export default async function BuilderPage({ params }: { params: Promise<{ id: st
   const aiReady = serverCatalog().catalog !== null;
   const brokerReady = brokerConfig() !== null;
   const preview = sandbox.data?.status === "running" ? previewLinkFor(project.id) : null;
+  const inspect = preview ? previewLinkFor(project.id, "/?kw-inspect=1") : null;
   const lastMsg = messages.data?.at(-1);
 
   return (
@@ -194,8 +195,10 @@ export default async function BuilderPage({ params }: { params: Promise<{ id: st
               sandboxStatus={sandbox.data?.status ?? null}
               sandboxError={sandbox.data?.error ?? null}
               previewUrl={preview?.url ?? null}
+              previewInspectUrl={inspect?.url ?? null}
               previewOrigin={preview?.origin ?? null}
               canDesign={writable}
+              designAvailable={Boolean(process.env.KW_APP_ORIGIN)}
             />
           </div>
         </section>
