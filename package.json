@@ -12,7 +12,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test 'src/**/*.test.ts' 'services/**/*.test.ts'",
+    "test": "tsx --test 'src/**/*.test.ts' 'services/**/*.test.ts' 'scripts/**/*.test.ts'",
     "test:db": "bash scripts/test-db.sh",
     "test:template": "cd templates/next-supabase && node --test 'tests/*.test.ts'",
     "drill": "bash scripts/backup-restore-drill.sh",

@@ -1,0 +1,17 @@
+/** Every migration the running code expects. Keep in step with supabase/migrations. */
+export const EXPECTED_MIGRATIONS = [
+  "20261107000100_phase1_core",
+  "20261107000200_phase2_projects",
+  "20261107000300_phase3_agents",
+  "20261107000400_phase4_imports",
+  "20261107000500_phase5_code",
+  "20261107000600_phase6_data",
+  "20261107000700_phase7_automation",
+  "20261107000800_phase8_quality",
+  "20261107000900_phase9_deploy",
+  "20261107001000_phase10_billing",
+  "20261107001100_phase11_heal",
+  "20261107001200_phase12_platform",
+  "20261107001300_phase13_hardening",
+  "20261108000100_stack_choice",
+] as const;
