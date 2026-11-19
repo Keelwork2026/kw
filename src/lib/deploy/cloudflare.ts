@@ -20,6 +20,9 @@ export function assetHash(content: Buffer, path: string): string {
   return createHash("sha256").update(Buffer.concat([content, Buffer.from(ext)])).digest("hex").slice(0, 32);
 }
 
+/** What one Worker version upload contains. */
+export type VersionInput = { main: string; modules: { name: string; content: Buffer; type: string }[]; assetsJwt: string | null; bindings: unknown[]; commitSha: string | null; compatibilityDate: string; compatibilityFlags: string[] };
+
 export function createCloudflare(cfg: CfConfig) {
   if (!/^[0-9a-f]{32}$/.test(cfg.accountId)) throw new CloudflareError("CLOUDFLARE_ACCOUNT_ID must be 32 hex characters");
   const f = cfg.fetch ?? fetch;
@@ -66,7 +69,7 @@ export function createCloudflare(cfg: CfConfig) {
       return completion;
     },
     /** Uploads a new version (not yet serving traffic). */
-    async createVersion(script: string, input: { main: string; modules: { name: string; content: Buffer; type: string }[]; assetsJwt: string | null; bindings: unknown[]; commitSha: string | null; compatibilityDate: string; compatibilityFlags: string[] }): Promise<{ id: string; previewUrl: string | null }> {
+    async createVersion(script: string, input: VersionInput): Promise<{ id: string; previewUrl: string | null }> {
       const metadata = {
         main_module: input.main,
         compatibility_date: input.compatibilityDate,
@@ -77,15 +80,15 @@ export function createCloudflare(cfg: CfConfig) {
       };
       const form = new FormData();
       form.append("metadata", new Blob([JSON.stringify(metadata)], { type: "application/json" }));
-      for (const m of input.modules) form.append(m.name, new Blob([m.content], { type: m.type }), m.name);
+      for (const m of input.modules) form.append(m.name, new Blob([new Uint8Array(m.content)], { type: m.type }), m.name);
       const r = await call<{ id: string; metadata?: { has_preview?: boolean } }>("POST", `${acct}/workers/scripts/${script}/versions`, form);
       return { id: r.id, previewUrl: null };
     },
     /** First upload of a new Worker creates the script. */
-    async createScript(script: string, input: Parameters<ReturnType<typeof createCloudflare>["createVersion"]>[1]): Promise<void> {
+    async createScript(script: string, input: VersionInput): Promise<void> {
       const form = new FormData();
       form.append("metadata", new Blob([JSON.stringify({ main_module: input.main, compatibility_date: input.compatibilityDate, compatibility_flags: input.compatibilityFlags, bindings: input.bindings, ...(input.assetsJwt ? { assets: { jwt: input.assetsJwt } } : {}) })], { type: "application/json" }));
-      for (const m of input.modules) form.append(m.name, new Blob([m.content], { type: m.type }), m.name);
+      for (const m of input.modules) form.append(m.name, new Blob([new Uint8Array(m.content)], { type: m.type }), m.name);
       await call("PUT", `${acct}/workers/scripts/${script}`, form);
     },
     async enableWorkersDev(script: string): Promise<void> {

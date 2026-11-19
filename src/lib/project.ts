@@ -29,7 +29,7 @@ export async function loadProject(id: string): Promise<{
 
   const perms = ["project.read", "project.write", "project.manage", "secret.manage", "usage.read"] as const;
   const results = await Promise.all(perms.map((p) => supabase.rpc("has_permission", { p_org: project.org_id, p_perm: p })));
-  const granted = new Set(perms.filter((_, i) => results[i]?.data === true));
+  const granted = new Set<string>(perms.filter((_, i) => results[i]?.data === true));
   const archived = project.status === "archived";
   const can = (p: string) => granted.has(p) && (!archived || p === "project.read" || p === "usage.read");
   return { supabase, project: project as ProjectRow, userId: auth.user.id, can, readOnly: archived || !granted.has("project.write") };

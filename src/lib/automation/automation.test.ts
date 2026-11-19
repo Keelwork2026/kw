@@ -32,7 +32,7 @@ test("the three starter templates validate", () => {
 });
 
 test("definitions: limits, ids, dependencies and references", () => {
-  const bad = (def: unknown) => { const r = validateDefinition(def); assert.equal(r.ok, false); return r.ok ? [] : r.errors.join(" | "); };
+  const bad = (def: unknown) => { const r = validateDefinition(def); assert.equal(r.ok, false); return r.ok ? "" : r.errors.join(" | "); };
   assert.match(bad({ steps: Array.from({ length: 26 }, (_, i) => ({ id: `s${i}`, type: "slack", text: "x" })) }), /at most 25/);
   assert.match(bad({ steps: [{ id: "Bad-Id", type: "slack", text: "x" }] }), /id must match/);
   assert.match(bad({ steps: [{ id: "a", type: "slack", text: "x".repeat(4001) }] }), /longer than 4000/);
@@ -77,12 +77,12 @@ test("engine: dependency order, outputs, conditions and secret scrubbing", async
   assert.deepEqual(out.records.map((r) => `${r.stepId}:${r.status}`), ["fetch_stats:succeeded", "send:succeeded"]);
   assert.ok(!JSON.stringify(out.records).includes("tok_live_123456"), "secrets are scrubbed from stored outputs");
   assert.ok(calls.includes("Bearer tok_live_123456"), "the real value is sent to the server");
-  const skip = await runWorkflow({ definition: (validateDefinition(WORKFLOW_TEMPLATES[2]!.definition) as { definition: never }).definition, trigger: { body: { email: "a@gmail.com", is_business_email: false } }, secrets: {}, prior: [], executors: ex, now: 0 });
+  const skip = await runWorkflow({ definition: (validateDefinition(WORKFLOW_TEMPLATES[2]!.definition) as unknown as { definition: never }).definition, trigger: { body: { email: "a@gmail.com", is_business_email: false } }, secrets: {}, prior: [], executors: ex, now: 0 });
   assert.deepEqual(skip.records.map((r) => `${r.stepId}:${r.status}`), ["shape:succeeded", "forward:skipped"]);
 });
 
 test("engine: temporary failures retry with doubling backoff, then fail", async () => {
-  const def = (validateDefinition({ steps: [{ id: "call", type: "http", url: "https://x.example", retries: { max: 2, backoffSeconds: 10 } }] }) as { definition: never }).definition;
+  const def = (validateDefinition({ steps: [{ id: "call", type: "http", url: "https://x.example", retries: { max: 2, backoffSeconds: 10 } }] }) as unknown as { definition: never }).definition;
   const failing = exec({ http: async () => { throw new TemporaryError("503"); } }).ex;
   const prior: PriorAttempt[] = [];
   let now = 1_000_000;
@@ -105,7 +105,7 @@ test("engine: temporary failures retry with doubling backoff, then fail", async 
 });
 
 test("engine: delays wait, and a resumed run continues after its last finished step", async () => {
-  const def = (validateDefinition({ steps: [{ id: "first", type: "slack", text: "1" }, { id: "pause", type: "delay", seconds: 60, dependsOn: ["first"] }, { id: "second", type: "slack", text: "2", dependsOn: ["pause"] }] }) as { definition: never }).definition;
+  const def = (validateDefinition({ steps: [{ id: "first", type: "slack", text: "1" }, { id: "pause", type: "delay", seconds: 60, dependsOn: ["first"] }, { id: "second", type: "slack", text: "2", dependsOn: ["pause"] }] }) as unknown as { definition: never }).definition;
   const { ex, calls } = exec();
   const a = await runWorkflow({ definition: def, trigger: {}, secrets: {}, prior: [], executors: ex, now: 0 });
   assert.equal(a.status, "waiting");
