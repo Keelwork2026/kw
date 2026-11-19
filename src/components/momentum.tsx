@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { TemplatePreview } from "./site/template-preview";
 import { starterHref, type Starter } from "@/lib/site/starters";
-import type { progress } from "@/lib/engagement";
+import type { progress as computeProgress } from "@/lib/engagement";
 
 const NEXT: Record<string, { label: string; at: string }> = {
   draft: { label: "Plan it with the AI", at: "chat" },
@@ -16,7 +16,7 @@ const NEXT: Record<string, { label: string; at: string }> = {
  */
 export function Momentum({ last, progress, ideas }: {
   last: { id: string; name: string; status: string; updated_at: string } | null;
-  progress: ReturnType<typeof progress>;
+  progress: ReturnType<typeof computeProgress>;
   ideas: Starter[];
 }) {
   const next = last ? NEXT[last.status] ?? NEXT.draft! : null;
@@ -47,7 +47,7 @@ export function Momentum({ last, progress, ideas }: {
             <div className="h-full rounded-full" style={{ width: `${progress.percent}%`, background: "var(--grad-art)" }} />
           </div>
           {progress.next ? (
-            <p className="mt-3 text-sm text-muted">Next, when you're ready: <Link href={progress.next.href} className="font-semibold text-accent hover:underline">{progress.next.label.toLowerCase()}</Link>.</p>
+            <p className="mt-3 text-sm text-muted">Next, when you&apos;re ready: <Link href={progress.next.href} className="font-semibold text-accent hover:underline">{progress.next.label.toLowerCase()}</Link>.</p>
           ) : (
             <p className="mt-3 text-sm text-muted">Every setup milestone reached. Nicely done.</p>
           )}

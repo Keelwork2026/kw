@@ -51,7 +51,7 @@ export function pageBySlug(site: Site, slug: string | undefined): Page | undefin
  */
 export function resolveHref(site: Site, href: string, base = `/demo/${site.slug}`): string {
   if (/^(https?:|mailto:|tel:|#)/.test(href)) return href;
-  if (href === "/" || href === "") return base;
+  if (href === "/" || href === "") return base || "/";
   return `${base}${href.startsWith("/") ? href : `/${href}`}`;
 }
 
@@ -73,4 +73,38 @@ export function sectionLinks(s: Section): string[] {
 /** Every string in a section (for QA content checks). */
 export function sectionText(s: Section): string {
   return JSON.stringify(s);
+}
+
+/* ---------- generic editing of a section's text ---------- */
+
+export type Path = (string | number)[];
+export type TextField = { path: Path; label: string; value: string; long: boolean; link: boolean };
+
+const SKIP = new Set(["t", "v", "art", "icon", "id", "seed", "kind", "type", "sample", "featured", "reverse", "cols", "inNav"]);
+const NICE: Record<string, string> = { title: "Title", sub: "Supporting text", eyebrow: "Eyebrow", body: "Body", label: "Button text", href: "Link", meta: "Details", price: "Price", alt: "Image description", quote: "Quote", name: "Name", role: "Role", desc: "Description", button: "Button text", placeholder: "Placeholder", note: "Note", blurb: "Summary", bio: "Bio", badge: "Badge", year: "Date", who: "Who", room: "Room", time: "Time", day: "Day" };
+
+/** Every editable string in a section, with a readable label. */
+export function textFields(section: unknown): TextField[] {
+  const out: TextField[] = [];
+  const walk = (v: unknown, path: Path) => {
+    if (out.length >= 120) return;
+    const key = [...path].reverse().find((k) => typeof k === "string") as string | undefined;
+    if (typeof v === "string") {
+      if (key && SKIP.has(key)) return;
+      const parts = path.map((k, i) => (typeof k === "number" ? `${k + 1}` : i === path.length - 1 ? NICE[k] ?? k : NICE[k] ?? k)).filter((x) => !["items", "ctas", "plans", "groups", "sessions", "days", "fields"].includes(String(x)));
+      out.push({ path, label: parts.join(" · ") || "Text", value: v, long: v.length > 70 || key === "body" || key === "sub" || key === "quote", link: key === "href" });
+    } else if (Array.isArray(v)) v.forEach((x, i) => walk(x, [...path, i]));
+    else if (v && typeof v === "object") for (const [k, x] of Object.entries(v)) if (!SKIP.has(k) || typeof x === "object") walk(x, [...path, k]);
+  };
+  walk(section, []);
+  return out;
+}
+
+/** Immutable set by path. */
+export function setAt<T>(obj: T, path: Path, value: unknown): T {
+  if (!path.length) return value as T;
+  const [k, ...rest] = path;
+  if (Array.isArray(obj)) return obj.map((x, i) => (i === k ? setAt(x, rest, value) : x)) as T;
+  const o = obj as Record<string, unknown>;
+  return { ...o, [k as string]: setAt(o[k as string], rest, value) } as T;
 }

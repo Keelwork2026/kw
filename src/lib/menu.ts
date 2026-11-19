@@ -74,11 +74,20 @@ export const MENU: readonly MenuGroup[] = [
       },
       {
         slug: "templates", label: "Templates", hint: "Start from a reviewed template",
-        can: ["Start from one of nine designed starter templates", "Use a reviewed template from the marketplace", "Import a page from a website you're allowed to use"],
+        can: ["Start from a designed app starter or one of seventeen website templates", "Use a reviewed template from the marketplace", "Import a page from a website you're allowed to use"],
         children: [
           { label: "Starter templates", hint: "Nine designed starters, ready to build", to: { path: "/templates#starters" } },
           { label: "Marketplace templates", hint: "Reviewed templates from others", to: { path: "/templates#reviewed" } },
           { label: "Import a website", hint: "Rebuild a page you own", to: { path: "/templates#import" } },
+        ],
+      },
+      {
+        slug: "sites", label: "Websites", hint: "Complete websites written from your business details",
+        can: ["Answer a few questions and get a full multi-page website", "Edit every word, regenerate any section, change tone with AI", "Preview on desktop, tablet and mobile, then share a link or export HTML"],
+        children: [
+          { label: "Your websites", hint: "Drafts in this workspace", to: { path: "/sites" } },
+          { label: "Create a website", hint: "From your business profile", to: { path: "/sites/new" } },
+          { label: "Website templates", hint: "Seventeen complete sites to preview", to: { path: "/starters" } },
         ],
       },
       {

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { createServiceClient } from "@/lib/supabase/server";
 import { EXPECTED_MIGRATIONS } from "@/lib/security/readiness";
 import { brokerConfig } from "@/lib/sandbox/client";
@@ -52,7 +53,7 @@ export default async function StatusPage() {
             </li>
           ))}
         </ul>
-        <p className="mt-6 text-center text-sm text-muted">Machine-readable checks: <a className="font-semibold text-accent" href="/api/health">/api/health</a> and <a className="font-semibold text-accent" href="/api/ready">/api/ready</a>.</p>
+        <p className="mt-6 text-center text-sm text-muted">Machine-readable checks: <Link prefetch={false} className="font-semibold text-accent" href="/api/health">/api/health</Link> and <Link prefetch={false} className="font-semibold text-accent" href="/api/ready">/api/ready</Link>.</p>
       </section>
     </>
   );

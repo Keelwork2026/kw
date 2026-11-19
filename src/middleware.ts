@@ -2,12 +2,12 @@ import { NextResponse, type NextRequest } from "next/server";
 import { refreshSession } from "@/lib/supabase/middleware";
 import { buildCsp, makeNonce, SECURITY_HEADERS } from "@/lib/security/headers";
 
-const APP_PREFIXES = ["/dashboard", "/projects", "/new-project", "/builder", "/templates", "/design", "/database", "/backend", "/integrations", "/automation", "/agents", "/testing", "/security", "/deployments", "/hosting", "/analytics", "/team", "/marketplace", "/billing", "/settings", "/admin"];
+const APP_PREFIXES = ["/dashboard", "/sites", "/projects", "/new-project", "/builder", "/templates", "/design", "/database", "/backend", "/integrations", "/automation", "/agents", "/testing", "/security", "/deployments", "/hosting", "/analytics", "/team", "/marketplace", "/billing", "/settings", "/admin"];
 
 /** Session refresh, CSP nonce, security headers and auth redirects. */
 export async function middleware(request: NextRequest) {
   const nonce = makeNonce();
-  const isDemo = request.nextUrl.pathname.startsWith("/demo/");
+  const isDemo = request.nextUrl.pathname.startsWith("/demo/") || /^\/sites\/[0-9a-f-]{36}\/preview(\/|$)/.test(request.nextUrl.pathname);
   const csp = buildCsp({ nonce, dev: process.env.NODE_ENV !== "production", supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL, previewBaseDomain: process.env.PREVIEW_BASE_DOMAIN, frameableBySelf: isDemo });
   const headers = new Headers(request.headers);
   headers.set("x-nonce", nonce);

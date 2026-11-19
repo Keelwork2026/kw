@@ -5,7 +5,20 @@ import { Art } from "./art";
 import { SiteIcon, SocialIcon } from "./icons";
 import { AddToCart, CartView, Checkout, CookieBanner, CookieLink, DemoForm, Donate, NewsletterForm, Options } from "./interactive";
 
-type Ctx = { site: Site; base: string; page: Page };
+type Ctx = { site: Site; base: string; page: Page; live: boolean };
+
+/**
+ * In a static export there is no JavaScript: forms become plain HTML forms
+ * the owner wires to a form service, and the basket explains itself.
+ */
+function Form({ ctx, button, done, children }: { ctx: Ctx; button: string; done: string; children: React.ReactNode }) {
+  if (ctx.live) return <DemoForm button={button} done={done}>{children}</DemoForm>;
+  return <form className="ks-form" method="post" action="#">{children}<button className="ks-btn primary" type="submit" style={{ justifySelf: "start" }}>{button}</button></form>;
+}
+function Newsletter({ ctx, button, compact }: { ctx: Ctx; button: string; compact?: boolean }) {
+  if (ctx.live) return <NewsletterForm button={button} compact={compact} />;
+  return <form className={compact ? "ks-news" : "ks-search"} method="post" action="#" style={compact ? undefined : { maxWidth: 520, margin: "28px auto 0" }}><input type="email" required placeholder="you@example.com" aria-label="Email address" /><button className={`ks-btn ${compact ? "light" : "primary"}`} type="submit">{button}</button></form>;
+}
 
 /** Text with [[placeholder]] chips for facts only the owner can supply. */
 export function T({ s }: { s: string }) {
@@ -89,7 +102,7 @@ export function SectionView({ s, ctx, index }: { s: Section; ctx: Ctx; index: nu
     case "pricing": return <section className={`ks-sec${alt}`}><div className="ks-wrap"><Head title={s.title} sub={s.sub} center /><div className={`ks-grid ks-g${Math.min(4, s.plans.length) as 2 | 3 | 4}`}>{s.plans.map((p) => <div key={p.name} className={`ks-plan${p.featured ? " feat" : ""}`}>{p.featured && <span className="ks-badge" style={{ alignSelf: "flex-start" }}>Most chosen</span>}<h3 className="ks-h3">{p.name}</h3><p><span className="amt"><T s={p.price} /></span> <span className="ks-meta">{p.per}</span></p><p className="ks-meta">{p.blurb}</p><ul>{p.features.map((f) => <li key={f}>{f}</li>)}</ul><A l={p.cta} ctx={ctx} kind={p.featured ? "primary" : "ghost"} /></div>)}</div></div></section>;
     case "faq": return <section className={`ks-sec${alt}`}><div className="ks-wrap"><Head title={s.title} center /><div className="ks-faq">{s.items.map(([q, a]) => <details key={q}><summary><T s={q} /></summary><p><T s={a} /></p></details>)}</div></div></section>;
     case "cta": return <section className="ks-sec"><div className="ks-wrap"><div className="ks-cta" style={s.img ? undefined : { gridTemplateColumns: "1fr" }}><div><h2 className="ks-h2"><T s={s.title} /></h2><p className="ks-sub"><T s={s.sub} /></p><Ctas ctas={s.ctas} ctx={ctx} /></div>{s.img && <Pic img={s.img} ctx={ctx} />}</div></div></section>;
-    case "newsletter": return <section className={`ks-sec${alt}`}><div className="ks-wrap" style={{ textAlign: "center" }}><Head title={s.title} sub={s.sub} center /><NewsletterForm button={s.button} /><p className="ks-note" style={{ marginTop: 12 }}>No spam. Unsubscribe with one click, any time.</p></div></section>;
+    case "newsletter": return <section className={`ks-sec${alt}`}><div className="ks-wrap" style={{ textAlign: "center" }}><Head title={s.title} sub={s.sub} center /><Newsletter ctx={ctx} button={s.button} /><p className="ks-note" style={{ marginTop: 12 }}>No spam. Unsubscribe with one click, any time.</p></div></section>;
     case "contact": return (
       <section className={`ks-sec${alt}`} id="contact"><div className="ks-wrap ks-two">
         <div><h2 className="ks-h2"><T s={s.title} /></h2><p className="ks-sub"><T s={s.sub} /></p>
@@ -97,7 +110,7 @@ export function SectionView({ s, ctx, index }: { s: Section; ctx: Ctx; index: nu
           {s.hours && <><h3 className="ks-h3" style={{ marginTop: 32, fontSize: 18 }}>Hours</h3><dl className="ks-dl">{s.hours.map(([k, v]) => <div key={k}><dt>{k}</dt><dd><T s={v} /></dd></div>)}</dl></>}
           <div className="ks-art" style={{ aspectRatio: "16/9", marginTop: 28 }}><Art kind="map" palette={ctx.site.palette} alt="Map showing the location" /></div>
         </div>
-        <div className="ks-panel"><DemoForm button={s.button} done="Thanks — your message is ready to send.">{s.fields.map((f) => <label key={f}>{f}{/message|details|tell|question/i.test(f) ? <textarea rows={5} required /> : <input type={/email/i.test(f) ? "email" : /phone/i.test(f) ? "tel" : "text"} required={!/phone|company|optional/i.test(f)} autoComplete={/email/i.test(f) ? "email" : /name/i.test(f) ? "name" : /phone/i.test(f) ? "tel" : "off"} />}</label>)}<p className="ks-note">We use your details only to reply to you. See our privacy policy.</p></DemoForm></div>
+        <div className="ks-panel"><Form ctx={ctx} button={s.button} done="Thanks — your message is ready to send.">{s.fields.map((f) => <label key={f}>{f}{/message|details|tell|question/i.test(f) ? <textarea rows={5} required /> : <input type={/email/i.test(f) ? "email" : /phone/i.test(f) ? "tel" : "text"} required={!/phone|company|optional/i.test(f)} autoComplete={/email/i.test(f) ? "email" : /name/i.test(f) ? "name" : /phone/i.test(f) ? "tel" : "off"} />}</label>)}<p className="ks-note">We use your details only to reply to you. See our privacy policy.</p></Form></div>
       </div></section>
     );
     case "steps": return <section className={`ks-sec${alt}`}><div className="ks-wrap"><Head title={s.title} sub={s.sub} center /><div className="ks-steps">{s.items.map((x) => <div className="ks-step" key={x.title}><h3 className="ks-h3"><T s={x.title} /></h3><p><T s={x.body} /></p></div>)}</div></div></section>;
@@ -110,8 +123,8 @@ export function SectionView({ s, ctx, index }: { s: Section; ctx: Ctx; index: nu
         <div>
           <h1 className="ks-h2"><T s={s.title} /></h1><p className="ks-sub" style={{ fontSize: 17 }}><T s={s.sub} /></p>
           {s.price && <p className="price"><T s={s.price} /></p>}
-          {s.options && <Options name={s.options.name} values={s.options.values} />}
-          {s.v === "product" && s.price ? <AddToCart slug={ctx.site.slug} title={s.title} price={s.price} img={s.img} href={resolveHref(ctx.site, "/cart", ctx.base)} /> : <div className="ks-ctas" style={{ marginTop: 26 }}><A l={s.cta} ctx={ctx} />{s.secondary && <A l={s.secondary} ctx={ctx} kind="ghost" />}</div>}
+          {s.options && (ctx.live ? <Options name={s.options.name} values={s.options.values} /> : <div style={{ marginTop: 22 }}><p className="ks-meta">{s.options.name}</p><div className="ks-opts">{s.options.values.map((v, i) => <button key={v} type="button" aria-pressed={i === 0}>{v}</button>)}</div></div>)}
+          {s.v === "product" && s.price && ctx.live ? <AddToCart slug={ctx.site.slug} title={s.title} price={s.price} img={s.img} href={resolveHref(ctx.site, "/cart", ctx.base)} /> : <div className="ks-ctas" style={{ marginTop: 26 }}><A l={s.cta} ctx={ctx} />{s.secondary && <A l={s.secondary} ctx={ctx} kind="ghost" />}</div>}
           <dl className="ks-dl">{s.facts.map(([k, v]) => <div key={k}><dt>{k}</dt><dd><T s={v} /></dd></div>)}</dl>
           <div style={{ marginTop: 24, color: "var(--ks-muted)" }}>{s.body.map((b) => <p key={b.slice(0, 40)} style={{ marginTop: 12 }}><T s={b} /></p>)}</div>
           {s.highlights && <ul className="ks-bul">{s.highlights.map((h) => <li key={h}><T s={h} /></li>)}</ul>}
@@ -123,15 +136,15 @@ export function SectionView({ s, ctx, index }: { s: Section; ctx: Ctx; index: nu
     case "booking": return (
       <section className={`ks-sec${alt}`} id="book"><div className="ks-wrap ks-two">
         <div><h2 className="ks-h2"><T s={s.title} /></h2><p className="ks-sub"><T s={s.sub} /></p><ul className="ks-bul">{s.aside.map((a) => <li key={a}><T s={a} /></li>)}</ul></div>
-        <div className="ks-panel"><DemoForm button={s.button} done={{ table: "Your table request is ready.", appointment: "Your appointment request is ready.", tour: "Your enquiry is ready.", ticket: "Your ticket selection is ready.", visit: "Your viewing request is ready." }[s.kind]}><div className="ks-grid ks-g2">{s.fields.map((f) => <Field key={f.label} f={f} />)}</div></DemoForm></div>
+        <div className="ks-panel"><Form ctx={ctx} button={s.button} done={{ table: "Your table request is ready.", appointment: "Your appointment request is ready.", tour: "Your enquiry is ready.", ticket: "Your ticket selection is ready.", visit: "Your viewing request is ready." }[s.kind]}><div className="ks-grid ks-g2">{s.fields.map((f) => <Field key={f.label} f={f} />)}</div></Form></div>
       </div></section>
     );
-    case "donate": return <section className={`ks-sec${alt}`} id="donate"><div className="ks-wrap ks-two"><div><h2 className="ks-h2"><T s={s.title} /></h2><p className="ks-sub"><T s={s.sub} /></p><dl className="ks-dl">{s.impact.map(([k, v]) => <div key={k}><dt>£{k}</dt><dd>{v}</dd></div>)}</dl></div><div className="ks-panel"><Donate amounts={s.amounts} impact={s.impact} /></div></div></section>;
-    case "cart": return <section className="ks-sec" style={{ paddingTop: 48 }}><div className="ks-wrap"><h1 className="ks-h2" style={{ marginBottom: 28 }}>Your basket</h1><CartView slug={ctx.site.slug} palette={ctx.site.palette} checkoutHref={resolveHref(ctx.site, "/checkout", ctx.base)} shopHref={resolveHref(ctx.site, "/shop", ctx.base)} /></div></section>;
-    case "checkout": return <section className="ks-sec" style={{ paddingTop: 48 }}><div className="ks-wrap"><h1 className="ks-h2" style={{ marginBottom: 28 }}>Checkout</h1><Checkout slug={ctx.site.slug} /></div></section>;
+    case "donate": return <section className={`ks-sec${alt}`} id="donate"><div className="ks-wrap ks-two"><div><h2 className="ks-h2"><T s={s.title} /></h2><p className="ks-sub"><T s={s.sub} /></p><dl className="ks-dl">{s.impact.map(([k, v]) => <div key={k}><dt>£{k}</dt><dd>{v}</dd></div>)}</dl></div><div className="ks-panel">{ctx.live ? <Donate amounts={s.amounts} impact={s.impact} /> : <p className="ks-ok">Connect a donation provider to take gifts securely.</p>}</div></div></section>;
+    case "cart": return <section className="ks-sec" style={{ paddingTop: 48 }}><div className="ks-wrap"><h1 className="ks-h2" style={{ marginBottom: 28 }}>Your basket</h1>{ctx.live ? <CartView slug={ctx.site.slug} palette={ctx.site.palette} checkoutHref={resolveHref(ctx.site, "/checkout", ctx.base)} shopHref={resolveHref(ctx.site, "/shop", ctx.base)} /> : <p className="ks-ok">Your basket appears here once your shop is connected to a checkout.</p>}</div></section>;
+    case "checkout": return <section className="ks-sec" style={{ paddingTop: 48 }}><div className="ks-wrap"><h1 className="ks-h2" style={{ marginBottom: 28 }}>Checkout</h1>{ctx.live ? <Checkout slug={ctx.site.slug} /> : <p className="ks-ok">Checkout is handled by your payment provider once connected.</p>}</div></section>;
     case "account": return (
       <section className="ks-sec" style={{ paddingTop: 48 }}><div className="ks-wrap ks-two">
-        <div className="ks-panel"><h1 className="ks-h3">Sign in</h1><DemoForm button="Sign in" done="Account sign-in works once your shop is live."><label>Email<input type="email" required autoComplete="email" /></label><label>Password<input type="password" required autoComplete="current-password" /></label></DemoForm></div>
+        <div className="ks-panel"><h1 className="ks-h3">Sign in</h1><Form ctx={ctx} button="Sign in" done="Account sign-in works once your shop is live."><label>Email<input type="email" required autoComplete="email" /></label><label>Password<input type="password" required autoComplete="current-password" /></label></Form></div>
         <div><h2 className="ks-h3">New here?</h2><p className="ks-sub" style={{ fontSize: 16 }}>An account keeps your orders, delivery addresses and saved pieces in one place. You can always check out as a guest.</p><ul className="ks-bul"><li>Track orders and returns</li><li>Save delivery addresses</li><li>Keep a wishlist</li></ul></div>
       </div></section>
     );
@@ -144,8 +157,8 @@ function Logo({ site }: { site: Site }) {
   return <><svg width="28" height="28" viewBox="0 0 28 28" fill="var(--ks-accent)" aria-hidden>{shape}</svg><span>{site.logo.word}</span></>;
 }
 
-export function SiteDocument({ site, page, base }: { site: Site; page: Page; base: string }) {
-  const ctx: Ctx = { site, base, page };
+export function SiteDocument({ site, page, base, live = true }: { site: Site; page: Page; base: string; live?: boolean }) {
+  const ctx: Ctx = { site, base, page, live };
   const nav = site.pages.filter((p) => p.inNav !== false && p.slug !== "" && !["privacy", "terms", "cookies", "cart", "checkout", "account", "accessibility"].includes(p.slug));
   const has = (slug: string) => site.pages.some((p) => p.slug === slug);
   const href = (h: string) => resolveHref(site, h, base);
@@ -176,15 +189,15 @@ export function SiteDocument({ site, page, base }: { site: Site; page: Page; bas
               <div className="ks-social">{site.footer.social.map((s) => <a key={s} href="#" aria-label={`${site.name} on ${s} (link added when you publish)`} title="Add your profile link when you publish"><SocialIcon name={s} /></a>)}</div>
             </div>
             {site.footer.columns.map((c) => <div key={c.title}><h4>{c.title}</h4><ul>{c.links.map((l) => <li key={l.label}><a href={href(l.href)}>{l.label}</a></li>)}</ul></div>)}
-            {site.footer.newsletter && <div><h4>{site.footer.newsletter.title}</h4><p style={{ opacity: 0.75, fontSize: 14 }}>Occasional updates. Unsubscribe any time.</p><NewsletterForm button={site.footer.newsletter.button} compact /></div>}
+            {site.footer.newsletter && <div><h4>{site.footer.newsletter.title}</h4><p style={{ opacity: 0.75, fontSize: 14 }}>Occasional updates. Unsubscribe any time.</p><Newsletter ctx={ctx} button={site.footer.newsletter.button} compact /></div>}
           </div>
           <div className="ks-legal">
             <span><T s={site.footer.legal} /></span>
-            <nav aria-label="Legal">{has("privacy") && <a href={href("/privacy")}>Privacy policy</a>}{has("terms") && <a href={href("/terms")}>Terms</a>}{has("cookies") && <a href={href("/cookies")}>Cookie policy</a>}{has("accessibility") && <a href={href("/accessibility")}>Accessibility</a>}{has("cookies") && <CookieLink />}</nav>
+            <nav aria-label="Legal">{has("privacy") && <a href={href("/privacy")}>Privacy policy</a>}{has("terms") && <a href={href("/terms")}>Terms</a>}{has("cookies") && <a href={href("/cookies")}>Cookie policy</a>}{has("accessibility") && <a href={href("/accessibility")}>Accessibility</a>}{has("cookies") && live && <CookieLink />}</nav>
           </div>
         </div>
       </footer>
-      {has("cookies") && <CookieBanner slug={site.slug} policyHref={href("/cookies")} />}
+      {has("cookies") && live && <CookieBanner slug={site.slug} policyHref={href("/cookies")} />}
     </div>
   );
 }

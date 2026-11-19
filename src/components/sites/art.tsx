@@ -136,7 +136,7 @@ const SCENES: Record<ArtKind, (c: Ctx) => React.ReactNode> = {
       <path d="M90 150 L235 70 L380 150 Z" fill={mix(p.ink, p.accent, 0.25)} />
       <rect x="290" y="80" width="26" height="50" fill={mix(p.ink, p.accent, 0.35)} />
       <rect x="210" y="200" width="50" height="80" fill={p.accent} /><circle cx="250" cy="242" r="3" fill={p.soft} />
-      {[[135, 175], [290, 175], [135, 225], [290, 225]].map(([x, y]) => <g key={`${x}${y}`}><rect x={x} y={y} width="48" height="36" fill={mix(p.accent2, "#fff", 0.55)} /><path d={`M${x + 24} ${y}v36M${x} ${y + 18}h48`} stroke={p.surface} strokeWidth="3" /></g>)}
+      {([[135, 175], [290, 175], [135, 225], [290, 225]] as [number, number][]).map(([x, y]) => <g key={`${x}${y}`}><rect x={x} y={y} width="48" height="36" fill={mix(p.accent2, "#fff", 0.55)} /><path d={`M${x + 24} ${y}v36M${x} ${y + 18}h48`} stroke={p.surface} strokeWidth="3" /></g>)}
       {Array.from({ length: 3 }, (_, i) => <g key={i}><circle cx={40 + i * 26} cy={240 - r() * 20} r={30 + r() * 12} fill={mix("#3f7d3a", p.ink, 0.15 + r() * 0.15)} /></g>)}
       <circle cx="430" cy="236" r="34" fill={mix("#3f7d3a", p.ink, 0.2)} />
       <path d="M220 280 Q200 330 160 360 L330 360 Q280 330 260 280 Z" fill={mix(p.soft, p.surface, 0.5)} />
