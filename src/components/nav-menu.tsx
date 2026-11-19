@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
-import { MENU, PROJECT_PATH_RE, hrefFor, itemForPath, type MenuItem } from "@/lib/menu";
+import { MENU, PROJECT_PATH_RE, TAB_TO_MENU, hrefFor, itemForPath, type MenuItem, type ProjectTab } from "@/lib/menu";
 
 const HINTS_KEY = "kw.menu.hints";
 
@@ -23,8 +23,10 @@ function useStoredFlag(key: string, initial: boolean): [boolean, (v: boolean) =>
  */
 export function NavMenu({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?: () => void }) {
   const pathname = usePathname() ?? "/";
-  const projectId = PROJECT_PATH_RE.exec(pathname)?.[1] ?? null;
-  const current = itemForPath(pathname)?.item.slug ?? null;
+  const projectMatch = PROJECT_PATH_RE.exec(pathname);
+  const projectId = projectMatch?.[1] ?? null;
+  const projectTab = (projectMatch?.[2] ?? "") as ProjectTab;
+  const current = projectId ? TAB_TO_MENU[projectTab] ?? "builder" : itemForPath(pathname)?.item.slug ?? null;
   const [hints, setHints] = useStoredFlag(HINTS_KEY, true);
   const hintsId = useId();
 

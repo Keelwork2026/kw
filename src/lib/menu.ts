@@ -286,4 +286,10 @@ export function itemForPath(pathname: string): { item: MenuItem; group: MenuGrou
   return null;
 }
 
+/** Inside a project, the sidebar highlights the studio that owns the open tab. */
+export const TAB_TO_MENU: Record<ProjectTab, string> = {
+  "": "builder", code: "builder", database: "database", backend: "backend", tests: "testing", incidents: "testing",
+  security: "security", secrets: "security", deployments: "deployments", analytics: "analytics", automations: "automation", integrations: "integrations",
+};
+
 export const PROJECT_PATH_RE = /^\/projects\/([0-9a-f-]{36})(?:\/([a-z]+))?/i;

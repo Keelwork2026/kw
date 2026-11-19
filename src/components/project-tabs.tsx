@@ -28,7 +28,7 @@ export function ProjectTabs({ projectId }: { projectId: string }) {
                   href={href}
                   title={hint}
                   aria-current={isActive ? "page" : undefined}
-                  className={`inline-flex min-h-10 items-center rounded-full px-4 text-sm font-semibold ${isActive ? "bg-[#0b1f3a] text-white" : "border border-border bg-surface hover:bg-surface-2"}`}
+                  className={`inline-flex min-h-10 items-center rounded-full px-4 text-sm font-semibold ${isActive ? "bg-accent text-accent-contrast shadow-sm" : "border border-border bg-surface hover:bg-surface-2"}`}
                 >
                   {t.label}<span className="sr-only"> — {hint}</span>
                 </Link>

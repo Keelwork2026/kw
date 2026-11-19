@@ -61,3 +61,9 @@ test("menu: links resolve inside a project or through the picker, and picker inp
   assert.equal(itemForPath("/settings/audit")?.item.slug, "settings");
   assert.equal(itemForPath("/nowhere"), null);
 });
+
+test("menu: every project tab maps to a studio in the menu", async () => {
+  const { TAB_TO_MENU } = await import("./menu");
+  const slugs = new Set(MENU.flatMap((g) => g.items.map((i) => i.slug)));
+  for (const t of PROJECT_TABS) assert.ok(slugs.has(TAB_TO_MENU[t.slug]), `tab "${t.slug}" maps to an unknown menu item`);
+});
