@@ -137,7 +137,7 @@ function Tree({ nodes, projectId, current }: { nodes: TreeNode[]; projectId: str
         </li>
       ) : (
         <li key={n.path}>
-          <Link href={`/projects/${projectId}/code?path=${encodeURIComponent(n.path)}`} aria-current={current === n.path ? "page" : undefined} className={`flex min-h-8 items-center truncate rounded-lg px-1.5 font-mono text-xs hover:bg-surface-2 ${current === n.path ? "bg-[#eef0ff] text-[#1f1a8f]" : ""}`}>{n.name}</Link>
+          <Link href={`/projects/${projectId}/code?path=${encodeURIComponent(n.path)}`} aria-current={current === n.path ? "page" : undefined} className={`flex min-h-8 items-center truncate rounded-lg px-1.5 font-mono text-xs hover:bg-surface-2 ${current === n.path ? "bg-soft-accent text-soft-accent-ink" : ""}`}>{n.name}</Link>
         </li>
       ))}
     </ul>

@@ -10,11 +10,11 @@ const PROMPTS = [
 ];
 
 const CHIPS = [
-  { label: "Booking app", color: "#3d2bff", text: "A booking app with time slots, reminders and payments" },
-  { label: "Portfolio", color: "#007f86", text: "A portfolio with case-study pages and a contact form" },
-  { label: "SaaS dashboard", color: "#0b78a0", text: "A SaaS dashboard with sign-in, teams and usage charts" },
-  { label: "Online shop", color: "#14a36b", text: "An online shop with a catalogue, cart and checkout" },
-  { label: "Habit tracker", color: "#ffb703", text: "A habit tracker with streaks and an evening nudge" },
+  { label: "Booking app", color: "#ff5c8a", text: "A booking app with time slots, reminders and payments" },
+  { label: "Portfolio", color: "#8b6cff", text: "A portfolio with case-study pages and a contact form" },
+  { label: "SaaS dashboard", color: "#ff8a4c", text: "A SaaS dashboard with sign-in, teams and usage charts" },
+  { label: "Online shop", color: "#3fb37f", text: "An online shop with a catalogue, cart and checkout" },
+  { label: "Habit tracker", color: "#ffc46b", text: "A habit tracker with streaks and an evening nudge" },
 ];
 
 /** The homepage prompt. Submitting carries the idea through sign-up into the first project. */
@@ -46,7 +46,7 @@ export function HeroPrompt() {
 
   return (
     <form action="/sign-up" method="get" className="mx-auto mt-10 w-full max-w-3xl">
-      <div className="relative rounded-[28px] border border-border bg-surface p-3 text-left shadow-[0_40px_90px_-40px_rgba(61,43,255,0.45)]">
+      <div className="relative rounded-[28px] border border-border bg-surface p-3 text-left shadow-[0_40px_90px_-40px_rgba(199,37,78,0.35)]">
         <label htmlFor="hero-prompt" className="sr-only">Describe the app you want to build</label>
         <textarea
           id="hero-prompt"

@@ -35,7 +35,7 @@ export default async function TestsPage({ params, searchParams }: { params: Prom
       {full ? (
         <section className="panel p-4" aria-labelledby="log">
           <div className="flex items-center justify-between"><h2 id="log" className="text-lg">Full log · {full.kind}</h2><Link href={`/projects/${project.id}/tests`} className="text-sm font-semibold text-accent">Close</Link></div>
-          <pre className="mt-3 max-h-[60vh] overflow-auto rounded-xl bg-[#0b1f3a] p-4 font-mono text-xs leading-5 text-[#e7ecf4]">{full.output ?? "No output."}</pre>
+          <pre className="mt-3 max-h-[60vh] overflow-auto rounded-xl bg-ink p-4 font-mono text-xs leading-5 text-ink-text">{full.output ?? "No output."}</pre>
         </section>
       ) : null}
       <section className="panel overflow-x-auto" aria-labelledby="history">

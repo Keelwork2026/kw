@@ -21,7 +21,7 @@ function useStoredFlag(key: string, initial: boolean): [boolean, (v: boolean) =>
  * project, project submenus open that project directly; elsewhere they go
  * through the section's project picker.
  */
-export function NavMenu({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?: () => void }) {
+export function NavMenu({ isAdmin, staffQueue = 0, onNavigate }: { isAdmin: boolean; staffQueue?: number; onNavigate?: () => void }) {
   const pathname = usePathname() ?? "/";
   const projectMatch = PROJECT_PATH_RE.exec(pathname);
   const projectId = projectMatch?.[1] ?? null;
@@ -56,7 +56,15 @@ export function NavMenu({ isAdmin, onNavigate }: { isAdmin: boolean; onNavigate?
         </section>
       ))}
       {isAdmin ? (
-        <ul><li><Link href="/admin" onClick={onNavigate} className="flex min-h-10 items-center rounded-xl px-3 text-sm font-semibold text-accent hover:bg-surface-2">Platform admin</Link></li></ul>
+        <section aria-labelledby="menu-staff">
+          <h2 id="menu-staff" className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">Staff</h2>
+          <ul><li>
+            <Link href="/admin" onClick={onNavigate} aria-current={pathname.startsWith("/admin") ? "page" : undefined} className={`flex min-h-10 items-center justify-between gap-2 rounded-xl px-3 py-1.5 text-sm hover:bg-surface-2 ${pathname.startsWith("/admin") ? "bg-surface-2 font-semibold" : "font-medium text-muted hover:text-text"}`}>
+              <span><span className="block">Platform admin</span><span className={hints ? "block text-[11px] font-normal leading-4 text-muted" : "sr-only"}>Organizations, support access and reviews</span></span>
+              {staffQueue ? <span className="pill bg-soft-accent text-soft-accent-ink" aria-label={`${staffQueue} waiting for review`}>{staffQueue}</span> : null}
+            </Link>
+          </li></ul>
+        </section>
       ) : null}
     </nav>
   );

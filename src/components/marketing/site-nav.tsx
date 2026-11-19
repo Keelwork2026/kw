@@ -20,7 +20,7 @@ export function SiteNav() {
 
   return (
     <div ref={ref} className="sticky top-0 z-40">
-      <Link href="/sign-up" className="block px-4 py-2 text-center text-sm font-semibold text-white" style={{ background: "linear-gradient(90deg, #3d2bff, #0b78a0, #007f86)" }}>
+      <Link href="/sign-up" className="block px-4 py-2 text-center text-sm font-semibold text-white" style={{ background: "var(--grad-button)" }}>
         New · Agents now test their own work — try it free →
       </Link>
       <nav aria-label="Primary" className="border-b border-border bg-bg/90 backdrop-blur">

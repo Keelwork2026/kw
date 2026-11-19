@@ -26,7 +26,7 @@ export default async function PricingPage() {
           {plans.map((p) => {
             const featured = p.key === "pro";
             return (
-              <div key={p.key} className={featured ? "rounded-[28px] p-[2px]" : ""} style={featured ? { background: "linear-gradient(135deg, #3d2bff, #007f86)" } : undefined}>
+              <div key={p.key} className={featured ? "rounded-[28px] p-[2px]" : ""} style={featured ? { background: "var(--grad-art)" } : undefined}>
                 <div className="card h-full">
                   <div className="flex items-center justify-between"><h2 className="text-2xl">{p.name}</h2>{featured ? <span className="pill bg-highlight text-highlight-ink">Popular</span> : null}</div>
                   <p className="mt-4 font-display text-4xl font-bold">{p.key === "free" ? "$0" : "[PRICE]"}</p>

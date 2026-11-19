@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { requireOrg } from "@/lib/org";
 import { PageHeader, EmptyState, StatusPill, formatMicros, timeAgo } from "@/components/page-header";
+import { GettingStarted, type Step } from "@/components/getting-started";
 
 export const metadata = { title: "Dashboard" };
 
@@ -15,10 +16,24 @@ export default async function DashboardPage() {
     can("usage.read") ? supabase.rpc("billing_summary", { p_org: org.id }) : Promise.resolve({ data: null }),
   ]);
   const summary = billing.data as null | { balance_micros: number; month_usage_micros: number; plan_name: string };
+  const count = (table: string) => supabase.from(table).select("id", { count: "exact", head: true }).eq("org_id", org.id).then((r) => r.count ?? 0);
+  const [plansApproved, sandboxes, secrets, deploys, invites] = await Promise.all([
+    supabase.from("plans").select("id", { count: "exact", head: true }).eq("org_id", org.id).eq("status", "approved").then((r) => r.count ?? 0),
+    count("sandboxes"), count("project_secrets"), count("deployments"), count("invitations"),
+  ]);
+  const steps: Step[] = [
+    { key: "project", label: "Create your first project", hint: "Describe the app you want", href: "/new-project", done: (projects.data?.length ?? 0) > 0 },
+    { key: "plan", label: "Approve a plan", hint: "Chat with the planner, then approve", href: "/builder?to=build&at=plan", done: plansApproved > 0 },
+    { key: "sandbox", label: "Start a live preview", hint: "Run the app in its sandbox", href: "/builder?to=build&at=preview", done: sandboxes > 0 },
+    { key: "secret", label: "Add a secret", hint: "Keys your app needs, encrypted", href: "/integrations?to=secrets&at=set-secret", done: secrets > 0 },
+    { key: "deploy", label: "Deploy your app", hint: "Preview first, then production", href: "/deployments?to=deployments&at=deploy", done: deploys > 0 },
+    { key: "team", label: "Invite a teammate", hint: "Build together with roles", href: "/team#invite", done: (members.count ?? 0) > 1 || invites > 0 },
+  ];
 
   return (
     <>
       <PageHeader title={org.name} description="Your workspace at a glance. Everything below is live data." actions={<Link href="/new-project" className="btn btn-gradient">New project</Link>} />
+      <GettingStarted steps={steps} />
       <div className="grid gap-4 sm:grid-cols-3">
         <Stat label="Active members" value={String(members.count ?? 0)} href="/team" />
         <Stat label="Projects" value={String(projects.data?.length ?? 0)} href="/projects" />

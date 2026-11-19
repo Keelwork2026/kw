@@ -67,3 +67,11 @@ test("menu: every project tab maps to a studio in the menu", async () => {
   const slugs = new Set(MENU.flatMap((g) => g.items.map((i) => i.slug)));
   for (const t of PROJECT_TABS) assert.ok(slugs.has(TAB_TO_MENU[t.slug]), `tab "${t.slug}" maps to an unknown menu item`);
 });
+
+test("quick search: every word must match", async () => {
+  const { matches } = await import("./menu");
+  const e = { label: "Billing and Usage › Buy credits", hint: "Top up your balance", group: "Workspace" };
+  assert.ok(matches(e, "buy cred"));
+  assert.ok(matches(e, "workspace top"));
+  assert.ok(!matches(e, "buy deploy"));
+});

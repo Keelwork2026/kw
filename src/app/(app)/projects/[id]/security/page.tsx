@@ -30,10 +30,10 @@ export default async function SecurityPage({ params, searchParams }: { params: P
         <span className="ml-auto text-xs text-muted">{scans?.map((s) => `${s.kind} ${s.status} ${timeAgo(s.created_at)}`).join(" · ")}</span>
       </div>
       <nav id="findings" aria-label="Filters" className="flex flex-wrap gap-1.5 text-sm">
-        {["open", "accepted", "resolved"].map((s) => <Link key={s} href={`?status=${s}${sp.severity ? `&severity=${sp.severity}` : ""}`} aria-current={status === s ? "page" : undefined} className={`pill min-h-9 px-3 ${status === s ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>{s}</Link>)}
+        {["open", "accepted", "resolved"].map((s) => <Link key={s} href={`?status=${s}${sp.severity ? `&severity=${sp.severity}` : ""}`} aria-current={status === s ? "page" : undefined} className={`pill min-h-9 px-3 ${status === s ? "bg-brand text-brand-contrast" : "border border-border"}`}>{s}</Link>)}
         <span className="mx-2 h-6 w-px bg-border" aria-hidden />
-        <Link href={`?status=${status}`} className={`pill min-h-9 px-3 ${!sp.severity ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>all severities</Link>
-        {SEVERITIES.map((s) => <Link key={s} href={`?status=${status}&severity=${s}`} aria-current={sp.severity === s ? "page" : undefined} className={`pill min-h-9 px-3 ${sp.severity === s ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>{s}</Link>)}
+        <Link href={`?status=${status}`} className={`pill min-h-9 px-3 ${!sp.severity ? "bg-brand text-brand-contrast" : "border border-border"}`}>all severities</Link>
+        {SEVERITIES.map((s) => <Link key={s} href={`?status=${status}&severity=${s}`} aria-current={sp.severity === s ? "page" : undefined} className={`pill min-h-9 px-3 ${sp.severity === s ? "bg-brand text-brand-contrast" : "border border-border"}`}>{s}</Link>)}
       </nav>
       {findings?.length ? (
         <ul className="grid gap-3">

@@ -73,7 +73,7 @@ export default async function BuilderPage({ params }: { params: Promise<{ id: st
           <h2 id="chat" className="border-b border-border px-5 py-3 text-lg">Chat</h2>
           <ol className="flex-1 space-y-3 overflow-y-auto p-5" aria-live="polite">
             {messages.data?.length ? messages.data.map((m) => (
-              <li key={m.id} className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${m.role === "user" ? "ml-auto bg-[#0b1f3a] text-white" : m.role === "assistant" ? "bg-surface-2" : "border border-dashed border-border text-muted"}`}>
+              <li key={m.id} className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${m.role === "user" ? "ml-auto bg-brand text-brand-contrast" : m.role === "assistant" ? "bg-surface-2" : "border border-dashed border-border text-muted"}`}>
                 <p className="whitespace-pre-wrap">{m.content}</p>
                 <p className={`mt-1 text-[11px] ${m.role === "user" ? "text-white/70" : "text-muted"}`}>{m.role === "assistant" ? "Software Architect" : m.role === "system" ? "Keelwork" : "You"} · {timeAgo(m.created_at)}</p>
               </li>

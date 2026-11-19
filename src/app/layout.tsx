@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { cookies } from "next/headers";
+import { themeFromCookie, THEME_COOKIE } from "@/lib/theme";
 import { Inter, Space_Grotesk, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -12,9 +14,10 @@ export const metadata: Metadata = {
   description: "Turn ideas into real apps and websites by chatting with AI. Design it, ship it, own every line.",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const theme = themeFromCookie((await cookies()).get(THEME_COOKIE)?.value);
   return (
-    <html lang="en" className={`${inter.variable} ${grotesk.variable} ${serif.variable} ${mono.variable}`}>
+    <html lang="en" data-theme={theme === "system" ? undefined : theme} className={`${inter.variable} ${grotesk.variable} ${serif.variable} ${mono.variable}`}>
       <body className="min-h-dvh bg-bg text-text">{children}</body>
     </html>
   );

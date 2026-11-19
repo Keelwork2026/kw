@@ -2,12 +2,12 @@ import Link from "next/link";
 import { HeroPrompt } from "@/components/marketing/hero-prompt";
 
 const TEMPLATES = [
-  { slug: "studio-bookings", name: "Studio Bookings", body: "Class schedules, passes and payments.", from: "#3d2bff", to: "#7a6cff" },
-  { slug: "folio", name: "Folio", body: "Case studies that load like magazines.", from: "#007f86", to: "#3ccfd0" },
-  { slug: "pulse-analytics", name: "Pulse Analytics", body: "A SaaS dashboard with teams and charts.", from: "#0b78a0", to: "#2f7bff" },
-  { slug: "clay-and-co", name: "Clay & Co", body: "A small shop with a big personality.", from: "#14a36b", to: "#7bd88f" },
-  { slug: "streaks", name: "Streaks", body: "Habits, streaks and an evening nudge.", from: "#c98a00", to: "#ffb703" },
-  { slug: "launchpad", name: "Launchpad", body: "A waitlist page that converts.", from: "#0b1f3a", to: "#3d2bff" },
+  { slug: "studio-bookings", name: "Studio Bookings", body: "Class schedules, passes and payments.", from: "#ff5c8a", to: "#ffb48a" },
+  { slug: "folio", name: "Folio", body: "Case studies that load like magazines.", from: "#8b6cff", to: "#ff9ec0" },
+  { slug: "pulse-analytics", name: "Pulse Analytics", body: "A SaaS dashboard with teams and charts.", from: "#ff8a4c", to: "#ffc46b" },
+  { slug: "clay-and-co", name: "Clay & Co", body: "A small shop with a big personality.", from: "#3fb37f", to: "#c6e9a7" },
+  { slug: "streaks", name: "Streaks", body: "Habits, streaks and an evening nudge.", from: "#ffb347", to: "#ffe08a" },
+  { slug: "launchpad", name: "Launchpad", body: "A waitlist page that converts.", from: "#1c1b19", to: "#c7254e" },
 ];
 
 const CAPTIONS = ["a booking app", "a portfolio", "a client portal", "an online shop"];
@@ -18,11 +18,11 @@ export default function HomePage() {
       {/* 1. Hero */}
       <section className="relative overflow-hidden px-4 pb-24 pt-20 text-center">
         <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div className="kw-blob-a absolute -left-20 top-10 h-96 w-96 rounded-full bg-[#3d2bff]/25 blur-3xl" />
-          <div className="kw-blob-b absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#007f86]/25 blur-3xl" />
-          <div className="kw-blob-c absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-[#0b78a0]/25 blur-3xl" />
-          <div className="kw-blob-a absolute bottom-10 right-1/4 h-64 w-64 rounded-full bg-[#2f7bff]/20 blur-3xl" />
-          <div className="kw-blob-b absolute left-1/2 top-1/3 h-40 w-40 rounded-full bg-[#c6f43a]/30 blur-3xl" />
+          <div className="kw-blob-a absolute -left-20 top-10 h-96 w-96 rounded-full bg-[#8b6cff]/25 blur-3xl" />
+          <div className="kw-blob-b absolute right-0 top-0 h-[28rem] w-[28rem] rounded-full bg-[#ff5c8a]/25 blur-3xl" />
+          <div className="kw-blob-c absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-[#ff8a4c]/25 blur-3xl" />
+          <div className="kw-blob-a absolute bottom-10 right-1/4 h-64 w-64 rounded-full bg-[#ffc46b]/25 blur-3xl" />
+          <div className="kw-blob-b absolute left-1/2 top-1/3 h-40 w-40 rounded-full bg-[#ff9ec0]/30 blur-3xl" />
         </div>
         <div className="relative mx-auto max-w-6xl">
           <Link href="/sign-up" className="pill mx-auto border border-border bg-surface px-4 py-2 text-sm">
@@ -76,18 +76,18 @@ export default function HomePage() {
           <Bento title="A team, not a bot" body="Architect, database, backend, frontend, QA, security and docs agents review each other." />
           <Bento title="Live in one click" body="Deploy to your own Cloudflare account. Health-checked, with automatic rollback." />
           <Bento dark title="Every line is yours" body="Export the whole repository any time. No lock-in, no secrets in the archive." className="md:col-span-3">
-            <pre aria-hidden className="mt-6 overflow-x-auto rounded-2xl bg-black/30 p-4 text-xs text-[#c6f43a]">{`export async function GET() {\n  return Response.json({ ok: true });\n}`}</pre>
+            <pre aria-hidden className="mt-6 overflow-x-auto rounded-2xl bg-black/30 p-4 text-xs text-ink-accent">{`export async function GET() {\n  return Response.json({ ok: true });\n}`}</pre>
           </Bento>
         </div>
       </section>
 
       {/* 5. Steps band */}
-      <section className="bg-[#0b1f3a] px-4 py-24 text-white" aria-labelledby="steps-h">
+      <section className="bg-ink px-4 py-24 text-ink-text" aria-labelledby="steps-h">
         <div className="mx-auto max-w-7xl">
-          <h2 id="steps-h" className="max-w-3xl text-4xl md:text-6xl">From idea to launched <span className="font-serif font-normal italic text-[#c6f43a]">before your coffee cools.</span></h2>
+          <h2 id="steps-h" className="max-w-3xl text-4xl md:text-6xl">From idea to launched <span className="font-serif font-normal italic text-ink-accent">before your coffee cools.</span></h2>
           <ol className="mt-12 grid gap-6 md:grid-cols-3">
             {[["01", "Describe it", "Say what you want. Keelwork turns it into a plan you can read."], ["02", "Shape it", "Approve the plan, then click and chat until it's right."], ["03", "Ship it", "Tests run, security checks pass, and it goes live on your domain."]].map(([n, t, b]) => (
-              <li key={n} className="rounded-3xl border border-white/15 p-6"><p className="font-mono text-sm text-[#c6f43a]">{n}</p><p className="mt-3 font-display text-2xl font-bold">{t}</p><p className="mt-2 text-white/80">{b}</p></li>
+              <li key={n} className="rounded-3xl border border-white/15 p-6"><p className="font-mono text-sm text-ink-accent">{n}</p><p className="mt-3 font-display text-2xl font-bold">{t}</p><p className="mt-2 text-white/80">{b}</p></li>
             ))}
           </ol>
         </div>
@@ -106,11 +106,11 @@ export default function HomePage() {
 
       {/* 7. Final CTA */}
       <section className="px-4 pb-28" aria-labelledby="cta-h">
-        <div className="mx-auto max-w-4xl rounded-[36px] p-10 text-center text-white md:p-16" style={{ background: "linear-gradient(135deg, #3d2bff, #007f86)" }}>
+        <div className="mx-auto max-w-4xl rounded-[36px] p-10 text-center text-white md:p-16" style={{ background: "var(--grad-button)" }}>
           <h2 id="cta-h" className="text-4xl md:text-6xl">What will you make today?</h2>
           <form action="/sign-up" method="get" className="mx-auto mt-8 flex max-w-2xl flex-col gap-3 sm:flex-row">
             <label htmlFor="cta-prompt" className="sr-only">Describe your idea</label>
-            <input id="cta-prompt" name="prompt" maxLength={2000} placeholder="Describe your idea" className="input flex-1 border-white/30 text-[#0b1f3a]" />
+            <input id="cta-prompt" name="prompt" maxLength={2000} placeholder="Describe your idea" className="input flex-1 border-white/30 text-[#1c1b19]" />
             <button type="submit" className="btn bg-highlight text-highlight-ink">Start free</button>
           </form>
           <p className="mt-4 text-sm text-white/90">No credit card. Your code, always.</p>
@@ -122,7 +122,7 @@ export default function HomePage() {
 
 function Bento({ title, body, dark, className = "", children }: { title: string; body: string; dark?: boolean; className?: string; children?: React.ReactNode }) {
   return (
-    <div className={`rounded-[28px] border p-7 ${dark ? "border-transparent bg-[#0b1f3a] text-white" : "border-border bg-surface"} ${className}`}>
+    <div className={`rounded-[28px] border p-7 ${dark ? "border-transparent bg-ink text-ink-text" : "border-border bg-surface"} ${className}`}>
       <p className="font-display text-2xl font-bold">{title}</p>
       <p className={`mt-2 ${dark ? "text-white/80" : "text-muted"}`}>{body}</p>
       {children}

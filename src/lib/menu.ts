@@ -293,3 +293,9 @@ export const TAB_TO_MENU: Record<ProjectTab, string> = {
 };
 
 export const PROJECT_PATH_RE = /^\/projects\/([0-9a-f-]{36})(?:\/([a-z]+))?/i;
+
+/** Quick search: every lower-case word of the query must appear in the entry's label, hint or group. */
+export function matches(e: { label: string; hint: string; group: string }, query: string): boolean {
+  const hay = `${e.label} ${e.hint} ${e.group}`.toLowerCase();
+  return query.toLowerCase().split(/\s+/).filter(Boolean).every((w) => hay.includes(w));
+}

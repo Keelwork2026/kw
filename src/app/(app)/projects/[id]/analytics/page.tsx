@@ -41,7 +41,7 @@ export default async function AnalyticsPage({ params, searchParams }: { params: 
   return (
     <div className="grid gap-6">
       <div className="flex flex-wrap items-center gap-2 text-sm">
-        {[7, 30, 90].map((d) => <a key={d} href={`?days=${d}`} aria-current={d === days ? "page" : undefined} className={`pill min-h-9 px-3 ${d === days ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>Last {d} days</a>)}
+        {[7, 30, 90].map((d) => <a key={d} href={`?days=${d}`} aria-current={d === days ? "page" : undefined} className={`pill min-h-9 px-3 ${d === days ? "bg-brand text-brand-contrast" : "border border-border"}`}>Last {d} days</a>)}
         <span className="ml-auto text-xs text-muted">Collector: <code className="break-all">{collector}</code></span>
       </div>
       <div className="grid gap-4 sm:grid-cols-2"><div className="panel p-5"><p className="text-sm text-muted">Visitors</p><p className="font-display text-3xl font-bold">{s.visitors}</p></div><div className="panel p-5"><p className="text-sm text-muted">Page views</p><p className="font-display text-3xl font-bold">{s.pageviews}</p></div></div>

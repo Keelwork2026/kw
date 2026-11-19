@@ -31,7 +31,7 @@ export const MENUS: Menu[] = [
       { title: "Interaction Effects", description: "Scroll, hover and gesture effects that respect reduced motion.", icon: "wave", tint: "pink", href: "/sign-up" },
       { title: "3D Scenes", description: "Interactive 3D models, lights and cameras in the browser.", icon: "cube", tint: "navy", href: "/sign-up", badge: "New" },
     ],
-    feature: { eyebrow: "New", title: "Agents now test their own work", from: "#3d2bff", to: "#007f86", href: "/sign-up" },
+    feature: { eyebrow: "New", title: "Agents now test their own work", from: "#c7254e", to: "#c2410c", href: "/sign-up" },
     footnote: { text: "Start free. Your code always lives in your own GitHub.", link: "Compare plans", href: "/pricing" },
   },
   {
@@ -46,7 +46,7 @@ export const MENUS: Menu[] = [
       { title: "Internal tools", description: "Dashboards and admin panels your team will use.", icon: "wrench", tint: "green", href: "/sign-up" },
       { title: "Enterprise", description: "Isolation, audit logs and support you control.", icon: "building", tint: "navy", href: "/#teams" },
     ],
-    feature: { eyebrow: "For designers", title: "Keep your craft. Skip the handoff.", from: "#0b78a0", to: "#2f7bff", href: "/sign-up" },
+    feature: { eyebrow: "For designers", title: "Keep your craft. Skip the handoff.", from: "#6a4bdc", to: "#c7254e", href: "/sign-up" },
     footnote: { text: "Building for a larger organization?", link: "Talk to our team", href: "/#teams" },
   },
   {
@@ -61,7 +61,7 @@ export const MENUS: Menu[] = [
       { title: "Inspiration", description: "Templates other people remixed.", icon: "star", tint: "yellow", href: "/#templates" },
       { title: "System status", description: "Is everything up right now?", icon: "pulse", tint: "green", href: "/api/health" },
     ],
-    feature: { eyebrow: "Guide", title: "Your first app in one sitting", from: "#0b1f3a", to: "#0b78a0", href: "/sign-up" },
+    feature: { eyebrow: "Guide", title: "Your first app in one sitting", from: "#1c1b19", to: "#6a4bdc", href: "/sign-up" },
     footnote: { text: "Need a hand?", link: "Get help", href: "/sign-in?next=/docs" },
   },
 ];

@@ -21,8 +21,8 @@ export default async function MarketplacePage({ searchParams }: { searchParams: 
     <>
       <PageHeader title="Marketplace" description="Free templates published by Keelwork users. Every one is scanned and reviewed by a person before it's listed." />
       <nav aria-label="Categories" className="mb-4 flex flex-wrap gap-1.5 text-sm">
-        <Link href="/marketplace" className={`pill min-h-9 px-3 ${!category ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>All</Link>
-        {CATEGORIES.map((c) => <Link key={c} href={`/marketplace?category=${c}`} aria-current={category === c ? "page" : undefined} className={`pill min-h-9 px-3 ${category === c ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>{c}</Link>)}
+        <Link href="/marketplace" className={`pill min-h-9 px-3 ${!category ? "bg-brand text-brand-contrast" : "border border-border"}`}>All</Link>
+        {CATEGORIES.map((c) => <Link key={c} href={`/marketplace?category=${c}`} aria-current={category === c ? "page" : undefined} className={`pill min-h-9 px-3 ${category === c ? "bg-brand text-brand-contrast" : "border border-border"}`}>{c}</Link>)}
       </nav>
       {items?.length ? (
         <ul id="browse" aria-label="Published templates" className="grid scroll-mt-6 gap-4 sm:grid-cols-2 lg:grid-cols-3">

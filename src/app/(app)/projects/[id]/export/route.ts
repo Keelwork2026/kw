@@ -12,7 +12,7 @@ import { decryptProjectSecrets } from "@/lib/secrets/load";
 export const dynamic = "force-dynamic";
 
 function page(status: number, title: string, body: string) {
-  const html = `<!doctype html><meta charset="utf-8"><title>${title}</title><body style="font-family:system-ui;max-width:640px;margin:4rem auto;padding:0 1rem;color:#0b1f3a;background:#fbf8f4"><h1>${title}</h1>${body}<p><a href="javascript:history.back()">Back</a></p></body>`;
+  const html = `<!doctype html><meta charset="utf-8"><title>${title}</title><body style="font-family:system-ui;max-width:640px;margin:4rem auto;padding:0 1rem;color:#1c1b19;background:#fbf8f4"><h1>${title}</h1>${body}<p><a href="javascript:history.back()">Back</a></p></body>`;
   return new Response(html, { status, headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" } });
 }
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => `&#${c.charCodeAt(0)};`);
