@@ -6,7 +6,7 @@ select kwtest.eq((select bool_and(allowed) from (select (public.take_tokens(repe
 select kwtest.eq((select allowed from public.take_tokens(repeat('a', 64), 3, 0.001)), false, 'and then refuses');
 select kwtest.ok((select retry_after_seconds from public.take_tokens(repeat('a', 64), 3, 0.001)) > 0, 'refusals say when to retry');
 select kwtest.throws('select public.take_tokens(''203.0.113.5'', 10, 1)', 'sha256', 'raw IPs and emails are never stored as keys');
-select kwtest.ok(public.readiness() ->> 'db' = 'true' and jsonb_array_length(public.readiness() -> 'migrations') = 14, 'readiness reports the database and all 14 migrations');
+select kwtest.ok(public.readiness() ->> 'db' = 'true' and jsonb_array_length(public.readiness() -> 'migrations') = 15, 'readiness reports the database and all 15 migrations');
 reset role;
 update public.rate_limits set updated_at = now() - interval '2 days' where key_hash = repeat('a', 64);
 set role service_role;
