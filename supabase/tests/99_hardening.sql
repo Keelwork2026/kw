@@ -22,4 +22,4 @@ select kwtest.eq((select count(*) from information_schema.column_privileges wher
 select kwtest.eq((select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and p.proname like '\_%'
   and (has_function_privilege('authenticated', p.oid, 'execute') or has_function_privilege('anon', p.oid, 'execute')))::int, 0, 'internal helpers are not callable by clients');
 select kwtest.eq((select count(*) from pg_proc p join pg_namespace n on n.oid = p.pronamespace where n.nspname = 'public' and has_function_privilege('anon', p.oid, 'execute'))::int, 0, 'anon cannot call any function');
-select kwtest.ok((select count(*) from keelwork.applied_migrations) = 14, 'all 14 migrations recorded themselves');
+select kwtest.ok((select count(*) from keelwork.applied_migrations) = 15, 'all 15 migrations recorded themselves');

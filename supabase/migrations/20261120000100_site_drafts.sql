@@ -88,10 +88,14 @@ begin
 end $$;
 grant execute on function public.site_draft_share(uuid, boolean) to authenticated;
 
--- Public read of a shared draft by its token (used by the /s/<token> page).
+-- Read of a shared draft by its token, for the server-rendered /s/<token>
+-- page only (service role). Clients never call it directly.
 create or replace function public.shared_site(p_token text) returns jsonb
 language sql stable security definer set search_path = '' as $$
   select d.site from public.site_drafts d
   where p_token is not null and char_length(p_token) >= 32 and d.share_token = p_token
 $$;
-grant execute on function public.shared_site(text) to anon, authenticated;
+revoke all on function public.shared_site(text) from public, anon, authenticated;
+grant execute on function public.shared_site(text) to service_role;
+
+select keelwork.finish_migration('20261120000100_site_drafts');
