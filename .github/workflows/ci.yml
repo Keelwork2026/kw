@@ -37,14 +37,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
-      - run: pnpm install --frozen-lockfile=false
+      # No lockfile is committed yet, so dependency caching is off and the
+      # install may resolve fresh versions. Commit pnpm-lock.yaml to pin them.
+      - run: pnpm install --no-frozen-lockfile
       - run: pnpm lint
+        if: ${{ !cancelled() }}
       - run: pnpm typecheck
+        if: ${{ !cancelled() }}
       - run: pnpm check
+        if: ${{ !cancelled() }}
       - run: pnpm test
+        if: ${{ !cancelled() }}
       - run: pnpm test:template
+        if: ${{ !cancelled() }}
       - run: pnpm build
+        if: ${{ !cancelled() }}
         env:
           NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
           NEXT_PUBLIC_SUPABASE_ANON_KEY: ci-placeholder-anon-key
