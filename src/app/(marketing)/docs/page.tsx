@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { requireOrg } from "@/lib/org";
 import { PageHeader } from "@/components/page-header";
 
 export const metadata = { title: "Documentation" };
@@ -26,10 +25,9 @@ const SECTIONS: { id: string; title: string; body: React.ReactNode }[] = [
 ];
 
 export default async function DocsPage() {
-  await requireOrg();
   return (
-    <>
-      <PageHeader title="Documentation" description="How Keelwork works, briefly." />
+    <div className="mx-auto max-w-7xl px-4 py-14">
+      <PageHeader title="Documentation" description="How Keelwork works — no sign-in needed. Step-by-step guides live in Tutorials." />
       <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
         <nav aria-label="On this page" className="hidden lg:block">
           <ul className="sticky top-6 grid gap-1 text-sm">{SECTIONS.map((s) => <li key={s.id}><a className="flex min-h-9 items-center rounded-lg px-2 hover:bg-surface-2" href={`#${s.id}`}>{s.title}</a></li>)}</ul>
@@ -43,6 +41,6 @@ export default async function DocsPage() {
           ))}
         </div>
       </div>
-    </>
+    </div>
   );
 }

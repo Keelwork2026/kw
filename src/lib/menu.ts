@@ -74,9 +74,10 @@ export const MENU: readonly MenuGroup[] = [
       },
       {
         slug: "templates", label: "Templates", hint: "Start from a reviewed template",
-        can: ["Start a project from a reviewed template", "Import a page from a website you're allowed to use"],
+        can: ["Start from one of nine designed starter templates", "Use a reviewed template from the marketplace", "Import a page from a website you're allowed to use"],
         children: [
-          { label: "Reviewed templates", hint: "Ready-made starting points", to: { path: "/templates#reviewed" } },
+          { label: "Starter templates", hint: "Nine designed starters, ready to build", to: { path: "/templates#starters" } },
+          { label: "Marketplace templates", hint: "Reviewed templates from others", to: { path: "/templates#reviewed" } },
           { label: "Import a website", hint: "Rebuild a page you own", to: { path: "/templates#import" } },
         ],
       },

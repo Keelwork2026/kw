@@ -20,8 +20,8 @@ export function SiteNav() {
 
   return (
     <div ref={ref} className="sticky top-0 z-40">
-      <Link href="/sign-up" className="block px-4 py-2 text-center text-sm font-semibold text-white" style={{ background: "var(--grad-button)" }}>
-        New · Agents now test their own work — try it free →
+      <Link href="/starters" className="block px-4 py-2 text-center text-sm font-semibold text-white" style={{ background: "var(--grad-button)" }}>
+        New · Nine designed starter templates, ready to build — try one free →
       </Link>
       <nav aria-label="Primary" className="border-b border-border bg-bg/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3">
@@ -42,9 +42,9 @@ export function SiteNav() {
                 {open === m.id ? <MegaPanel menu={m} /> : null}
               </li>
             ))}
-            <li><Link href="/#templates" className="flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-surface-2">Templates</Link></li>
+            <li><Link href="/starters" className="flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-surface-2">Templates</Link></li>
             <li><Link href="/pricing" className="flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-surface-2">Pricing</Link></li>
-            <li><Link href="/#teams" className="flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-surface-2">Enterprise</Link></li>
+            <li><Link href="/solutions/enterprise" className="flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-surface-2">Enterprise</Link></li>
           </ul>
           <div className="ml-auto hidden items-center gap-2 lg:flex">
             <Link href="/sign-in" className="btn btn-secondary">Log in</Link>
@@ -66,9 +66,9 @@ export function SiteNav() {
                 </ul>
               </details>
             ))}
-            <Link href="/#templates" className="flex min-h-12 items-center font-semibold">Templates</Link>
+            <Link href="/starters" className="flex min-h-12 items-center font-semibold">Templates</Link>
             <Link href="/pricing" className="flex min-h-12 items-center font-semibold">Pricing</Link>
-            <Link href="/#teams" className="flex min-h-12 items-center font-semibold">Enterprise</Link>
+            <Link href="/solutions/enterprise" className="flex min-h-12 items-center font-semibold">Enterprise</Link>
             <div className="mt-4 grid gap-2">
               <Link href="/sign-in" className="btn btn-secondary">Log in</Link>
               <Link href="/sign-up" className="btn btn-primary">Get started</Link>

@@ -20,8 +20,9 @@ export function safeRedirectPath(input: unknown, fallback = "/dashboard"): strin
 }
 
 /** Carries ?prompt= and ?template= from sign-up into the first project. */
-export function onboardingParams(input: { prompt?: unknown; template?: unknown }) {
-  const out: { prompt?: string; template?: string } = {};
+export function onboardingParams(input: { prompt?: unknown; template?: unknown; name?: unknown }) {
+  const out: { prompt?: string; template?: string; name?: string } = {};
+  if (typeof input.name === "string" && input.name.trim()) out.name = input.name.trim().replace(/[\u0000-\u001f\u007f]/g, "").slice(0, 80);
   if (typeof input.prompt === "string" && input.prompt.trim()) out.prompt = input.prompt.trim().slice(0, 2000);
   if (typeof input.template === "string" && /^[a-z0-9-]{1,48}$/.test(input.template)) out.template = input.template;
   return out;

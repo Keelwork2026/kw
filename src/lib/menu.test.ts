@@ -6,7 +6,8 @@ import { MENU, PROJECT_TAB_HINTS, hrefFor, pickerTarget, itemForPath } from "./m
 import { SECTIONS, PROJECT_TABS } from "./nav";
 
 const APP = join(process.cwd(), "src/app/(app)");
-const pageFile = (route: string) => join(APP, route, "page.tsx");
+const MARKETING = join(process.cwd(), "src/app/(marketing)");
+const pageFile = (route: string) => { const a = join(APP, route, "page.tsx"); return existsSync(a) ? a : join(MARKETING, route, "page.tsx"); };
 const projectTabFile = (tab: string) => join(APP, "projects/[id]", tab, "page.tsx");
 const hasAnchor = (file: string, id: string) => {
   const src = readFileSync(file, "utf8");

@@ -11,13 +11,14 @@ test("CSP: nonce, strict-dynamic, Supabase origins, preview frames, no framing o
   const d = Object.fromEntries(csp.split("; ").map((x) => { const [k, ...v] = x.split(" "); return [k, v]; }));
   assert.deepEqual(d["script-src"], ["'self'", `'nonce-${nonce}'`, "'strict-dynamic'"]);
   assert.deepEqual(d["connect-src"], ["'self'", "https://abc.supabase.co", "wss://abc.supabase.co"]);
-  assert.deepEqual(d["frame-src"], ["https://*.preview.keelwork.dev"]);
+  assert.deepEqual(d["frame-src"], ["'self'", "https://*.preview.keelwork.dev"]);
   assert.deepEqual(d["frame-ancestors"], ["'none'"]);
   assert.deepEqual(d["object-src"], ["'none'"]);
   assert.ok(d["form-action"]!.includes("https://checkout.stripe.com") && d["form-action"]!.includes("https://billing.stripe.com"));
   assert.ok(!csp.includes("unsafe-eval"));
   assert.ok(buildCsp({ nonce, dev: true }).includes("'unsafe-eval'"), "dev only");
-  assert.ok(buildCsp({ nonce }).includes("frame-src 'none'"));
+  assert.ok(buildCsp({ nonce }).includes("frame-src 'self';"));
+  assert.ok(buildCsp({ nonce, frameableBySelf: true }).includes("frame-ancestors 'self'"), "demo sites can be framed by Keelwork itself");
   assert.ok(!buildCsp({ nonce, supabaseUrl: "javascript:alert(1)" }).includes("javascript"));
   assert.notEqual(makeNonce(), makeNonce());
 });

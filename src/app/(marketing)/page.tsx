@@ -1,14 +1,10 @@
 import Link from "next/link";
 import { HeroPrompt } from "@/components/marketing/hero-prompt";
+import { STARTERS } from "@/lib/site/starters";
+import { FEATURES, SOLUTIONS, FAQ } from "@/lib/site/content";
+import { TemplatePreview } from "@/components/site/template-preview";
+import { Icon } from "@/components/marketing/icon";
 
-const TEMPLATES = [
-  { slug: "studio-bookings", name: "Studio Bookings", body: "Class schedules, passes and payments.", from: "#ff5c8a", to: "#ffb48a" },
-  { slug: "folio", name: "Folio", body: "Case studies that load like magazines.", from: "#8b6cff", to: "#ff9ec0" },
-  { slug: "pulse-analytics", name: "Pulse Analytics", body: "A SaaS dashboard with teams and charts.", from: "#ff8a4c", to: "#ffc46b" },
-  { slug: "clay-and-co", name: "Clay & Co", body: "A small shop with a big personality.", from: "#3fb37f", to: "#c6e9a7" },
-  { slug: "streaks", name: "Streaks", body: "Habits, streaks and an evening nudge.", from: "#ffb347", to: "#ffe08a" },
-  { slug: "launchpad", name: "Launchpad", body: "A waitlist page that converts.", from: "#1c1b19", to: "#c7254e" },
-];
 
 const CAPTIONS = ["a booking app", "a portfolio", "a client portal", "an online shop"];
 
@@ -47,18 +43,19 @@ export default function HomePage() {
         <div className="mt-10 flex w-max gap-5 kw-marquee">
           {[0, 1].map((copy) => (
             <ul key={copy} className="flex gap-5" aria-hidden={copy === 1 ? true : undefined}>
-              {TEMPLATES.map((t) => (
+              {STARTERS.map((t) => (
                 <li key={t.slug}>
-                  <Link href={`/sign-up?template=${t.slug}`} tabIndex={copy === 1 ? -1 : undefined} className="block w-72 rounded-3xl border border-border bg-bg p-3 hover:border-accent">
-                    <div className="h-40 rounded-2xl" style={{ background: `linear-gradient(140deg, ${t.from}, ${t.to})` }} />
+                  <Link href={`/starters/${t.slug}`} tabIndex={copy === 1 ? -1 : undefined} className="block w-80 rounded-3xl border border-border bg-bg p-3 hover:border-accent">
+                    <TemplatePreview starter={t} className="rounded-2xl" idSuffix={`-m${copy}`} />
                     <p className="mt-3 px-1 font-semibold">{t.name}</p>
-                    <p className="px-1 pb-1 text-sm text-muted">{t.body}</p>
+                    <p className="px-1 pb-1 text-sm text-muted">{t.tagline}</p>
                   </Link>
                 </li>
               ))}
             </ul>
           ))}
         </div>
+        <p className="mt-10 text-center"><Link href="/starters" className="btn btn-primary">Browse all {STARTERS.length} templates</Link></p>
       </section>
 
       {/* 4. Bento */}
@@ -86,7 +83,7 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl">
           <h2 id="steps-h" className="max-w-3xl text-4xl md:text-6xl">From idea to launched <span className="font-serif font-normal italic text-ink-accent">before your coffee cools.</span></h2>
           <ol className="mt-12 grid gap-6 md:grid-cols-3">
-            {[["01", "Describe it", "Say what you want. Keelwork turns it into a plan you can read."], ["02", "Shape it", "Approve the plan, then click and chat until it's right."], ["03", "Ship it", "Tests run, security checks pass, and it goes live on your domain."]].map(([n, t, b]) => (
+            {[["01", "Describe it", "Say what you want. Keelwork turns it into a plan you can read."], ["02", "Shape it", "Approve the plan, then click and chat until it's right."], ["03", "Ship it", "Tests run, security checks pass, and it goes live in your own hosting account."]].map(([n, t, b]) => (
               <li key={n} className="rounded-3xl border border-white/15 p-6"><p className="font-mono text-sm text-ink-accent">{n}</p><p className="mt-3 font-display text-2xl font-bold">{t}</p><p className="mt-2 text-white/80">{b}</p></li>
             ))}
           </ol>
@@ -101,7 +98,42 @@ export default function HomePage() {
             <div key={t} className="card"><p className="font-display text-xl font-bold">{t}</p><p className="mt-2 text-muted">{b}</p></div>
           ))}
         </div>
-        <Link href="/sign-up" className="mt-8 inline-block font-semibold text-accent hover:underline">Keelwork for teams →</Link>
+        <Link href="/solutions/enterprise" className="mt-8 inline-block font-semibold text-accent hover:underline">Keelwork for teams →</Link>
+      </section>
+
+      {/* Explore the product */}
+      <section className="mx-auto max-w-7xl px-4 pb-24" aria-labelledby="explore-h">
+        <h2 id="explore-h" className="max-w-3xl text-4xl md:text-5xl">Everything you need, <span className="font-serif font-normal italic">nothing you don&apos;t.</span></h2>
+        <ul className="mt-10 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+          {FEATURES.map((f) => (
+            <li key={f.slug}><Link href={`/product/${f.slug}`} className="group flex h-full gap-4 rounded-3xl border border-border bg-surface p-5 transition hover:-translate-y-0.5 hover:border-accent"><span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl tile-${f.tint}`}><Icon name={f.icon} /></span><span><span className="block font-semibold group-hover:underline">{f.title}</span><span className="block text-sm text-muted">{f.tagline}</span></span></Link></li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Made for */}
+      <section className="border-y border-border bg-surface px-4 py-20" aria-labelledby="made-h">
+        <div className="mx-auto max-w-7xl">
+          <h2 id="made-h" className="text-3xl md:text-4xl">Made for how you work</h2>
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {SOLUTIONS.map((s) => (
+              <li key={s.slug}><Link href={`/solutions/${s.slug}`} className="flex h-full flex-col rounded-3xl border border-border bg-bg p-6 hover:border-accent"><span className={`flex h-11 w-11 items-center justify-center rounded-2xl tile-${s.tint}`}><Icon name={s.icon} /></span><span className="mt-4 font-display text-xl font-bold">{s.title}</span><span className="mt-1 text-muted">{s.tagline}</span><span className="mt-4 text-sm font-semibold text-accent">See how →</span></Link></li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="mx-auto max-w-4xl px-4 py-24" aria-labelledby="faq-h">
+        <h2 id="faq-h" className="text-center text-3xl md:text-4xl">Questions, answered</h2>
+        <div className="mt-10 grid gap-3">
+          {FAQ.map((f) => (
+            <details key={f.q} className="group rounded-3xl border border-border bg-surface p-6 open:shadow-sm">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-lg font-bold">{f.q}<span aria-hidden className="text-2xl text-accent transition group-open:rotate-45">+</span></summary>
+              <p className="mt-3 leading-7 text-muted">{f.a}</p>
+            </details>
+          ))}
+        </div>
       </section>
 
       {/* 7. Final CTA */}

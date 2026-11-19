@@ -3,6 +3,8 @@ import { requireOrg } from "@/lib/org";
 import { PageHeader, EmptyState } from "@/components/page-header";
 import { ActionForm } from "@/components/action-form";
 import { importWebsite } from "./actions";
+import { STARTERS, starterHref } from "@/lib/site/starters";
+import { StarterCard } from "@/components/site/blocks";
 
 export const metadata = { title: "Templates" };
 
@@ -14,9 +16,16 @@ export default async function TemplatesPage() {
   ]);
   return (
     <>
-      <PageHeader title="Templates" description="Start from a reviewed template, or bring in the structure of a site you own." actions={<Link href="/marketplace" className="btn btn-secondary">Browse the marketplace</Link>} />
+      <PageHeader title="Templates" description="Start from a designed starter, a reviewed marketplace template, or the structure of a site you own." actions={<Link href="/marketplace" className="btn btn-secondary">Browse the marketplace</Link>} />
+      <section aria-labelledby="starters" className="mb-12">
+        <h2 id="starters" className="text-xl">Starter templates</h2>
+        <p className="mb-4 text-sm text-muted">Designed starting points. “Use this template” opens Create Project with the name and a detailed brief filled in — edit anything before planning.</p>
+        <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {STARTERS.map((s) => <li key={s.slug}><StarterCard s={s} href={starterHref(s, true)} /></li>)}
+        </ul>
+      </section>
       <section aria-labelledby="reviewed">
-        <h2 id="reviewed" className="mb-3 text-xl">Reviewed templates</h2>
+        <h2 id="reviewed" className="mb-3 text-xl">From the marketplace</h2>
         {items?.length ? (
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((i) => (

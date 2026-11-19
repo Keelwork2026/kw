@@ -15,7 +15,12 @@ function origin(url: string | undefined): string | null {
   try { const u = new URL(url); return u.protocol === "https:" || u.hostname === "localhost" ? u.origin : null; } catch { return null; }
 }
 
-export function buildCsp(o: { nonce: string; dev?: boolean; supabaseUrl?: string; previewBaseDomain?: string }): string {
+/**
+ * frameableBySelf: template demo sites (/demo/...) may be shown inside
+ * Keelwork's own template previews (same origin only); every other page
+ * refuses to be framed.
+ */
+export function buildCsp(o: { nonce: string; dev?: boolean; supabaseUrl?: string; previewBaseDomain?: string; frameableBySelf?: boolean }): string {
   const supa = origin(o.supabaseUrl);
   const supaWss = supa ? supa.replace(/^http/, "ws") : null;
   // Previews are https, except a *.localhost base (one-machine setups), which is http and may carry a port.
@@ -28,8 +33,8 @@ export function buildCsp(o: { nonce: string; dev?: boolean; supabaseUrl?: string
     ["img-src", ["'self'", "data:", "blob:", "https:"]],
     ["font-src", ["'self'", "data:"]],
     ["connect-src", ["'self'", ...(supa ? [supa] : []), ...(supaWss ? [supaWss] : [])]],
-    ["frame-src", preview ? [preview] : ["'none'"]],
-    ["frame-ancestors", ["'none'"]],
+    ["frame-src", ["'self'", ...(preview ? [preview] : [])]],
+    ["frame-ancestors", [o.frameableBySelf ? "'self'" : "'none'"]],
     ["form-action", ["'self'", ...(supa ? [supa] : []), "https://checkout.stripe.com", "https://billing.stripe.com"]],
     ["base-uri", ["'self'"]],
     ["object-src", ["'none'"]],

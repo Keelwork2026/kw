@@ -2,6 +2,9 @@ import Link from "next/link";
 import { requireOrg } from "@/lib/org";
 import { PageHeader, EmptyState, StatusPill, formatMicros, timeAgo } from "@/components/page-header";
 import { GettingStarted, type Step } from "@/components/getting-started";
+import { Momentum } from "@/components/momentum";
+import { progress } from "@/lib/engagement";
+import { ideasForDay } from "@/lib/site/starters";
 
 export const metadata = { title: "Dashboard" };
 
@@ -21,6 +24,7 @@ export default async function DashboardPage() {
     supabase.from("plans").select("id", { count: "exact", head: true }).eq("org_id", org.id).eq("status", "approved").then((r) => r.count ?? 0),
     count("sandboxes"), count("project_secrets"), count("deployments"), count("invitations"),
   ]);
+  const now = new Date();
   const steps: Step[] = [
     { key: "project", label: "Create your first project", hint: "Describe the app you want", href: "/new-project", done: (projects.data?.length ?? 0) > 0 },
     { key: "plan", label: "Approve a plan", hint: "Chat with the planner, then approve", href: "/builder?to=build&at=plan", done: plansApproved > 0 },
@@ -33,6 +37,7 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader title={org.name} description="Your workspace at a glance. Everything below is live data." actions={<Link href="/new-project" className="btn btn-gradient">New project</Link>} />
+      <Momentum last={(projects.data?.[0] as { id: string; name: string; status: string; updated_at: string } | undefined) ?? null} progress={progress(steps)} ideas={ideasForDay(now)} />
       <GettingStarted steps={steps} />
       <div className="grid gap-4 sm:grid-cols-3">
         <Stat label="Active members" value={String(members.count ?? 0)} href="/team" />

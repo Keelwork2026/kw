@@ -16,7 +16,7 @@ test("preview: https everywhere except a *.localhost base domain, which may carr
 
 test("preview: the CSP frames http previews only for a localhost base", () => {
   const frame = (base: string) => buildCsp({ nonce: "n", previewBaseDomain: base }).split("; ").find((d) => d.startsWith("frame-src"));
-  assert.equal(frame("preview.localhost:8080"), "frame-src http://*.preview.localhost:8080");
-  assert.equal(frame("preview.keelwork.dev"), "frame-src https://*.preview.keelwork.dev");
-  assert.equal(frame("evil.com:80"), "frame-src 'none'");
+  assert.equal(frame("preview.localhost:8080"), "frame-src 'self' http://*.preview.localhost:8080");
+  assert.equal(frame("preview.keelwork.dev"), "frame-src 'self' https://*.preview.keelwork.dev");
+  assert.equal(frame("evil.com:80"), "frame-src 'self'");
 });

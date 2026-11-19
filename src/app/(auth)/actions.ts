@@ -45,8 +45,8 @@ export async function signUp(_prev: ActionResult, form: FormData): Promise<Actio
   const limited = await limitOrMessage("signIn", `${email}|${await clientIp()}`);
   if (limited) return { ok: false, message: limited };
 
-  const carry = onboardingParams({ prompt: str(form, "prompt"), template: str(form, "template") });
-  const next = new URLSearchParams({ ...(carry.prompt ? { prompt: carry.prompt } : {}), ...(carry.template ? { template: carry.template } : {}) });
+  const carry = onboardingParams({ prompt: str(form, "prompt"), template: str(form, "template"), name: str(form, "name") });
+  const next = new URLSearchParams({ ...(carry.prompt ? { prompt: carry.prompt } : {}), ...(carry.template ? { template: carry.template } : {}), ...(carry.name ? { name: carry.name } : {}) });
   const nextPath = `/new-project${next.size ? `?${next}` : ""}`;
 
   const supabase = await createClient();
