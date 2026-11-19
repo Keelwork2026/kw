@@ -18,6 +18,8 @@ export function PreviewPane(props: {
   const [design, setDesign] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
   const [selection, setSelection] = useState<DesignSelection | null>(null);
+  const [device, setDevice] = useState<"desktop" | "tablet" | "mobile">("desktop");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!design) return;
@@ -41,10 +43,13 @@ export function PreviewPane(props: {
       <div className="flex flex-wrap items-center gap-2">
         <span className="flex items-center gap-2 text-sm font-medium"><span aria-hidden className="kw-live h-2.5 w-2.5 rounded-full bg-success" />Live preview of your app</span>
         <div className="ml-auto flex flex-wrap gap-2">
+          <div role="group" aria-label="Preview size" className="flex rounded-full border border-border p-0.5">
+            {(["desktop", "tablet", "mobile"] as const).map((d) => <button key={d} type="button" aria-pressed={device === d} onClick={() => setDevice(d)} className={`rounded-full px-3 py-1 text-xs font-semibold capitalize ${device === d ? "bg-brand text-brand-contrast" : "text-muted hover:text-text"}`}>{d}</button>)}
+          </div>
           {props.canDesign && props.designAvailable !== false && props.previewInspectUrl ? (
-            <button type="button" className={`btn min-h-10 ${design ? "btn-primary" : "btn-secondary"}`} aria-pressed={design} onClick={() => { setDesign(!design); setSelection(null); setReloadKey((k) => k + 1); }}>Design mode</button>
+            <button type="button" className={`btn min-h-10 ${design ? "btn-primary" : "btn-secondary"}`} aria-pressed={design} onClick={() => { setDesign(!design); setSelection(null); setReloadKey((k) => k + 1); setLoading(true); }}>Design mode</button>
           ) : null}
-          <button type="button" className="btn btn-secondary min-h-10" onClick={() => setReloadKey((k) => k + 1)}>Restart</button>
+          <button type="button" className="btn btn-secondary min-h-10" onClick={() => { setReloadKey((k) => k + 1); setLoading(true); }}>Restart</button>
           <a className="btn btn-secondary min-h-10" href={props.previewUrl} target="_blank" rel="noopener noreferrer">Open in new tab</a>
         </div>
       </div>
@@ -60,13 +65,17 @@ export function PreviewPane(props: {
           <button type="button" className="mt-2 text-sm font-semibold underline" onClick={() => setSelection(null)}>Clear</button>
         </div>
       ) : design ? <p className="design-bar rounded-2xl p-3 text-sm">Click any element in the preview to select it.</p> : null}
-      <iframe
-        key={reloadKey}
-        src={src}
-        title="Live preview of your app"
-        className="h-[560px] w-full rounded-2xl border border-border bg-white"
-        sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
-      />
+      <div className="relative mx-auto w-full transition-[max-width] duration-300" style={{ maxWidth: { desktop: "100%", tablet: "820px", mobile: "390px" }[device] }}>
+        {loading && <div className="absolute inset-0 z-10 grid place-items-center rounded-2xl bg-surface/80 text-sm text-muted" role="status"><span className="animate-pulse">Loading your app…</span></div>}
+        <iframe
+          key={reloadKey}
+          src={src}
+          title="Live preview of your app"
+          className={`w-full rounded-2xl border border-border bg-white ${device === "mobile" ? "h-[720px]" : "h-[560px]"}`}
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
+          onLoad={() => setLoading(false)}
+        />
+      </div>
     </div>
   );
 }

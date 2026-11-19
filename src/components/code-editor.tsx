@@ -11,6 +11,9 @@ import type { Extension } from "@codemirror/state";
  * visible editing and keeps the hidden textarea in sync, so the form posts
  * exactly what the person sees. CodeMirror is imported on demand so other
  * pages don't pay for it.
+ *
+ * Unsaved edits are kept as a local draft in this browser (never sent
+ * anywhere) and offered back if the page is closed before saving.
  */
 export function CodeEditor({
   id,
@@ -30,6 +33,24 @@ export function CodeEditor({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const hostRef = useRef<HTMLDivElement>(null);
   const [enhanced, setEnhanced] = useState(false);
+  const [draft, setDraft] = useState<string | null>(null);
+  const [docVersion, setDocVersion] = useState(0);
+  const key = `kw-draft:${id}:${hash(value)}`;
+
+  // Offer a draft left from an earlier visit; clear it when the form is saved.
+  useEffect(() => {
+    if (readOnly) return;
+    try { const d = localStorage.getItem(key); if (d !== null && d !== value) setDraft(d); } catch { /* storage unavailable */ }
+    const form = textareaRef.current?.form;
+    const clear = () => { try { localStorage.removeItem(key); } catch { /* ignore */ } };
+    form?.addEventListener("submit", clear);
+    return () => form?.removeEventListener("submit", clear);
+  }, [key, value, readOnly]);
+
+  const remember = (text: string) => {
+    if (readOnly) return;
+    try { if (text === value) localStorage.removeItem(key); else localStorage.setItem(key, text); } catch { /* storage full or unavailable */ }
+  };
 
   useEffect(() => {
     let destroyed = false;
@@ -54,7 +75,7 @@ export function CodeEditor({
             EditorState.readOnly.of(readOnly),
             EditorView.editable.of(!readOnly),
             EditorView.contentAttributes.of({ "aria-label": label, ...(readOnly ? { "aria-readonly": "true" } : {}) }),
-            EditorView.updateListener.of((u) => { if (u.docChanged) textarea.value = u.state.doc.toString(); }),
+            EditorView.updateListener.of((u) => { if (u.docChanged) { textarea.value = u.state.doc.toString(); remember(textarea.value); } }),
             theme(EditorView),
             ...(lang ? [lang] : []),
           ],
@@ -64,10 +85,24 @@ export function CodeEditor({
       setEnhanced(true);
     })().catch(() => { /* keep the plain textarea if the editor can't load */ });
     return () => { destroyed = true; destroy?.(); };
-  }, [language, readOnly, label]);
+  }, [language, readOnly, label, docVersion]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const restore = () => {
+    if (draft === null || !textareaRef.current) return;
+    textareaRef.current.value = draft;
+    setDraft(null);
+    setEnhanced(false);
+    setDocVersion((v) => v + 1); // rebuild the editor from the restored text
+  };
 
   return (
     <>
+      {draft !== null && (
+        <p role="status" className="notice mb-2 flex flex-wrap items-center gap-2 text-sm">You have unsaved changes to this file from an earlier visit.
+          <button type="button" className="btn btn-secondary min-h-8 px-3" onClick={restore}>Restore them</button>
+          <button type="button" className="text-sm underline" onClick={() => { try { localStorage.removeItem(key); } catch { /* ignore */ } setDraft(null); }}>Discard</button>
+        </p>
+      )}
       <textarea
         ref={textareaRef}
         id={id}
@@ -77,6 +112,7 @@ export function CodeEditor({
         spellCheck={false}
         wrap="off"
         aria-label={label}
+        onChange={(e) => remember(e.target.value)}
         hidden={enhanced}
         className="h-[62vh] w-full resize-y rounded-xl border border-border bg-surface-2 p-3 font-mono text-[13px] leading-5"
       />
@@ -112,4 +148,11 @@ function theme(EditorView: typeof import("@codemirror/view").EditorView): Extens
     ".cm-cursor": { borderLeftColor: "var(--text)" },
     "&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection": { backgroundColor: "color-mix(in srgb, var(--accent) 25%, transparent)" },
   });
+}
+
+/** Short content hash, so a draft only applies to the version it was made from. */
+function hash(s: string): string {
+  let h = 5381;
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0;
+  return (h >>> 0).toString(36);
 }
