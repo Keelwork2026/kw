@@ -20,7 +20,7 @@ export default async function TeamPage() {
     <>
       <PageHeader title="Team" description="Members, roles and invitations. An organization always keeps at least one active owner." />
       <div className="panel overflow-x-auto">
-        <table className="w-full min-w-[640px] text-left text-sm">
+        <table id="members" aria-label="Members" className="w-full min-w-[640px] scroll-mt-6 text-left text-sm">
           <caption className="sr-only">Members</caption>
           <thead className="text-muted"><tr><th className="p-4">Member</th><th className="p-4">Role</th><th className="p-4">Status</th><th className="p-4"><span className="sr-only">Actions</span></th></tr></thead>
           <tbody>
@@ -75,7 +75,7 @@ export default async function TeamPage() {
             </ActionForm>
           </div>
           <div className="panel p-6">
-            <h2 className="text-xl">Open invitations</h2>
+            <h2 id="invitations" className="text-xl">Open invitations</h2>
             {invites.data?.length ? (
               <ul className="mt-3 grid gap-3 text-sm">
                 {invites.data.map((i) => (

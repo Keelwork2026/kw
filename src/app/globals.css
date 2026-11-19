@@ -191,3 +191,7 @@ code, kbd, pre, samp { font-family: var(--font-mono); }
   }
   .kw-rise { transform: none; opacity: 1; }
 }
+
+/* In-page anchors from menus land a little below the top edge. */
+[id] { scroll-margin-top: 1.5rem; }
+@media (prefers-reduced-motion: no-preference) { html, main { scroll-behavior: smooth; } }

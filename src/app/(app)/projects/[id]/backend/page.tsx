@@ -24,8 +24,8 @@ export default async function BackendPage({ params }: { params: Promise<{ id: st
     <div className="grid gap-6">
       <p className="text-sm text-muted">Found by reading the source. Checks are heuristics: a ✓ means the pattern was found, not that the code is correct.</p>
       {[["API routes", routes], ["Server actions and client code", actions]].map(([title, list]) => (
-        <section key={title as string} className="panel overflow-x-auto">
-          <h2 className="px-5 pt-4 text-lg">{title as string}</h2>
+        <section key={title as string} className="panel overflow-x-auto" aria-labelledby={title === "API routes" ? "routes" : "actions"}>
+          <h2 id={title === "API routes" ? "routes" : "actions"} className="px-5 pt-4 text-lg">{title as string}</h2>
           {(list as RouteReport[]).length ? (
             <table className="mt-2 w-full min-w-[720px] text-left text-sm">
               <thead className="text-muted"><tr><th className="px-5 py-2">Route / file</th><th className="px-5 py-2">Methods</th><th className="px-5 py-2">Caller checked</th><th className="px-5 py-2">Input validated</th><th className="px-5 py-2">Issues</th></tr></thead>

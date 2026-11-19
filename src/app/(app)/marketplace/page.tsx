@@ -25,7 +25,7 @@ export default async function MarketplacePage({ searchParams }: { searchParams: 
         {CATEGORIES.map((c) => <Link key={c} href={`/marketplace?category=${c}`} aria-current={category === c ? "page" : undefined} className={`pill min-h-9 px-3 ${category === c ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>{c}</Link>)}
       </nav>
       {items?.length ? (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul id="browse" aria-label="Published templates" className="grid scroll-mt-6 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((i) => <li key={i.id}><Link href={`/marketplace/${i.id}`} className="panel block h-full p-5 hover:border-accent"><p className="font-semibold">{i.title}</p><p className="mt-1 line-clamp-3 text-sm text-muted">{i.description}</p><p className="mt-3 text-xs text-muted">{i.category}</p></Link></li>)}
         </ul>
       ) : <EmptyState title="No templates here yet" />}

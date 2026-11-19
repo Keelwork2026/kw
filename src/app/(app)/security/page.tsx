@@ -2,6 +2,6 @@ import { SectionPicker } from "@/components/section-picker";
 
 export const metadata = { title: "Security Centre" };
 
-export default function Page() {
-  return <SectionPicker slug="security" />;
+export default async function Page({ searchParams }: { searchParams: Promise<{ to?: string; at?: string; q?: string }> }) {
+  return <SectionPicker slug="security" searchParams={await searchParams} />;
 }

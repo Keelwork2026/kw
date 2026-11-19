@@ -23,13 +23,13 @@ export default async function SecurityPage({ params, searchParams }: { params: P
   return (
     <div className="grid gap-6">
       {criticalOpen ? <p role="alert" className="notice">Open critical findings block every deployment — from people and agents — until they&apos;re fixed.</p> : null}
-      <div className="flex flex-wrap items-center gap-2">
+      <div id="scans" className="flex flex-wrap items-center gap-2">
         {can("project.write") ? [["secrets", "Scan for secrets"], ["review", "Security review"], ["audit", "Dependency audit"]].map(([k, l]) => (
           <ActionForm key={k} action={requestChecks} submitLabel={l!} submitClassName="btn btn-secondary min-h-10"><input type="hidden" name="projectId" value={project.id} /><input type="hidden" name="kind" value={k} /></ActionForm>
         )) : null}
         <span className="ml-auto text-xs text-muted">{scans?.map((s) => `${s.kind} ${s.status} ${timeAgo(s.created_at)}`).join(" · ")}</span>
       </div>
-      <nav aria-label="Filters" className="flex flex-wrap gap-1.5 text-sm">
+      <nav id="findings" aria-label="Filters" className="flex flex-wrap gap-1.5 text-sm">
         {["open", "accepted", "resolved"].map((s) => <Link key={s} href={`?status=${s}${sp.severity ? `&severity=${sp.severity}` : ""}`} aria-current={status === s ? "page" : undefined} className={`pill min-h-9 px-3 ${status === s ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>{s}</Link>)}
         <span className="mx-2 h-6 w-px bg-border" aria-hidden />
         <Link href={`?status=${status}`} className={`pill min-h-9 px-3 ${!sp.severity ? "bg-[#0b1f3a] text-white" : "border border-border"}`}>all severities</Link>

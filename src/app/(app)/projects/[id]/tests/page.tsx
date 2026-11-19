@@ -24,7 +24,7 @@ export default async function TestsPage({ params, searchParams }: { params: Prom
     <div className="grid gap-6">
       {!canRun ? <Notice>Checks run inside the project&apos;s sandbox, which {brokerConfig() ? "isn't running — start it from the builder" : "isn't connected to this installation"}. Nothing can run until it is.</Notice> : null}
       {can("project.write") ? (
-        <div className="flex flex-wrap gap-2">
+        <div id="run" className="flex flex-wrap gap-2">
           {BUTTONS.map(([kind, label]) => (
             <ActionForm key={kind} action={requestChecks} submitLabel={label} submitClassName={`btn min-h-10 ${kind === "tests" ? "btn-primary" : "btn-secondary"}`}>
               <input type="hidden" name="projectId" value={project.id} /><input type="hidden" name="kind" value={kind} />

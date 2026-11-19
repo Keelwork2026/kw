@@ -30,7 +30,7 @@ export default async function DeploymentsPage({ params }: { params: Promise<{ id
       {missing.length ? <Notice>To deploy, add {missing.join(" and ")} on the <Link className="font-semibold underline" href={`/projects/${project.id}/secrets`}>Secrets tab</Link>. Deploy credentials are used only by the deploy service, never passed to your app.</Notice> : null}
       {critical ? <p role="alert" className="notice">{critical} open critical security finding{critical === 1 ? "" : "s"} block deployments. <Link className="font-semibold underline" href={`/projects/${project.id}/security`}>Review them</Link>.</p> : null}
       {manage && !missing.length ? (
-        <div className="flex flex-wrap gap-3">
+        <div id="deploy" className="flex flex-wrap gap-3">
           <ActionForm action={deploy} submitLabel="Deploy preview" submitClassName="btn btn-secondary"><input type="hidden" name="projectId" value={project.id} /><input type="hidden" name="environment" value="preview" /></ActionForm>
           <ActionForm action={deploy} submitLabel="Deploy production" submitClassName="btn btn-gradient" className="flex flex-wrap items-center gap-3">
             <input type="hidden" name="projectId" value={project.id} /><input type="hidden" name="environment" value="production" />
