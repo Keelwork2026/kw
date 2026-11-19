@@ -68,6 +68,8 @@ create policy site_drafts_delete on public.site_drafts for delete to authenticat
 create policy site_draft_versions_select on public.site_draft_versions for select to authenticated
   using (public.has_permission(org_id, 'project.read'));
 
+revoke all on public.site_drafts, public.site_draft_versions from anon, authenticated;
+revoke all on sequence public.site_draft_versions_id_seq from anon, authenticated;
 grant select, insert, update, delete on public.site_drafts to authenticated;
 grant select on public.site_draft_versions to authenticated;
 
