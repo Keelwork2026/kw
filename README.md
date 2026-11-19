@@ -65,7 +65,8 @@ Run in a Linux workspace with PostgreSQL 16.15 and Node 22.23 (tsx). Package ins
 | Every TS/TSX file parses; `"use server"` first and async-only exports; no client component imports server-only code (`scripts/check-sources.ts`) | **Passed** | 214 files |
 | `.env.example` lists every variable any process reads | **Passed** | in the unit count |
 | Bugs found by the checks and fixed during the build | **Fixed** | 8 — see below |
-| `pnpm install`, `next lint`, strict `tsc --noEmit`, `next build` | **Not run yet** | needs package-registry access; runs in CI on the first push |
+| `pnpm install`, `next lint`, strict `tsc --noEmit`, `next build` | **Passed in CI** | GitHub Actions, 19 Nov 2026; the first run found 15 type errors, fixed in `6db870a` |
+| Database checks and the backup/restore drill on GitHub's runners | **Passed in CI** | same 415 checks and drill as above, on Ubuntu 24.04 with PostgreSQL 16 |
 | k6 against staging | **Not run yet** | needs a staging deployment |
 | Real Kimi, DeepSeek, Brave, Cloudflare, Vercel, Stripe, Appwrite and CloudBase calls | **Not run yet** | adapters are tested against fakes only |
 | Real sandboxes and the agent worker end to end | **Not run yet** | needs a Docker host; the worker's task loop is tested with injected fakes |
@@ -74,7 +75,7 @@ Run in a Linux workspace with PostgreSQL 16.15 and Node 22.23 (tsx). Package ins
 
 Note on the unit count: the main suite has 139 tests and the template has 6, 145 together. Test counts are reported as `node:test` counts them (one `test()` = one test, each with several assertions).
 
-**Fixed during verification** (each caught by a check before commit): `decide_approval` missing an enum cast; a CTE inside a subquery in a test; `set_project_secret` letting a NULL `jsonb_typeof` slip through (plaintext envelopes would have been accepted); the support-grant policy calling an internal helper clients can't execute; the Cloudflare adapter crashing on an unknown asset hash; `toDotenv` rejecting one-letter names; import specifiers returned out of source order; file references inside `(…)` in stack traces being missed.
+**Fixed during verification** (each caught by a check before commit; CI later caught 15 type-only errors in three files, fixed in `6db870a`): `decide_approval` missing an enum cast; a CTE inside a subquery in a test; `set_project_secret` letting a NULL `jsonb_typeof` slip through (plaintext envelopes would have been accepted); the support-grant policy calling an internal helper clients can't execute; the Cloudflare adapter crashing on an unknown asset hash; `toDotenv` rejecting one-letter names; import specifiers returned out of source order; file references inside `(…)` in stack traces being missed.
 
 ## Not done yet
 
@@ -86,7 +87,6 @@ Note on the unit count: the main suite has 139 tests and the template has 6, 145
 - Prices are set in Stripe; the pricing page shows `[PRICE]` until real prices exist.
 - Automations need the runner (`pnpm runner`) deployed; until then runs stay queued and the UI says so.
 - The sandbox workspace is a tmpfs, as specified: stopping a sandbox discards its files (export first).
-- The Code view editor is a plain monospace textarea with language labels, not CodeMirror (no package installs were available).
 - Commits are one per phase (13), not the original's 17.
 
 ## How to run

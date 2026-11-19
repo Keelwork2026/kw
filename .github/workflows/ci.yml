@@ -37,8 +37,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      # No lockfile is committed yet, so dependency caching is off and the
-      # install may resolve fresh versions. Commit pnpm-lock.yaml to pin them.
+          cache: pnpm
+      # Installs the versions pinned in pnpm-lock.yaml. Not frozen: when a push
+      # changes package.json, the Lockfile workflow commits the updated lockfile
+      # separately, so this run resolves the new entries itself.
       - run: pnpm install --no-frozen-lockfile
       - run: pnpm lint
         if: ${{ !cancelled() }}
