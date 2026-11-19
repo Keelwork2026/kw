@@ -7,6 +7,7 @@ import { checkPath } from "@/lib/agents/policy";
 import { ActionForm } from "@/components/action-form";
 import { StatusPill, timeAgo } from "@/components/page-header";
 import { saveFile } from "./actions";
+import { CodeEditor } from "@/components/code-editor";
 
 export const metadata = { title: "Code" };
 
@@ -89,11 +90,10 @@ export default async function CodePage({ params, searchParams }: { params: Promi
                 <input type="hidden" name="path" value={editingPath} />
                 <input type="hidden" name="baseSha" value={currentSha} />
                 {at ? <input type="hidden" name="restoring" value={at} /> : null}
-                <label htmlFor="content" className="sr-only">Contents of {editingPath}</label>
-                <textarea id="content" name="content" defaultValue={content} spellCheck={false} wrap="off" className="h-[62vh] w-full resize-y rounded-xl border border-border bg-surface-2 p-3 font-mono text-[13px] leading-5" />
+                <CodeEditor key={`${editingPath}@${at ?? currentSha}`} id="content" name="content" value={content} language={languageFor(editingPath)} label={`Contents of ${editingPath}`} />
               </ActionForm>
             ) : (
-              <pre className="h-[62vh] overflow-auto rounded-xl border border-border bg-surface-2 p-3 font-mono text-[13px] leading-5">{content}</pre>
+              <CodeEditor key={`${editingPath}@${at ?? "ro"}`} id="content" value={content} language={languageFor(editingPath)} label={`Contents of ${editingPath} (read only)`} readOnly />
             )}
           </>
         ) : <p className="text-sm text-muted">{path ? "That file couldn't be read." : "Choose a file, or create one with New."}</p>}
