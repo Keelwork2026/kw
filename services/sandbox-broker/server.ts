@@ -287,5 +287,6 @@ if (process.argv[1] && /sandbox-broker\/server\.ts$/.test(process.argv[1])) {
     image: process.env.SANDBOX_IMAGE, network: process.env.SANDBOX_NETWORK, runtime: process.env.SANDBOX_RUNTIME,
   });
   const port = Number(process.env.PORT ?? 7070);
-  server.listen(port, () => console.log(`[broker] listening on :${port}`));
+  const host = process.env.HOST || "0.0.0.0";
+  server.listen(port, host, () => console.log(`[broker] listening on ${host}:${port}`));
 }

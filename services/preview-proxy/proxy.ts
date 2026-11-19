@@ -134,5 +134,6 @@ if (process.argv[1] && /preview-proxy\/proxy\.ts$/.test(process.argv[1])) {
     portFor: brokerPortLookup(need("BROKER_URL"), need("BROKER_TOKEN")),
   });
   const port = Number(process.env.PORT ?? 8080);
-  server.listen(port, () => console.log(`[preview-proxy] listening on :${port}`));
+  const host = process.env.HOST || "0.0.0.0";
+  server.listen(port, host, () => console.log(`[preview-proxy] listening on ${host}:${port}`));
 }

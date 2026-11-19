@@ -50,10 +50,23 @@ export function previewHostFor(projectId: string, baseDomain: string): string {
   return `p-${projectId}.${baseDomain}`;
 }
 
+/**
+ * Previews are served over https, except on a *.localhost base domain
+ * (e.g. "preview.localhost:8080") used to run everything on one machine:
+ * browsers resolve *.localhost to this computer and treat it as secure.
+ */
+export function isLocalPreviewDomain(baseDomain: string): boolean {
+  return /^([a-z0-9-]+\.)*localhost(:\d{2,5})?$/i.test(baseDomain);
+}
+
+export function previewOriginFor(projectId: string, baseDomain: string): string {
+  return `${isLocalPreviewDomain(baseDomain) ? "http" : "https"}://${previewHostFor(projectId, baseDomain)}`;
+}
+
 export function projectFromHost(host: string | undefined, baseDomain: string): string | null {
   if (!host) return null;
   const h = host.toLowerCase().replace(/:\d+$/, "");
-  const suffix = `.${baseDomain.toLowerCase()}`;
+  const suffix = `.${baseDomain.toLowerCase().replace(/:\d+$/, "")}`;
   if (!h.endsWith(suffix)) return null;
   const label = h.slice(0, -suffix.length);
   const m = /^p-([0-9a-f-]{36})$/.exec(label);

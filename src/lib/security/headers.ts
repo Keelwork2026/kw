@@ -18,7 +18,9 @@ function origin(url: string | undefined): string | null {
 export function buildCsp(o: { nonce: string; dev?: boolean; supabaseUrl?: string; previewBaseDomain?: string }): string {
   const supa = origin(o.supabaseUrl);
   const supaWss = supa ? supa.replace(/^http/, "ws") : null;
-  const preview = o.previewBaseDomain && /^[a-z0-9.-]+$/i.test(o.previewBaseDomain) ? `https://*.${o.previewBaseDomain}` : null;
+  // Previews are https, except a *.localhost base (one-machine setups), which is http and may carry a port.
+  const local = o.previewBaseDomain && /^([a-z0-9-]+\.)*localhost(:\d{2,5})?$/i.test(o.previewBaseDomain);
+  const preview = o.previewBaseDomain && (local || /^[a-z0-9.-]+$/i.test(o.previewBaseDomain)) ? `${local ? "http" : "https"}://*.${o.previewBaseDomain}` : null;
   const directives: [string, string[]][] = [
     ["default-src", ["'self'"]],
     ["script-src", ["'self'", `'nonce-${o.nonce}'`, "'strict-dynamic'", ...(o.dev ? ["'unsafe-eval'"] : [])]],
