@@ -1,12 +1,19 @@
 import Link from "next/link";
 import { HeroPrompt } from "@/components/marketing/hero-prompt";
-import { STARTERS } from "@/lib/site/starters";
+import { SITES, SITE_CATEGORIES, categorySlug, siteBySlug } from "@/lib/sites";
+import { SiteThumb } from "@/components/sites/site-card";
+import { Art } from "@/components/sites/art";
+import { HeroInterface } from "@/components/marketing/hero-interface";
 import { FEATURES, SOLUTIONS, FAQ } from "@/lib/site/content";
-import { TemplatePreview } from "@/components/site/template-preview";
 import { Icon } from "@/components/marketing/icon";
 
 
 const CAPTIONS = ["a booking app", "a portfolio", "a client portal", "an online shop"];
+
+const INSIDE: [string, string, string][] = [
+  ["harbour-kitchen", "menu", "Restaurant menu"], ["clay-and-co", "shop/stoneware-mug", "Product page"], ["summit-2027", "schedule", "Event schedule"],
+  ["keystone-homes", "properties/family-home", "Property listing"], ["northbank", "savings", "Rates table"], ["field-notes", "stories/city-rivers", "Long-read article"],
+];
 
 export default function HomePage() {
   return (
@@ -34,28 +41,51 @@ export default function HomePage() {
             Today someone is building <span className="kw-rise inline-block font-serif text-base italic text-text">{CAPTIONS[0]}</span>
           </p>
           <HeroPrompt />
+          <HeroInterface />
         </div>
       </section>
 
-      {/* 3. Templates marquee */}
+      {/* Explore by category */}
+      <section id="categories" className="mx-auto max-w-7xl px-4 py-20" aria-labelledby="cat-h">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <h2 id="cat-h" className="max-w-2xl text-3xl md:text-5xl">Start with a website <span className="font-serif font-normal italic">for your kind of work</span></h2>
+          <Link href="/starters" className="btn btn-secondary">All templates</Link>
+        </div>
+        <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+          {SITE_CATEGORIES.map((c) => {
+            const t = SITES.find((s) => s.category === c)!;
+            const hero = t.pages[0]!.sections.find((x) => x.t === "hero");
+            const img = hero && "img" in hero && hero.img ? hero.img : { art: "abstract" as const, alt: "" };
+            return (
+              <li key={c}><Link href={`/starters?category=${categorySlug(c)}#gallery`} className="group block overflow-hidden rounded-3xl border border-border bg-surface transition hover:-translate-y-0.5 hover:border-accent">
+                <div className="aspect-[4/3] overflow-hidden"><Art kind={img.art} palette={t.palette} seed={img.seed} alt="" className="h-full w-full transition group-hover:scale-105" /></div>
+                <p className="px-3 pb-3 pt-2.5 text-sm font-semibold leading-tight">{c}</p>
+              </Link></li>
+            );
+          })}
+        </ul>
+      </section>
+
+      {/* Featured templates */}
       <section id="templates" className="overflow-hidden border-y border-border bg-surface py-16" aria-labelledby="templates-h">
-        <h2 id="templates-h" className="px-4 text-center text-3xl md:text-5xl">Remix a <span className="font-serif font-normal italic">starting point</span></h2>
+        <h2 id="templates-h" className="px-4 text-center text-3xl md:text-5xl">Complete websites, <span className="font-serif font-normal italic">not blank pages</span></h2>
+        <p className="mx-auto mt-3 max-w-2xl px-4 text-center text-muted">Every template has real copy, original illustrations, working forms, legal pages and a proper footer. Preview them all without signing in.</p>
         <div className="mt-10 flex w-max gap-5 kw-marquee">
           {[0, 1].map((copy) => (
             <ul key={copy} className="flex gap-5" aria-hidden={copy === 1 ? true : undefined}>
-              {STARTERS.map((t) => (
+              {SITES.map((t) => (
                 <li key={t.slug}>
                   <Link href={`/starters/${t.slug}`} tabIndex={copy === 1 ? -1 : undefined} className="block w-80 rounded-3xl border border-border bg-bg p-3 hover:border-accent">
-                    <TemplatePreview starter={t} className="rounded-2xl" idSuffix={`-m${copy}`} />
+                    <SiteThumb site={t} className="rounded-2xl border border-border" />
                     <p className="mt-3 px-1 font-semibold">{t.name}</p>
-                    <p className="px-1 pb-1 text-sm text-muted">{t.tagline}</p>
+                    <p className="px-1 pb-1 text-sm text-muted">{t.category} · {t.pages.length} pages</p>
                   </Link>
                 </li>
               ))}
             </ul>
           ))}
         </div>
-        <p className="mt-10 text-center"><Link href="/starters" className="btn btn-primary">Browse all {STARTERS.length} templates</Link></p>
+        <p className="mt-10 text-center"><Link href="/starters" className="btn btn-primary">Browse all {SITES.length} website templates</Link></p>
       </section>
 
       {/* 4. Bento */}
@@ -78,12 +108,31 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Inspiration: inside the templates */}
+      <section className="mx-auto max-w-7xl px-4 pb-24" aria-labelledby="inside-h">
+        <h2 id="inside-h" className="max-w-3xl text-3xl md:text-5xl">Every page <span className="font-serif font-normal italic">is already designed</span></h2>
+        <p className="mt-3 max-w-2xl text-muted">Menus, product pages, schedules, property listings, rate tables, articles — open any of them.</p>
+        <ul className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {INSIDE.map(([slug, page, label]) => {
+            const site = siteBySlug(slug)!;
+            const p = site.pages.find((x) => x.slug === page)!;
+            const img = p.sections.flatMap((x) => ("img" in x && x.img ? [x.img] : [])).at(0) ?? site.pages[0]!.sections.flatMap((x) => ("img" in x && x.img ? [x.img] : []))[0] ?? { art: "abstract" as const, alt: "" };
+            return (
+              <li key={slug + page}><a href={`/demo/${slug}/${page}`} target="_blank" rel="noopener" className="group block overflow-hidden rounded-3xl border border-border bg-surface hover:border-accent">
+                <div className="aspect-[16/10] overflow-hidden"><Art kind={img.art} palette={site.palette} seed={img.seed} alt="" className="h-full w-full transition group-hover:scale-105" /></div>
+                <div className="p-4"><p className="text-xs font-semibold uppercase tracking-wider text-accent">{label}</p><p className="mt-1 font-semibold">{p.title} <span className="font-normal text-muted">· {site.name}</span></p></div>
+              </a></li>
+            );
+          })}
+        </ul>
+      </section>
+
       {/* 5. Steps band */}
       <section className="bg-ink px-4 py-24 text-ink-text" aria-labelledby="steps-h">
         <div className="mx-auto max-w-7xl">
-          <h2 id="steps-h" className="max-w-3xl text-4xl md:text-6xl">From idea to launched <span className="font-serif font-normal italic text-ink-accent">before your coffee cools.</span></h2>
-          <ol className="mt-12 grid gap-6 md:grid-cols-3">
-            {[["01", "Describe it", "Say what you want. Keelwork turns it into a plan you can read."], ["02", "Shape it", "Approve the plan, then click and chat until it's right."], ["03", "Ship it", "Tests run, security checks pass, and it goes live in your own hosting account."]].map(([n, t, b]) => (
+          <h2 id="steps-h" className="max-w-3xl text-4xl md:text-6xl">Getting started <span className="font-serif font-normal italic text-ink-accent">in five steps.</span></h2>
+          <ol className="mt-12 grid gap-6 md:grid-cols-5">
+            {[["01", "Pick a starting point", "Choose a template or describe your idea in a sentence."], ["02", "Tell us about you", "Your business, customers and goal. We write every page from it."], ["03", "Approve the plan", "Nothing is built until you've read and approved what will happen."], ["04", "Make it yours", "Edit any word, regenerate a section, or chat to change the design."], ["05", "Preview and publish", "Check desktop, tablet and mobile, then go live on your own domain."]].map(([n, t, b]) => (
               <li key={n} className="rounded-3xl border border-white/15 p-6"><p className="font-mono text-sm text-ink-accent">{n}</p><p className="mt-3 font-display text-2xl font-bold">{t}</p><p className="mt-2 text-white/80">{b}</p></li>
             ))}
           </ol>
