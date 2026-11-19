@@ -29,7 +29,7 @@ export default async function NewSitePage({ searchParams }: { searchParams: Prom
           <div><label className="label" htmlFor="services">Main products or services <span className="font-normal text-muted">(one per line, up to 8)</span></label><textarea id="services" name="services" required rows={4} maxLength={600} className="input" placeholder={"Check-ups\nHygiene appointments\nTeeth whitening"} /></div>
         </fieldset>
         <fieldset className="panel grid gap-4 p-6">
-          <legend className="px-1 font-display text-lg font-bold">Who it's for and what it should do</legend>
+          <legend className="px-1 font-display text-lg font-bold">Who it&apos;s for and what it should do</legend>
           <div><label className="label" htmlFor="audience">Who are your customers?</label><input id="audience" name="audience" maxLength={160} className="input" placeholder="Families and working professionals" /></div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div><label className="label" htmlFor="goal">Main goal of the website</label><select id="goal" name="goal" className="input" defaultValue="Get enquiries">{["Get enquiries", "Book appointments", "Sell products online", "Request quotes", "Take donations", "Get sign-ups", "Get phone calls", "Book viewings or visits"].map((g) => <option key={g}>{g}</option>)}</select></div>
