@@ -21,7 +21,7 @@ export function SiteNav() {
   return (
     <div ref={ref} className="sticky top-0 z-40">
       <Link href="/starters" className="block px-4 py-2 text-center text-sm font-semibold text-white" style={{ background: "var(--grad-button)" }}>
-        New · Nine designed starter templates, ready to build — try one free →
+        New · 17 complete website templates — preview every page, no sign-in →
       </Link>
       <nav aria-label="Primary" className="border-b border-border bg-bg/90 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center gap-6 px-4 py-3">

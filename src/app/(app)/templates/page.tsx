@@ -5,6 +5,8 @@ import { ActionForm } from "@/components/action-form";
 import { importWebsite } from "./actions";
 import { STARTERS, starterHref } from "@/lib/site/starters";
 import { StarterCard } from "@/components/site/blocks";
+import { SITES, siteBySlug } from "@/lib/sites";
+import { SiteCard } from "@/components/sites/site-card";
 
 export const metadata = { title: "Templates" };
 
@@ -18,10 +20,20 @@ export default async function TemplatesPage() {
     <>
       <PageHeader title="Templates" description="Start from a designed starter, a reviewed marketplace template, or the structure of a site you own." actions={<Link href="/marketplace" className="btn btn-secondary">Browse the marketplace</Link>} />
       <section aria-labelledby="starters" className="mb-12">
-        <h2 id="starters" className="text-xl">Starter templates</h2>
-        <p className="mb-4 text-sm text-muted">Designed starting points. “Use this template” opens Create Project with the name and a detailed brief filled in — edit anything before planning.</p>
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 id="starters" className="text-xl">Website templates</h2>
+            <p className="text-sm text-muted">{SITES.length} complete multi-page websites. Use one with the AI builder, or write your own from your business details.</p>
+          </div>
+          {can("project.write") ? <Link href="/sites/new" className="btn btn-primary">Write a website from my details</Link> : null}
+        </div>
+        <ul className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          {SITES.map((s) => <li key={s.slug}><SiteCard site={s} /></li>)}
+        </ul>
+        <h3 className="mt-10 text-lg">App starters</h3>
+        <p className="mb-4 text-sm text-muted">Starting points for web apps. “Use this template” opens Create Project with the name and a detailed brief filled in — edit anything before planning.</p>
         <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {STARTERS.map((s) => <li key={s.slug}><StarterCard s={s} href={starterHref(s, true)} /></li>)}
+          {STARTERS.filter((s) => !siteBySlug(s.slug)).map((s) => <li key={s.slug}><StarterCard s={s} href={starterHref(s, true)} /></li>)}
         </ul>
       </section>
       <section aria-labelledby="reviewed">

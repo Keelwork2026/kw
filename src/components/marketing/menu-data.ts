@@ -58,7 +58,7 @@ export const MENUS: Menu[] = [
       { title: "Tutorials", description: "Step-by-step builds from idea to launch.", icon: "cap", tint: "orange", href: "/tutorials" },
       { title: "Marketplace", description: "Publish templates and install others' work.", icon: "chat", tint: "pink", href: "/sign-in?next=/marketplace" },
       { title: "Changelog", description: "What shipped, and when.", icon: "list", tint: "blue", href: "/changelog" },
-      { title: "Templates", description: "Nine designed starters, ready to build.", icon: "star", tint: "yellow", href: "/starters" },
+      { title: "Templates", description: "17 complete website templates and app starters.", icon: "star", tint: "yellow", href: "/starters" },
       { title: "System status", description: "Is everything up right now?", icon: "pulse", tint: "green", href: "/status" },
     ],
     feature: { eyebrow: "Guide", title: "Your first app in one sitting", from: "#1c1b19", to: "#6a4bdc", href: "/tutorials/first-app" },
