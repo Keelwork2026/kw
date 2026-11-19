@@ -1,0 +1,40 @@
+name: Lockfile
+# Keeps pnpm-lock.yaml in step with package.json on main. When dependencies
+# change and the lockfile is missing or stale, this resolves it on GitHub's
+# runner and commits only pnpm-lock.yaml back to main. It never runs for pull
+# requests, so code from forks can't use its write access.
+on:
+  push:
+    branches: [main]
+    paths: [package.json, .github/workflows/lockfile.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: lockfile
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Resolve the lockfile (no install scripts run)
+        run: pnpm install --lockfile-only --ignore-scripts
+      - name: Commit pnpm-lock.yaml if it changed
+        run: |
+          if git diff --quiet --exit-code -- pnpm-lock.yaml && git ls-files --error-unmatch pnpm-lock.yaml >/dev/null 2>&1; then
+            echo "pnpm-lock.yaml is already up to date."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pnpm-lock.yaml
+          git commit -m "Update pnpm-lock.yaml for package.json changes"
+          git push origin HEAD:main

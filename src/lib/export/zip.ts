@@ -15,7 +15,6 @@ export function crc32(buf: Buffer): number {
 
 /** Entry names must be relative, forward-slash paths without "..", empty segments or control characters. */
 export function safeEntryName(name: string): string {
-  // eslint-disable-next-line no-control-regex
   if (typeof name !== "string" || !name || name.length > 400 || /[\u0000-\u001f\u007f\\]/.test(name)) throw new Error(`unsafe entry name: ${JSON.stringify(name)}`);
   if (name.startsWith("/") || /^[A-Za-z]:/.test(name)) throw new Error(`absolute entry name: ${name}`);
   if (name.split("/").some((s) => s === "" || s === "." || s === "..")) throw new Error(`entry name has '..' or empty segments: ${name}`);

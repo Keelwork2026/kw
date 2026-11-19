@@ -40,7 +40,6 @@ const ask = (approvalKind: ApprovalKind, reason: string, details?: Record<string
 export function checkPath(path: unknown, opts: { write?: boolean } = {}): string | null {
   if (typeof path !== "string") return "path must be text";
   if (path.length < 1 || path.length > 300) return "path must be 1-300 characters";
-  // eslint-disable-next-line no-control-regex
   if (/[\u0000-\u001f\u007f]/.test(path)) return "path contains control characters";
   if (path.includes("\\")) return "path contains a backslash";
   if (path.startsWith("/") || /^[a-zA-Z]:/.test(path) || path.startsWith("~")) return "absolute paths are not allowed";

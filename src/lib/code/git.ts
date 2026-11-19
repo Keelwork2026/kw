@@ -31,7 +31,6 @@ export const headArgs = () => ["git", "rev-parse", "HEAD"];
 export const addArgs = (file: string) => ["git", "add", "--", path(file)];
 
 function clean(s: string, max: number): string {
-  // eslint-disable-next-line no-control-regex
   return s.replace(/[\u0000-\u001f\u007f;&|$<>`"\\]/g, " ").replace(/\s+/g, " ").trim().slice(0, max) || "Keelwork user";
 }
 export function commitArgs(message: string, author: { name: string; email: string }, file: string): string[] {
