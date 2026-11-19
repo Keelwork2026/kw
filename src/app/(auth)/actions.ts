@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { safeRedirectPath, onboardingParams } from "@/lib/auth/redirect";
+import { enabledProviders, type OAuthProvider } from "@/lib/auth/providers";
 import { limitOrMessage } from "@/lib/security/server-limit";
 import type { ActionResult } from "@/components/action-form";
 
@@ -74,12 +75,13 @@ export async function forgotPassword(_prev: ActionResult, form: FormData): Promi
 
 export async function oauthSignIn(form: FormData): Promise<void> {
   const provider = str(form, "provider");
-  if (provider !== "google" && provider !== "azure" && provider !== "github") redirect("/sign-in?error=provider");
+  if (!enabledProviders(process.env.AUTH_PROVIDERS).some((p) => p === provider)) redirect("/sign-in?error=provider");
+  const chosen = provider as OAuthProvider;
   const next = safeRedirectPath(str(form, "next"));
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
-    provider,
-    options: { redirectTo: `${siteUrl()}/auth/callback?next=${encodeURIComponent(next)}`, scopes: provider === "azure" ? "email" : undefined },
+    provider: chosen,
+    options: { redirectTo: `${siteUrl()}/auth/callback?next=${encodeURIComponent(next)}`, scopes: chosen === "azure" ? "email" : undefined },
   });
   if (error || !data.url) redirect("/sign-in?error=oauth");
   redirect(data.url);

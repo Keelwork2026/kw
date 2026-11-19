@@ -14,8 +14,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
       <h1 className="text-3xl">Welcome back</h1>
       <p className="mt-1 text-muted">Log in to keep building.</p>
       {sp.error ? <p role="alert" className="notice mt-4">Sign-in with that provider didn&apos;t complete. Try again or use your email.</p> : null}
-      <div className="mt-6"><OAuthButtons next={next} /></div>
-      <div className="my-6 flex items-center gap-3 text-xs text-muted"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
+      <OAuthButtons next={next} />
       <AuthForm
         action={signIn}
         submitLabel="Log in"

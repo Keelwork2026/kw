@@ -18,7 +18,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <PageHeader title={`Hello, ${org.name}`} description="Everything below comes from your organization's live data." actions={<Link href="/new-project" className="btn btn-gradient">New project</Link>} />
+      <PageHeader title={org.name} description="Your workspace at a glance. Everything below is live data." actions={<Link href="/new-project" className="btn btn-gradient">New project</Link>} />
       <div className="grid gap-4 sm:grid-cols-3">
         <Stat label="Active members" value={String(members.count ?? 0)} href="/team" />
         <Stat label="Projects" value={String(projects.data?.length ?? 0)} href="/projects" />

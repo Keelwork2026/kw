@@ -9,7 +9,7 @@ A production-grade AI software engineering platform. A person describes an app, 
 | Role | Service | Where |
 |---|---|---|
 | App | Next.js 15 App Router, React 19, TypeScript (strict), Tailwind CSS v4 (`@theme` tokens), pnpm, zod | `src/` |
-| Keelwork's database + auth | Supabase (Postgres 16 + Auth via `@supabase/ssr`) | `supabase/migrations` |
+| Keelwork's database + auth | Supabase (Postgres 17 locally, tested on 16 and 17; Auth via `@supabase/ssr`) | `supabase/migrations` |
 | Architecture, planning, reasoning | Kimi (Moonshot AI) `kimi-k3.1-pro` — routes `plan`, `reason`, `chat` | `src/lib/ai/presets.ts` |
 | Coding, review | DeepSeek `deepseek-flash` — routes `code`, `review` (each model is the other's fallback) | same |
 | Agent web research | Brave Search API, metered per search | `src/lib/research/brave.ts` |
@@ -67,6 +67,7 @@ Run in a Linux workspace with PostgreSQL 16.15 and Node 22.23 (tsx). Package ins
 | Bugs found by the checks and fixed during the build | **Fixed** | 8 — see below |
 | `pnpm install`, `next lint`, strict `tsc --noEmit`, `next build` | **Passed in CI** | GitHub Actions, 19 Nov 2026; the first run found 15 type errors, fixed in `6db870a` |
 | Database checks and the backup/restore drill on GitHub's runners | **Passed in CI** | same 415 checks and drill as above, on Ubuntu 24.04 with PostgreSQL 16 |
+| Full local stack on a Mac mini (Supabase CLI 3.2, PostgreSQL 17, `next start`) | **Passed by hand** | 20 Nov 2026: all 14 migrations applied; sign-up → email confirmation → sign-in; workspace auto-created with free credit; project created; stack saved; secret stored as ciphertext only; audit trail recorded each step; all 35 app pages render without errors |
 | k6 against staging | **Not run yet** | needs a staging deployment |
 | Real Kimi, DeepSeek, Brave, Cloudflare, Vercel, Stripe, Appwrite and CloudBase calls | **Not run yet** | adapters are tested against fakes only |
 | Real sandboxes and the agent worker end to end | **Not run yet** | needs a Docker host; the worker's task loop is tested with injected fakes |
@@ -105,6 +106,20 @@ pnpm runner                         # automation runner
 pnpm broker                         # sandbox broker — on the Docker host only
 pnpm proxy                          # preview proxy — next to the broker
 ```
+
+### Run the whole thing on one machine
+
+Needs Docker (Docker Desktop, or Colima on a Mac) and the Supabase CLI.
+
+```sh
+supabase start                      # local Postgres 17, Auth, REST, Studio, Mailpit; applies supabase/migrations
+# .env.local: NEXT_PUBLIC_SUPABASE_URL=http://localhost:54321, the anon and
+# service-role keys from `supabase status`, NEXT_PUBLIC_SITE_URL=http://localhost:3000,
+# SECRETS_MASTER_KEYS="1:$(openssl rand -base64 32)", and AUTH_PROVIDERS= (no OAuth apps locally)
+pnpm build && pnpm start -H 127.0.0.1
+```
+
+Confirmation emails land in Mailpit at http://localhost:54324. Use `localhost`, not `127.0.0.1`, for the Supabase URL: the content security policy only allows plain HTTP for localhost. The local OAuth providers in `supabase/config.toml` need real client IDs; without them, switch them off in your local copy and leave `AUTH_PROVIDERS` empty.
 
 Apply `supabase/migrations` in order to the Supabase project (`supabase db push`). Create the first platform admin by hand: `insert into platform_admins(user_id, role) values ('<uuid>', 'superadmin');`. The full order of go-live steps is in `docs/operations/go-live-checklist.md`.
 

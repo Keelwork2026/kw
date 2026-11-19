@@ -16,8 +16,7 @@ export default async function SignUpPage({ searchParams }: { searchParams: Promi
       {carry.prompt ? (
         <p className="mt-4 rounded-2xl bg-surface-2 p-3 text-sm"><span className="font-semibold">Your idea:</span> {carry.prompt}</p>
       ) : null}
-      <div className="mt-6"><OAuthButtons next={`/new-project${next.size ? `?${next}` : ""}`} /></div>
-      <div className="my-6 flex items-center gap-3 text-xs text-muted"><span className="h-px flex-1 bg-border" />or<span className="h-px flex-1 bg-border" /></div>
+      <OAuthButtons next={`/new-project${next.size ? `?${next}` : ""}`} />
       <AuthForm
         action={signUp}
         submitLabel="Create account"
