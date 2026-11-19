@@ -137,7 +137,10 @@ export function Donate({ amounts, impact }: { amounts: number[]; impact: [string
 export function CookieBanner({ slug, policyHref }: { slug: string; policyHref: string }) {
   const [open, setOpen] = useState(false);
   useEffect(() => {
-    try { if (!localStorage.getItem(`ks-consent-${slug}`)) setOpen(true); } catch { setOpen(true); }
+    // Inside Keelwork's own preview frames the banner would only cover the page.
+    let framed = true;
+    try { framed = window.self !== window.top; } catch { /* cross-origin parent: treat as framed */ }
+    if (!framed) { try { if (!localStorage.getItem(`ks-consent-${slug}`)) setOpen(true); } catch { setOpen(true); } }
     const show = () => setOpen(true);
     window.addEventListener("ks-cookies", show);
     return () => window.removeEventListener("ks-cookies", show);
