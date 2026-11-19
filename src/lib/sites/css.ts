@@ -46,7 +46,7 @@ export const SITE_CSS = `
 .ks-grid{display:grid;gap:24px}
 .ks-g2{grid-template-columns:repeat(2,minmax(0,1fr))}.ks-g3{grid-template-columns:repeat(3,minmax(0,1fr))}.ks-g4{grid-template-columns:repeat(4,minmax(0,1fr))}
 @media(max-width:900px){.ks-g3,.ks-g4{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:620px){.ks-g2,.ks-g3,.ks-g4{grid-template-columns:1fr}.ks-sec{padding:60px 0}}
+@media(max-width:620px){.ks-g2,.ks-g3,.ks-g4{grid-template-columns:minmax(0,1fr)}.ks-sec{padding:60px 0}}
 .ks-art{overflow:hidden;border-radius:var(--ks-r);background:var(--ks-soft)}
 .ks-art svg{width:100%;height:100%}
 .ks-card{background:var(--ks-surface);border:1px solid var(--ks-line);border-radius:var(--ks-r);overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
@@ -79,7 +79,7 @@ export const SITE_CSS = `
 .ks-hero{padding:72px 0 88px;position:relative;overflow:hidden}
 .ks-hero-split{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center}
 .ks-hero-split .ks-art{aspect-ratio:5/4;box-shadow:0 40px 80px -40px rgba(0,0,0,.45)}
-@media(max-width:900px){.ks-hero-split{grid-template-columns:1fr}}
+@media(max-width:900px){.ks-hero-split{grid-template-columns:minmax(0,1fr)}}
 .ks-hero-center{text-align:center;max-width:860px;margin:0 auto}
 .ks-hero-center .ks-sub{margin-left:auto;margin-right:auto}.ks-hero-center .ks-ctas{justify-content:center}
 .ks-hero-center .ks-art{margin-top:56px;aspect-ratio:16/8}
@@ -91,7 +91,7 @@ export const SITE_CSS = `
 .ks-hero-full .ks-btn.ghost{color:#fff;border-color:rgba(255,255,255,.6)}
 .ks-hero-ed{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end;border-bottom:1px solid var(--ks-line);padding-bottom:48px}
 .ks-hero-ed .ks-art{aspect-ratio:4/5}
-@media(max-width:900px){.ks-hero-ed{grid-template-columns:1fr}}
+@media(max-width:900px){.ks-hero-ed{grid-template-columns:minmax(0,1fr)}}
 .ks-hstats{display:flex;flex-wrap:wrap;gap:36px;margin-top:40px}
 .ks-hstats b{display:block;font-family:var(--ks-display);font-size:30px;font-weight:var(--ks-display-weight)}
 .ks-hstats span{font-size:14px;color:var(--ks-muted)}
@@ -116,10 +116,10 @@ export const SITE_CSS = `
 .ks-split p+p{margin-top:14px}.ks-split .ks-body{color:var(--ks-muted);font-size:17px;margin-top:18px}
 .ks-bul{list-style:none;padding:0;margin:22px 0 0;display:grid;gap:10px}
 .ks-bul li{display:flex;gap:10px;align-items:flex-start}.ks-bul li::before{content:"";flex:none;width:20px;height:20px;margin-top:3px;border-radius:50%;background:var(--ks-accent) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-7' stroke='white' stroke-width='2' fill='none'/%3E%3C/svg%3E") center/14px no-repeat}
-@media(max-width:900px){.ks-split{grid-template-columns:1fr;gap:32px}.ks-split.rev>.ks-art{order:0}}
+@media(max-width:900px){.ks-split{grid-template-columns:minmax(0,1fr);gap:32px}.ks-split.rev>.ks-art{order:0}}
 /* menu */
 .ks-menu{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 64px}
-@media(max-width:800px){.ks-menu{grid-template-columns:1fr}}
+@media(max-width:800px){.ks-menu{grid-template-columns:minmax(0,1fr)}}
 .ks-menu h3{font-size:26px;padding-bottom:12px;border-bottom:1px solid var(--ks-line);margin-bottom:8px}
 .ks-dish{display:grid;grid-template-columns:1fr auto;gap:4px 16px;padding:14px 0;border-bottom:1px dashed var(--ks-line)}
 .ks-dish b{font-size:17px}.ks-dish p{grid-column:1/-1;color:var(--ks-muted);font-size:15px}
@@ -150,7 +150,7 @@ export const SITE_CSS = `
 .ks-cta .ks-btn.primary{background:var(--ks-on);color:var(--ks-accent)}
 .ks-cta .ks-btn.ghost{color:var(--ks-on);border-color:color-mix(in srgb,var(--ks-on) 50%,transparent)}
 .ks-cta .ks-art{aspect-ratio:4/3}
-@media(max-width:800px){.ks-cta{grid-template-columns:1fr;padding:40px 28px}}
+@media(max-width:800px){.ks-cta{grid-template-columns:minmax(0,1fr);padding:40px 28px}}
 /* forms */
 .ks-form{display:grid;gap:14px}
 .ks-form label{display:grid;gap:6px;font-size:14px;font-weight:600}
@@ -160,7 +160,7 @@ export const SITE_CSS = `
 .ks-ok{padding:14px 16px;border-radius:var(--ks-r);background:var(--ks-soft);color:var(--ks-ink);font-size:15px}
 .ks-panel{background:var(--ks-surface);border:1px solid var(--ks-line);border-radius:calc(var(--ks-r) + 4px);padding:32px}
 .ks-two{display:grid;grid-template-columns:1fr 1.1fr;gap:48px;align-items:start}
-@media(max-width:900px){.ks-two{grid-template-columns:1fr}}
+@media(max-width:900px){.ks-two{grid-template-columns:minmax(0,1fr)}}
 .ks-dl{display:grid;gap:14px;margin:24px 0 0}
 .ks-dl div{display:grid;grid-template-columns:120px 1fr;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--ks-line)}
 .ks-dl dt{color:var(--ks-muted);font-size:14px}.ks-dl dd{margin:0}
@@ -188,7 +188,7 @@ export const SITE_CSS = `
 .ks-opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .ks-opts button{font:inherit;font-size:14px;padding:9px 14px;border-radius:999px;border:1px solid var(--ks-line);background:var(--ks-surface);color:var(--ks-ink);cursor:pointer}
 .ks-opts button[aria-pressed=true]{border-color:var(--ks-ink);background:var(--ks-ink);color:var(--ks-bg)}
-@media(max-width:900px){.ks-detail{grid-template-columns:1fr}}
+@media(max-width:900px){.ks-detail{grid-template-columns:minmax(0,1fr)}}
 /* article */
 .ks-article{max-width:760px;margin:0 auto}
 .ks-article .ks-art{aspect-ratio:16/9;margin:32px 0}
@@ -211,8 +211,10 @@ export const SITE_CSS = `
 .ks-sum div{display:flex;justify-content:space-between;padding:8px 0}.ks-sum .tot{font-weight:700;font-size:18px;border-top:1px solid var(--ks-line);margin-top:6px;padding-top:14px}
 /* footer */
 .ks-foot{background:var(--ks-ink);color:var(--ks-bg);padding:72px 0 32px;margin-top:0}
-.ks-foot-top{display:grid;grid-template-columns:1.4fr repeat(var(--ks-cols),1fr);gap:40px}
-@media(max-width:900px){.ks-foot-top{grid-template-columns:1fr 1fr}}
+.ks-foot-top{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(var(--ks-cols),minmax(0,1fr));gap:40px}
+@media(max-width:900px){.ks-foot-top{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.ks-foot-top{grid-template-columns:minmax(0,1fr)}}
+.ks{overflow-x:clip}
 .ks-foot h4{font:600 13px/1 var(--kw-inter,system-ui);letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px;opacity:.7;font-style:normal}
 .ks-foot ul{list-style:none;padding:0;margin:0;display:grid;gap:10px;font-size:15px}
 .ks-foot a{opacity:.85}.ks-foot a:hover{opacity:1;text-decoration:underline}
