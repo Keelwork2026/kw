@@ -33,7 +33,7 @@ export function QuickStart({ action }: { action: FormAction }) {
       <p className="relative mt-1 text-sm text-muted">Describe it in a sentence. The planner asks about the rest, and nothing is built until you approve the plan.</p>
       <form ref={formRef} action={formAction} className="relative mt-5">
         <input type="hidden" name="kind" value={kind} />
-        <div className="flex items-end gap-2 rounded-2xl border border-border bg-bg p-2 shadow-sm focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
+        <div className="flex flex-col gap-2 rounded-2xl border border-border bg-bg p-2 shadow-sm sm:flex-row sm:items-end focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
           <label htmlFor="quick-idea" className="sr-only">Describe your idea</label>
           <textarea
             id="quick-idea" ref={area} name="idea" rows={2} maxLength={2000} required minLength={8}
@@ -63,7 +63,7 @@ export function QuickStart({ action }: { action: FormAction }) {
 function Submit() {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" disabled={pending} className="btn btn-gradient min-h-12 shrink-0 px-5" aria-label={pending ? "Creating your project" : "Start building"}>
+    <button type="submit" disabled={pending} className="btn btn-gradient min-h-12 w-full shrink-0 px-5 sm:w-auto" aria-label={pending ? "Creating your project" : "Start building"}>
       {pending ? "Starting…" : <>Start <span aria-hidden>→</span></>}
     </button>
   );
