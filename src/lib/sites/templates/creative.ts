@@ -2,7 +2,7 @@ import type { Site } from "../types";
 import { contactPage, footer, legalPages } from "../common";
 
 export const folio: Site = {
-  slug: "folio", name: "Folio Studio", category: "Creative & Portfolio", style: "Gallery minimal", voice: "minimalist",
+  slug: "folio", name: "Portfolio with case studies", category: "Creative & Portfolio", style: "Gallery minimal", voice: "minimalist",
   tagline: "Design studio portfolio with case studies, services and enquiries.",
   description: "A portfolio site for a studio or freelancer: selected work, a full case study, services and process, about, and a project enquiry form — for designers, photographers and agencies.",
   palette: { bg: "#ffffff", surface: "#f5f4f1", ink: "#111111", muted: "#6b6b6b", accent: "#ff4f00", accent2: "#3d5afe", soft: "#f1efe9", line: "#e8e6e1", onAccent: "#ffffff" },
@@ -38,7 +38,7 @@ export const folio: Site = {
 };
 
 export const personal: Site = {
-  slug: "sam-okafor", name: "Sam Okafor", category: "Personal Websites", style: "Warm personal", voice: "conversational",
+  slug: "sam-okafor", name: "Personal site with projects & writing", category: "Personal Websites", style: "Warm personal", voice: "conversational",
   tagline: "Personal site with about, projects, writing, speaking and contact.",
   description: "A personal website for a professional, creator or job-seeker: an introduction, selected projects, writing, speaking, a CV page and contact — easy to make your own.",
   palette: { bg: "#fdfbf7", surface: "#ffffff", ink: "#22201c", muted: "#6a645b", accent: "#d1495b", accent2: "#00798c", soft: "#f8e7e9", line: "#ece6dc", onAccent: "#ffffff" },
@@ -65,7 +65,7 @@ export const personal: Site = {
 };
 
 export const fieldNotes: Site = {
-  slug: "field-notes", name: "Field Notes", category: "Blogs & Publications", style: "Editorial magazine", voice: "editorial",
+  slug: "field-notes", name: "Publication with stories & memberships", category: "Blogs & Publications", style: "Editorial magazine", voice: "editorial",
   tagline: "Online magazine with sections, articles, authors and membership.",
   description: "A blog and publication site with a front page, topic sections, a full article layout, authors, newsletter and membership — for writers, magazines and newsletters.",
   palette: { bg: "#fffdf8", surface: "#ffffff", ink: "#1a1a1a", muted: "#666055", accent: "#2b59c3", accent2: "#d64933", soft: "#eef2fb", line: "#ebe6db", onAccent: "#ffffff" },

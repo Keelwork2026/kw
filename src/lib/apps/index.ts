@@ -28,11 +28,11 @@ export function appBrief(app: AppTemplate): string {
   }).join("; ");
   const shell = app.shell === "admin" ? "a left sidebar on desktop and a scrollable tab bar on mobile" : "a top navigation bar that becomes a menu on mobile";
   const cart = modulesOf(app.screens.flatMap((s) => s.modules)).some((m) => m.m === "catalog" && m.cart);
-  const brief = `Build "${app.brand}", a ${app.type.toLowerCase()} for ${app.industry.toLowerCase()}, from the Keelwork "${app.name}" template. ${app.description} Screens: ${screens}. Layout: ${shell}. Features: ${app.features.join(", ")}. Use ${app.stack}. Every list needs empty, loading and error states; every form validates and confirms. ${cart ? "Checkout stays in test mode until I connect a payment provider. " : ""}Use the template's sample data only as seed data I can delete, and leave clear placeholders for my real business details — never invent facts, reviews or figures about my business. Fully responsive and accessible.`;
+  const brief = `Build a ${app.type.toLowerCase()} for ${app.industry.toLowerCase()}, from the Keelwork "${app.name}" template. ${app.description} Screens: ${screens}. Layout: ${shell}. Features: ${app.features.join(", ")}. Use ${app.stack}. Every list needs empty, loading and error states; every form validates and confirms. ${cart ? "Checkout stays in test mode until I connect a payment provider. " : ""}Use the template's sample data only as seed data I can delete, and leave clear placeholders for my real business details — never invent facts, reviews or figures about my business. Fully responsive and accessible.`;
   return brief.slice(0, 2000);
 }
 
 export function appUseHref(app: AppTemplate, signedIn: boolean): string {
-  const q = new URLSearchParams({ template: app.slug, name: app.brand, prompt: appBrief(app) });
+  const q = new URLSearchParams({ template: app.slug, name: app.name, prompt: appBrief(app) });
   return signedIn ? `/new-project?${q.toString()}` : `/sign-up?${q.toString()}`;
 }

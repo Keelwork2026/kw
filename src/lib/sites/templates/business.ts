@@ -2,7 +2,7 @@ import type { Site } from "../types";
 import { contactPage, footer, legalPages } from "../common";
 
 export const meridian: Site = {
-  slug: "meridian-advisory", name: "Meridian Advisory", category: "Corporate & Business", style: "Calm corporate", voice: "corporate",
+  slug: "meridian-advisory", name: "Consulting site with services & case studies", category: "Corporate & Business", style: "Calm corporate", voice: "corporate",
   tagline: "Management consultancy with services, insights, team and careers.",
   description: "A professional services site with service lines, an approach page, case studies, insights, leadership team, careers and contact — for consultancies, agencies and B2B firms.",
   palette: { bg: "#f7f8fa", surface: "#ffffff", ink: "#14213d", muted: "#5a6478", accent: "#1d4ed8", accent2: "#0ea5a3", soft: "#e6edfb", line: "#dfe4ee", onAccent: "#ffffff" },
@@ -93,7 +93,7 @@ export const meridian: Site = {
 };
 
 export const lumen: Site = {
-  slug: "lumen", name: "Lumen", category: "Technology & SaaS", style: "Crisp product", voice: "innovative",
+  slug: "lumen", name: "SaaS product site with pricing", category: "Technology & SaaS", style: "Crisp product", voice: "innovative",
   tagline: "SaaS product site with features, pricing, integrations, docs and sign-up.",
   description: "A software product website with product tour, feature pages, integrations, pricing with plan comparison, customer stories, changelog and contact — for SaaS and app makers.",
   palette: { bg: "#ffffff", surface: "#f7f7fb", ink: "#111127", muted: "#5d5d78", accent: "#6d4aff", accent2: "#22c3a6", soft: "#efeaff", line: "#e7e6f0", onAccent: "#ffffff" },
@@ -165,7 +165,7 @@ export const lumen: Site = {
 };
 
 export const northbank: Site = {
-  slug: "northbank", name: "Northbank", category: "Finance & Banking", style: "Trustworthy and clear", voice: "authoritative",
+  slug: "northbank", name: "Bank site with accounts & savings", category: "Finance & Banking", style: "Trustworthy and clear", voice: "authoritative",
   tagline: "Banking and savings site with accounts, rates, security and support.",
   description: "A financial services site with current and savings accounts, a rates table, business banking, security guidance, help centre and regulatory footer — for banks, credit unions and fintechs.",
   palette: { bg: "#f8faf9", surface: "#ffffff", ink: "#0b2b26", muted: "#4f6762", accent: "#0b6e4f", accent2: "#c9a227", soft: "#e3f1ec", line: "#d9e5e1", onAccent: "#ffffff" },
@@ -229,7 +229,7 @@ export const northbank: Site = {
 };
 
 export const launchpad: Site = {
-  slug: "launchpad", name: "Launchpad", category: "Landing Pages", style: "Gradient launch", voice: "bold",
+  slug: "launchpad", name: "Waitlist landing page", category: "Landing Pages", style: "Gradient launch", voice: "bold",
   tagline: "Single-page product launch with waitlist, features and FAQ.",
   description: "A focused landing page for launching a product or campaign: hero with waitlist, benefits, how it works, early-access pricing and FAQ — designed to convert.",
   palette: { bg: "#fffaf5", surface: "#ffffff", ink: "#1c1917", muted: "#6b625c", accent: "#ef476f", accent2: "#ff9f1c", soft: "#ffe8ee", line: "#f1e2d8", onAccent: "#ffffff" },

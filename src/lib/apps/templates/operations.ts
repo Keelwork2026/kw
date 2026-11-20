@@ -2,7 +2,7 @@ import type { AppTemplate } from "../types";
 import { PAL } from "../palettes";
 
 export const school: AppTemplate = {
-  slug: "app-school-management", name: "Harmony School Office", category: "Education", industry: "Primary and secondary schools", type: "Internal tool",
+  slug: "app-school-management", name: "School management office", category: "Education", industry: "Primary and secondary schools", type: "Internal tool",
   styles: ["Corporate", "Warm"], level: "Advanced", added: "2026-11-20",
   tagline: "Students, attendance, fees and parent messages for a school office.",
   description: "A school administration tool: student records by class, a daily attendance board, fee collection with outstanding balances, and messages to parents.",
@@ -38,7 +38,7 @@ export const school: AppTemplate = {
 };
 
 export const pharmacy: AppTemplate = {
-  slug: "app-pharmacy-inventory", name: "Medstock Pharmacy", category: "Healthcare", industry: "Pharmacies", type: "Internal tool",
+  slug: "app-pharmacy-inventory", name: "Pharmacy stock & prescriptions", category: "Healthcare", industry: "Pharmacies", type: "Internal tool",
   styles: ["Minimal", "Technical"], level: "Advanced", added: "2026-11-20",
   tagline: "Stock levels, expiry dates, suppliers and sales for a community pharmacy.",
   description: "A pharmacy back office: stock with low-stock and expiry filters, purchase orders moving from draft to received, and daily sales.",
@@ -68,7 +68,7 @@ export const pharmacy: AppTemplate = {
 };
 
 export const invoicing: AppTemplate = {
-  slug: "app-invoicing", name: "Paperless Invoicing", category: "Finance & Fintech", industry: "Freelancers and small businesses", type: "Web app",
+  slug: "app-invoicing", name: "Invoicing & payments", category: "Finance & Fintech", industry: "Freelancers and small businesses", type: "Web app",
   styles: ["Minimal", "Premium"], level: "Beginner-friendly", added: "2026-11-20",
   tagline: "Create invoices, chase payments and see cash flow.",
   description: "Invoicing for a small business: invoices with status filters, a create-invoice form, clients, and a cash-flow chart.",
@@ -97,7 +97,7 @@ export const invoicing: AppTemplate = {
 };
 
 export const logistics: AppTemplate = {
-  slug: "app-delivery-tracking", name: "Swiftmile Deliveries", category: "Business & Corporate", industry: "Logistics and couriers", type: "Web app",
+  slug: "app-delivery-tracking", name: "Delivery tracking & dispatch", category: "Business & Corporate", industry: "Logistics and couriers", type: "Web app",
   styles: ["Bold", "Technical"], level: "Advanced", added: "2026-11-20",
   tagline: "Shipments, drivers and customer tracking for a delivery company.",
   description: "A courier operations app: live shipment board, driver schedule, a shipment table with status filters, and a public tracking form for customers.",
@@ -128,7 +128,7 @@ export const logistics: AppTemplate = {
 };
 
 export const saasAdmin: AppTemplate = {
-  slug: "app-saas-admin", name: "Orbit SaaS Admin", category: "Technology & SaaS", industry: "Software companies", type: "Dashboard",
+  slug: "app-saas-admin", name: "SaaS admin console", category: "Technology & SaaS", industry: "Software companies", type: "Dashboard",
   styles: ["Technical", "Minimal"], level: "Advanced", added: "2026-11-20",
   tagline: "Customers, subscriptions, MRR and feature flags for a SaaS team.",
   description: "An admin console for a subscription product: MRR and churn, a customer table with plan filters, a release checklist and an audit feed.",
@@ -155,7 +155,7 @@ export const saasAdmin: AppTemplate = {
 };
 
 export const expenses: AppTemplate = {
-  slug: "app-expense-approvals", name: "Approvly Expenses", category: "Productivity & Workflow", industry: "Finance and operations teams", type: "Internal tool",
+  slug: "app-expense-approvals", name: "Expense claims & approvals", category: "Productivity & Workflow", industry: "Finance and operations teams", type: "Internal tool",
   styles: ["Corporate", "Minimal"], level: "Beginner-friendly", added: "2026-11-20",
   tagline: "Expense claims with receipts, approvals and reimbursements.",
   description: "An approvals workflow: staff submit expense claims, managers approve from an inbox, finance moves approved claims to paid, with a spend summary by team.",
@@ -190,7 +190,7 @@ export const expenses: AppTemplate = {
 };
 
 export const fitness: AppTemplate = {
-  slug: "app-gym-membership", name: "Pulsefit Gym", category: "Healthcare", industry: "Gyms and fitness studios", type: "Web app",
+  slug: "app-gym-membership", name: "Gym memberships & class booking", category: "Healthcare", industry: "Gyms and fitness studios", type: "Web app",
   styles: ["Bold", "Playful"], level: "Beginner-friendly", added: "2026-11-20",
   tagline: "Class timetable, memberships and check-ins for a gym.",
   description: "A gym app: membership plans members can pick, a weekly class timetable, a member list with plan filters, and check-in numbers for staff.",
@@ -219,7 +219,7 @@ export const fitness: AppTemplate = {
 };
 
 export const inventory: AppTemplate = {
-  slug: "app-inventory", name: "Shelfwise Inventory", category: "E-commerce & Retail", industry: "Retail and wholesale", type: "Internal tool",
+  slug: "app-inventory", name: "Inventory & stock control", category: "E-commerce & Retail", industry: "Retail and wholesale", type: "Internal tool",
   styles: ["Minimal", "Technical"], level: "Beginner-friendly", added: "2026-11-20",
   tagline: "Stock across locations, reorder points and supplier orders.",
   description: "Inventory for a retailer with two shops and a warehouse: stock by location with low-stock filters, stock movements, supplier orders and stock value.",

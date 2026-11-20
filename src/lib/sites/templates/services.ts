@@ -2,7 +2,7 @@ import type { Site } from "../types";
 import { contactPage, footer, legalPages } from "../common";
 
 export const brightpath: Site = {
-  slug: "brightpath-academy", name: "Brightpath Academy", category: "Education", style: "Friendly and bright", voice: "friendly",
+  slug: "brightpath-academy", name: "School site with courses & admissions", category: "Education", style: "Friendly and bright", voice: "friendly",
   tagline: "School or training provider with courses, admissions, events and staff.",
   description: "An education site with courses, a course detail page, admissions steps, fees, open days, staff, student life and contact — for schools, colleges and training providers.",
   palette: { bg: "#fbfaf6", surface: "#ffffff", ink: "#1e2a4a", muted: "#5c6680", accent: "#3c6ff0", accent2: "#ffb703", soft: "#e8eefe", line: "#e3e6ee", onAccent: "#ffffff" },
@@ -55,7 +55,7 @@ export const brightpath: Site = {
 };
 
 export const willow: Site = {
-  slug: "willow-clinic", name: "Willow Clinic", category: "Healthcare", style: "Calm and caring", voice: "warm",
+  slug: "willow-clinic", name: "Clinic site with doctors & appointments", category: "Healthcare", style: "Calm and caring", voice: "warm",
   tagline: "Private clinic with services, clinicians, appointments and patient info.",
   description: "A healthcare practice site with services, clinician profiles, online appointment requests, fees, patient information and accessibility details — for clinics, dentists and therapists. Makes no medical claims.",
   palette: { bg: "#f6faf8", surface: "#ffffff", ink: "#173a35", muted: "#566f6a", accent: "#2a9d8f", accent2: "#e9c46a", soft: "#e1f2ef", line: "#d8e7e3", onAccent: "#ffffff" },
@@ -93,7 +93,7 @@ export const willow: Site = {
 };
 
 export const ironline: Site = {
-  slug: "ironline-construction", name: "Ironline Construction", category: "Construction & Engineering", style: "Strong industrial", voice: "authoritative",
+  slug: "ironline-construction", name: "Construction firm site with projects & quotes", category: "Construction & Engineering", style: "Strong industrial", voice: "authoritative",
   tagline: "Contractor site with services, projects, safety, careers and quotes.",
   description: "A construction and engineering site with services, a project portfolio, a project case study, health and safety, accreditations, careers and a quote request — for builders, contractors and engineers.",
   palette: { bg: "#f5f5f2", surface: "#ffffff", ink: "#1b1d1f", muted: "#5d6166", accent: "#f2a900", accent2: "#2f4858", soft: "#fdf1cf", line: "#e2e2dc", onAccent: "#1b1d1f" },
@@ -136,7 +136,7 @@ export const ironline: Site = {
 };
 
 export const riverbend: Site = {
-  slug: "riverbend-trust", name: "Riverbend Trust", category: "Nonprofit", style: "Hopeful and human", voice: "warm",
+  slug: "riverbend-trust", name: "Charity site with donations & volunteering", category: "Nonprofit", style: "Hopeful and human", voice: "warm",
   tagline: "Charity site with programmes, impact, donations and volunteering.",
   description: "A nonprofit site with mission, programmes, impact reporting, monthly and one-off donations, volunteering, events, news and governance — for charities and community groups.",
   palette: { bg: "#fbfaf5", surface: "#ffffff", ink: "#203a2c", muted: "#5b6d61", accent: "#2d6a4f", accent2: "#f4a259", soft: "#e4efe7", line: "#e0e6dd", onAccent: "#ffffff" },

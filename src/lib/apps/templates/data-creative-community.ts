@@ -2,7 +2,7 @@ import type { AppTemplate } from "../types";
 import { PAL } from "../palettes";
 
 export const analytics: AppTemplate = {
-  slug: "app-sales-dashboard", name: "Tally Sales Dashboard", category: "Technology & SaaS", industry: "Sales and revenue teams", type: "Dashboard",
+  slug: "app-sales-dashboard", name: "Sales dashboard", category: "Technology & SaaS", industry: "Sales and revenue teams", type: "Dashboard",
   styles: ["Technical", "Minimal"], level: "Beginner-friendly", featured: true, added: "2026-11-20",
   tagline: "Revenue, targets, regions and rep leaderboards on one dark dashboard.",
   description: "A sales analytics dashboard: headline metrics, revenue trend with ranges, performance by region, a rep leaderboard you can filter, and a deals-at-risk list.",
@@ -27,7 +27,7 @@ export const analytics: AppTemplate = {
 };
 
 export const marketing: AppTemplate = {
-  slug: "app-campaign-planner", name: "Loop Campaign Planner", category: "Marketing & Creative", industry: "Marketing teams and agencies", type: "Web app",
+  slug: "app-campaign-planner", name: "Marketing campaign planner", category: "Marketing & Creative", industry: "Marketing teams and agencies", type: "Web app",
   styles: ["Playful", "Bold"], level: "Beginner-friendly", added: "2026-11-20",
   tagline: "Plan campaigns, schedule content and approve posts with clients.",
   description: "A marketing workspace: a content pipeline from idea to published, a content calendar, campaign results and a client approval inbox.",
@@ -64,7 +64,7 @@ export const marketing: AppTemplate = {
 };
 
 export const community: AppTemplate = {
-  slug: "app-community-events", name: "Gather Community", category: "Personal & Community", industry: "Communities, churches and clubs", type: "Web app",
+  slug: "app-community-events", name: "Community events & RSVPs", category: "Personal & Community", industry: "Communities, churches and clubs", type: "Web app",
   styles: ["Warm", "Playful"], level: "Beginner-friendly", added: "2026-11-20",
   tagline: "Events, RSVPs, members and announcements for a community group.",
   description: "A community app: upcoming events people can RSVP to, a member directory, announcements and a volunteer sign-up form.",
@@ -95,7 +95,7 @@ export const community: AppTemplate = {
 };
 
 export const recruiting: AppTemplate = {
-  slug: "app-hiring-tracker", name: "Talentboard Hiring", category: "Business & Corporate", industry: "HR and recruiting", type: "Internal tool",
+  slug: "app-hiring-tracker", name: "Hiring pipeline tracker", category: "Business & Corporate", industry: "HR and recruiting", type: "Internal tool",
   styles: ["Corporate", "Minimal"], level: "Beginner-friendly", added: "2026-11-20",
   tagline: "Open roles, candidate pipeline and interview schedule for a growing company.",
   description: "An applicant tracker: open roles with headcount, a candidate pipeline you can advance, an interview calendar and a public application form.",
@@ -126,7 +126,7 @@ export const recruiting: AppTemplate = {
 };
 
 export const habits: AppTemplate = {
-  slug: "app-personal-budget", name: "Ledgerly Budget", category: "Personal & Community", industry: "Personal finance", type: "Web app",
+  slug: "app-personal-budget", name: "Personal budget tracker", category: "Personal & Community", industry: "Personal finance", type: "Web app",
   styles: ["Minimal", "Playful"], level: "Beginner-friendly", added: "2026-11-20",
   tagline: "A personal budget with categories, bills and savings pots.",
   description: "A personal budgeting app: monthly budget by category, upcoming bills, a spending log you can add to, and savings pots.",

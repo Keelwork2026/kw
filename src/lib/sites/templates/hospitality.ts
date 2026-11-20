@@ -2,7 +2,7 @@ import type { Site } from "../types";
 import { contactPage, footer, legalPages } from "../common";
 
 export const harbourKitchen: Site = {
-  slug: "harbour-kitchen", name: "Harbour Kitchen", category: "Restaurant & Hospitality", style: "Warm editorial", voice: "warm",
+  slug: "harbour-kitchen", name: "Restaurant site with menu & table booking", category: "Restaurant & Hospitality", style: "Warm editorial", voice: "warm",
   tagline: "Seasonal seafood restaurant with menus, table booking and private dining.",
   description: "A coastal restaurant site with a full menu, online table requests, private dining enquiries, a story page and opening hours — ready for a neighbourhood restaurant or bistro.",
   palette: { bg: "#fbf6ef", surface: "#ffffff", ink: "#1f2a2e", muted: "#5b6669", accent: "#c4532f", accent2: "#e9a24b", soft: "#f5e6d6", line: "#eadccb", onAccent: "#ffffff" },
@@ -112,7 +112,7 @@ export const harbourKitchen: Site = {
 };
 
 export const wayfarer: Site = {
-  slug: "wayfarer-journeys", name: "Wayfarer Journeys", category: "Travel & Tourism", style: "Bright and airy", voice: "friendly",
+  slug: "wayfarer-journeys", name: "Tour operator site with trips & enquiries", category: "Travel & Tourism", style: "Bright and airy", voice: "friendly",
   tagline: "Small-group tour operator with trip pages, dates and enquiries.",
   description: "A travel company site with destination tours, detailed itineraries, departure dates, a planning guide and an enquiry form — for tour operators and travel planners.",
   palette: { bg: "#f6fafb", surface: "#ffffff", ink: "#12313d", muted: "#557079", accent: "#0f8a8a", accent2: "#f2a541", soft: "#e2f2f1", line: "#d6e6e8", onAccent: "#ffffff" },
@@ -190,7 +190,7 @@ export const wayfarer: Site = {
 };
 
 export const summit: Site = {
-  slug: "summit-2027", name: "Summit 2027", category: "Events", style: "Bold and electric", voice: "bold",
+  slug: "summit-2027", name: "Event site with schedule & tickets", category: "Events", style: "Bold and electric", voice: "bold",
   tagline: "Conference site with speakers, schedule, tickets and venue information.",
   description: "A two-day conference site with speakers, a full schedule, ticket tiers, venue and travel details, sponsorship packages and an FAQ — for conferences, festivals and meetups.",
   palette: { bg: "#0f0e17", surface: "#1b1a27", ink: "#fffffe", muted: "#a7a9be", accent: "#ff6e6c", accent2: "#7f5af0", soft: "#272538", line: "#2e2c40", onAccent: "#0f0e17" },

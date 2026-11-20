@@ -2,7 +2,7 @@ import type { Card, Site } from "../types";
 import { contactPage, footer, legalPages } from "../common";
 
 export const maisonVale: Site = {
-  slug: "maison-vale", name: "Maison Vale", category: "Fashion & Beauty", style: "Quiet luxury", voice: "luxury",
+  slug: "maison-vale", name: "Fashion store with collection & lookbook", category: "Fashion & Beauty", style: "Quiet luxury", voice: "luxury",
   tagline: "Fashion label with lookbook, collections, journal and appointments.",
   description: "A fashion and beauty brand site with seasonal collections, a lookbook, product pages, a journal, atelier appointments and stockists — for labels, boutiques and studios.",
   palette: { bg: "#f4efe9", surface: "#fbf8f4", ink: "#2a2420", muted: "#776a60", accent: "#8a5a44", accent2: "#c7a17a", soft: "#ebe1d6", line: "#ddd1c4", onAccent: "#fbf8f4" },
@@ -73,7 +73,7 @@ const CLAY: [string, string, string, "ceramic" | "bottle", number][] = [
 ];
 
 export const clayAndCo: Site = {
-  slug: "clay-and-co", name: "Clay & Co", category: "E-commerce", style: "Soft and earthy", voice: "friendly",
+  slug: "clay-and-co", name: "Online shop with product pages & cart", category: "E-commerce", style: "Soft and earthy", voice: "friendly",
   tagline: "Online shop with collections, product pages, basket, checkout and accounts.",
   description: "A complete online store: home, shop with filters, product pages with options, basket, checkout, customer account, delivery and returns, and an about page — for makers and small brands.",
   palette: { bg: "#faf6f0", surface: "#ffffff", ink: "#2d2a26", muted: "#6f675e", accent: "#b5653b", accent2: "#7a9e7e", soft: "#f1e6d8", line: "#e8ddd0", onAccent: "#ffffff" },
@@ -130,7 +130,7 @@ export const clayAndCo: Site = {
 };
 
 export const keystone: Site = {
-  slug: "keystone-homes", name: "Keystone Homes", category: "Real Estate", style: "Fresh and confident", voice: "professional",
+  slug: "keystone-homes", name: "Estate agent site with listings & valuations", category: "Real Estate", style: "Fresh and confident", voice: "professional",
   tagline: "Estate agency with property search, listings, valuations and guides.",
   description: "A real estate site with property search, listings with key facts, a property detail page with viewing requests, free valuation, buying and selling guides, and team — for agents and developers.",
   palette: { bg: "#f7f9fb", surface: "#ffffff", ink: "#16232e", muted: "#5b6975", accent: "#e4572e", accent2: "#29335c", soft: "#fde9e2", line: "#e1e7ec", onAccent: "#ffffff" },

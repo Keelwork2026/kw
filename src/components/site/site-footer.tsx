@@ -8,7 +8,7 @@ export function SiteFooter() {
   const columns: { title: string; links: { label: string; href: string }[] }[] = [
     { title: "Product", links: [...FEATURES.slice(0, 9).map((f) => ({ label: f.title, href: `/product/${f.slug}` })), { label: "Pricing", href: "/pricing" }] },
     { title: "Solutions", links: SOLUTIONS.map((s) => ({ label: s.title, href: `/solutions/${s.slug}` })) },
-    { title: "Templates", links: [{ label: "All templates", href: "/starters" }, { label: "Studio Bookings", href: "/starters/studio-bookings" }, { label: "Pulse Analytics", href: "/starters/pulse-analytics" }, { label: "Clay & Co shop", href: "/starters/clay-and-co" }, { label: "Folio portfolio", href: "/starters/folio" }, { label: "Deal Desk CRM", href: "/starters/deal-desk" }] },
+    { title: "Templates", links: [{ label: "All templates", href: "/starters" }, { label: "Class & appointment booking", href: "/starters/studio-bookings" }, { label: "Analytics dashboard", href: "/starters/pulse-analytics" }, { label: "Online shop", href: "/starters/clay-and-co" }, { label: "Portfolio", href: "/starters/folio" }, { label: "Sales CRM", href: "/starters/deal-desk" }] },
     { title: "Learn", links: [{ label: "Tutorials", href: "/tutorials" }, ...TUTORIALS.slice(0, 3).map((t) => ({ label: t.title, href: `/tutorials/${t.slug}` })), { label: "Changelog", href: "/changelog" }, { label: "Documentation", href: "/docs" }] },
     { title: "Trust", links: [{ label: "Security", href: "/trust" }, { label: "Privacy overview", href: "/privacy" }, { label: "System status", href: "/status" }, { label: "Your code is yours", href: "/trust#ownership" }, { label: "Acceptable use", href: "/acceptable-use" }, { label: "Report abuse", href: "/report" }] },
   ];

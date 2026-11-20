@@ -2,7 +2,7 @@ import type { AppTemplate } from "../types";
 import { PAL } from "../palettes";
 
 export const banking: AppTemplate = {
-  slug: "app-banking", name: "Kora Money", category: "Finance & Fintech", industry: "Digital banking", type: "Web app",
+  slug: "app-banking", name: "Mobile banking app", category: "Finance & Fintech", industry: "Digital banking", type: "Web app",
   styles: ["Premium", "Minimal"], level: "Advanced", featured: true, added: "2026-11-19",
   tagline: "Accounts, transfers, savings goals and statements for a digital bank.",
   description: "A customer banking app: account cards, spending insights, a transaction history with category filters, a two-step transfer with confirmation, and savings goals.",
@@ -37,7 +37,7 @@ export const banking: AppTemplate = {
 };
 
 export const loans: AppTemplate = {
-  slug: "app-loan-application", name: "Lendwell Loans", category: "Finance & Fintech", industry: "Lending", type: "Portal",
+  slug: "app-loan-application", name: "Loan applications & approvals", category: "Finance & Fintech", industry: "Lending", type: "Portal",
   styles: ["Corporate", "Minimal"], level: "Advanced", added: "2026-11-19",
   tagline: "Loan applications with eligibility, documents and an officer review queue.",
   description: "A lending portal: a customer application in steps with validation, an officer queue with risk filters and application details, and a portfolio dashboard.",
@@ -68,7 +68,7 @@ export const loans: AppTemplate = {
 };
 
 export const patients: AppTemplate = {
-  slug: "app-patient-portal", name: "Cedar Health Portal", category: "Healthcare", industry: "Clinics", type: "Portal",
+  slug: "app-patient-portal", name: "Patient portal with appointments", category: "Healthcare", industry: "Clinics", type: "Portal",
   styles: ["Warm", "Minimal"], level: "Advanced", featured: true, added: "2026-11-19",
   tagline: "Appointments, messages, results and prescriptions for clinic patients.",
   description: "A patient portal for a family clinic: upcoming appointments, booking in steps, secure messages with the care team, test results and repeat prescriptions.",
@@ -103,7 +103,7 @@ export const patients: AppTemplate = {
 };
 
 export const lms: AppTemplate = {
-  slug: "app-learning-platform", name: "Lumora Learning", category: "Education", industry: "Online courses", type: "Web app",
+  slug: "app-learning-platform", name: "Online learning platform", category: "Education", industry: "Online courses", type: "Web app",
   styles: ["Playful", "Warm"], level: "Beginner-friendly", featured: true, added: "2026-11-18",
   tagline: "Courses, lessons, progress and a class schedule for students.",
   description: "A learning platform for a tutoring school: a course catalogue with subject filters, student progress, a weekly live-class timetable and an enrolment form.",

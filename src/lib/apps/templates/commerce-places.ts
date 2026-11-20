@@ -2,7 +2,7 @@ import type { AppTemplate } from "../types";
 import { PAL } from "../palettes";
 
 export const store: AppTemplate = {
-  slug: "app-online-store", name: "Ọja Clothing Store", category: "E-commerce & Retail", industry: "Fashion retail", type: "Online store",
+  slug: "app-online-store", name: "Clothing store with cart & checkout", category: "E-commerce & Retail", industry: "Fashion retail", type: "Online store",
   styles: ["Bold", "Editorial"], level: "Beginner-friendly", featured: true, added: "2026-11-18",
   tagline: "A clothing shop with collections, a working basket and an orders back office.",
   description: "An online clothing store: a storefront with collection filters and a basket you can check out, plus an admin view of orders and stock.",
@@ -31,7 +31,7 @@ export const store: AppTemplate = {
 };
 
 export const restaurant: AppTemplate = {
-  slug: "app-restaurant-ordering", name: "Ember Kitchen Ordering", category: "Food & Hospitality", industry: "Restaurants", type: "Web app",
+  slug: "app-restaurant-ordering", name: "Restaurant ordering & table booking", category: "Food & Hospitality", industry: "Restaurants", type: "Web app",
   styles: ["Warm", "Bold"], level: "Beginner-friendly", featured: true, added: "2026-11-18",
   tagline: "Online ordering, table bookings and a kitchen view for a restaurant.",
   description: "A restaurant app: a menu customers order from with a basket, a table booking form, and a kitchen board that moves orders from new to ready.",
@@ -65,7 +65,7 @@ export const restaurant: AppTemplate = {
 };
 
 export const hotel: AppTemplate = {
-  slug: "app-hotel-booking", name: "Lagoon House Bookings", category: "Food & Hospitality", industry: "Hotels and guesthouses", type: "Web app",
+  slug: "app-hotel-booking", name: "Hotel room booking", category: "Food & Hospitality", industry: "Hotels and guesthouses", type: "Web app",
   styles: ["Premium", "Warm"], level: "Advanced", added: "2026-11-19",
   tagline: "Room booking for guests, with a front-desk occupancy view.",
   description: "A boutique hotel booking app: rooms with filters and a basket-style booking, a booking form with dates and guests, and front-desk occupancy and arrivals.",
@@ -96,7 +96,7 @@ export const hotel: AppTemplate = {
 };
 
 export const property: AppTemplate = {
-  slug: "app-property-listings", name: "Keyhaven Property", category: "Real Estate & Construction", industry: "Real estate agencies", type: "Web app",
+  slug: "app-property-listings", name: "Property listings & viewings", category: "Real Estate & Construction", industry: "Real estate agencies", type: "Web app",
   styles: ["Premium", "Corporate"], level: "Beginner-friendly", added: "2026-11-19",
   tagline: "Property listings with filters, viewings and an agent pipeline.",
   description: "A real estate agency app: listings to rent or buy with filters, a viewing request form, and an agent dashboard with enquiries and a deals pipeline.",
@@ -127,7 +127,7 @@ export const property: AppTemplate = {
 };
 
 export const construction: AppTemplate = {
-  slug: "app-construction-sites", name: "Steelline Site Manager", category: "Real Estate & Construction", industry: "Construction", type: "Internal tool",
+  slug: "app-construction-sites", name: "Construction site manager", category: "Real Estate & Construction", industry: "Construction", type: "Internal tool",
   styles: ["Bold", "Technical"], level: "Advanced", added: "2026-11-19",
   tagline: "Projects, site diaries, crews and materials for a construction company.",
   description: "An operations tool for a construction firm: project progress and budget, a site diary form, crew schedules and a materials order list with delivery status.",

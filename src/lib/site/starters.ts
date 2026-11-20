@@ -26,7 +26,7 @@ const p = (bg: string, surface: string, ink: string, muted: string, accent: stri
 
 export const STARTERS: Starter[] = [
   {
-    slug: "studio-bookings", name: "Studio Bookings", category: "Business",
+    slug: "studio-bookings", name: "Class & appointment booking", category: "Business",
     tagline: "Class schedules, passes and payments for studios.",
     description: "A booking site for a yoga, dance or fitness studio. Members browse the weekly timetable, book a spot, buy class passes and get reminders. Staff manage classes, capacity and the waitlist from an admin page.",
     pages: ["Home with this week's classes", "Timetable", "Class detail and booking", "Passes and checkout", "My bookings", "Admin: classes, capacity, waitlist"],
@@ -36,7 +36,7 @@ export const STARTERS: Starter[] = [
     design: { kind: "booking", palette: p("#fbf6f1", "#ffffff", "#2b2321", "#7a6b66", "#c2566a", "#e7a46a", "#f6e3e1"), headline: "Find your flow", sub: "Classes this week" },
   },
   {
-    slug: "folio", name: "Folio", category: "Creative",
+    slug: "folio", name: "Portfolio with case studies", category: "Creative",
     tagline: "A portfolio with case studies that read like magazines.",
     description: "A personal portfolio for designers, photographers and studios. Big type, image-led case studies, an about page and a contact form that lands in your inbox.",
     pages: ["Home with selected work", "Case study pages", "About", "Contact"],
@@ -46,7 +46,7 @@ export const STARTERS: Starter[] = [
     design: { kind: "portfolio", palette: p("#f5f3ee", "#ffffff", "#141414", "#6b6b6b", "#1f4fff", "#ff6b3d", "#e9e6df"), headline: "Design that ships", sub: "Selected work 2024–2026" },
   },
   {
-    slug: "pulse-analytics", name: "Pulse Analytics", category: "SaaS",
+    slug: "pulse-analytics", name: "Analytics dashboard", category: "SaaS",
     tagline: "A SaaS dashboard with teams, charts and plans.",
     description: "The skeleton of a SaaS product: sign-in, teams with roles, a dashboard of charts and tables, settings and subscription billing.",
     pages: ["Marketing home and pricing", "Sign-in and onboarding", "Dashboard with KPIs and charts", "Reports table with filters", "Team and roles", "Billing and settings"],
@@ -56,7 +56,7 @@ export const STARTERS: Starter[] = [
     design: { kind: "dashboard", palette: p("#f6f7fb", "#ffffff", "#141a2b", "#6a7287", "#5b5bf6", "#18b98c", "#eceefe"), headline: "Pulse", sub: "Last 30 days" },
   },
   {
-    slug: "clay-and-co", name: "Clay & Co", category: "Commerce",
+    slug: "clay-and-co", name: "Online shop with cart", category: "Commerce",
     tagline: "A small shop with a big personality.",
     description: "An online shop for a ceramics studio: catalogue, product pages, cart and checkout, with stock that updates as you sell.",
     pages: ["Shop home", "Collection pages", "Product page", "Cart and checkout", "Order confirmation", "Admin: products, stock, orders"],
@@ -66,7 +66,7 @@ export const STARTERS: Starter[] = [
     design: { kind: "shop", palette: p("#f7f1ea", "#fffaf5", "#2a211b", "#7b6a5d", "#b4532a", "#5e7d5a", "#efe2d3"), headline: "Made by hand", sub: "New glazes for autumn" },
   },
   {
-    slug: "streaks", name: "Streaks", category: "Personal",
+    slug: "streaks", name: "Habit tracker", category: "Personal",
     tagline: "Habits, streaks and an evening nudge.",
     description: "A habit tracker that makes consistency visible: daily check-ins, streak rings, a calendar heatmap and an optional evening reminder.",
     pages: ["Today", "Habit detail with history", "Calendar heatmap", "Settings and reminders"],
@@ -76,7 +76,7 @@ export const STARTERS: Starter[] = [
     design: { kind: "habits", palette: p("#f4f6f2", "#ffffff", "#1d2a20", "#66736a", "#2f9e5b", "#f4a83b", "#e3f1e6"), headline: "Today", sub: "4 of 5 done" },
   },
   {
-    slug: "launchpad", name: "Launchpad", category: "Marketing",
+    slug: "launchpad", name: "Waitlist landing page", category: "Marketing",
     tagline: "A waitlist page that converts.",
     description: "A launch page with a sharp headline, social proof you supply, a waitlist with referral positions and a simple admin to export sign-ups.",
     pages: ["Launch page", "Thank-you page with referral link", "Admin: sign-ups and export"],
@@ -86,7 +86,7 @@ export const STARTERS: Starter[] = [
     design: { kind: "waitlist", palette: p("#0f0e14", "#1a1922", "#f3f1fa", "#a7a3ba", "#ff5c8a", "#8b6cff", "#262433"), headline: "Something new is coming", sub: "Be first in line" },
   },
   {
-    slug: "harbour-kitchen", name: "Harbour Kitchen", category: "Food & drink",
+    slug: "harbour-kitchen", name: "Restaurant site with menu & booking", category: "Food & drink",
     tagline: "A restaurant site with menu, bookings and pre-orders.",
     description: "A restaurant website that does the work: a beautiful menu, table reservations with time slots, and click-and-collect pre-orders.",
     pages: ["Home", "Menu", "Reserve a table", "Order for collection", "Admin: bookings, menu, orders"],
@@ -96,7 +96,7 @@ export const STARTERS: Starter[] = [
     design: { kind: "restaurant", palette: p("#f6f1e8", "#fffdf8", "#13243a", "#6c7280", "#e2603f", "#2f6f8f", "#ece3d3"), headline: "Fresh from the harbour", sub: "Tonight's menu" },
   },
   {
-    slug: "field-notes", name: "Field Notes", category: "Content",
+    slug: "field-notes", name: "Blog with newsletter", category: "Content",
     tagline: "A blog and newsletter with members-only posts.",
     description: "A writing home: posts with rich formatting, tags and search, a newsletter sign-up and members-only posts for paying supporters.",
     pages: ["Home with latest posts", "Post page", "Tag and search", "Subscribe", "Members area", "Admin editor"],
@@ -106,7 +106,7 @@ export const STARTERS: Starter[] = [
     design: { kind: "blog", palette: p("#f7f5f0", "#ffffff", "#20221f", "#6d6f68", "#4c7a54", "#c08a3e", "#e8ece2"), headline: "Field Notes", sub: "Essays on slow places" },
   },
   {
-    slug: "deal-desk", name: "Deal Desk", category: "Internal tools",
+    slug: "deal-desk", name: "Lightweight sales CRM", category: "Internal tools",
     tagline: "A lightweight CRM your team will actually use.",
     description: "An internal tool for a small sales team: contacts, companies, a deal pipeline board, tasks and a weekly summary.",
     pages: ["Pipeline board", "Contacts and companies", "Deal detail with notes", "Tasks", "Reports"],

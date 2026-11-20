@@ -26,7 +26,7 @@ export function ProjectSetupFields({ name: initialName, prompt: initialPrompt, t
       <div className="grid content-start gap-4">
         <div>
           <label className="label" htmlFor="name">Project name</label>
-          <input id="name" name="name" required maxLength={80} className="input" placeholder="Studio Bookings" value={name} onChange={(e) => setName(e.target.value)} />
+          <input id="name" name="name" required maxLength={80} className="input" placeholder="e.g. Class booking app" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div>
           <label className="label" htmlFor="prompt">What should it do?</label>

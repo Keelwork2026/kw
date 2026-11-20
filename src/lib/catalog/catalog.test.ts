@@ -63,3 +63,10 @@ test("catalog: recent, related and use links", () => {
   assert.ok(href.startsWith("/new-project?") && new URLSearchParams(href.split("?")[1]).get("template") === crm.slug);
   assert.ok(templateUseHref(crm, false).startsWith("/sign-up?"));
 });
+
+test("catalog: template names say what the template does, not a sample company", async () => {
+  const { SITES } = await import("@/lib/sites");
+  for (const a of APP_TEMPLATES) assert.ok(!a.name.includes(a.brand.split(" ")[0]!), `${a.slug}: ${a.name}`);
+  for (const s of SITES) assert.ok(!s.name.includes(s.logo.word.split(" ")[0]!), `${s.slug}: ${s.name}`);
+  for (const a of APP_TEMPLATES) assert.ok(!appBrief(a).includes(a.brand), `${a.slug} brief names the sample brand`);
+});

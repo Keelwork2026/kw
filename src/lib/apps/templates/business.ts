@@ -4,7 +4,7 @@ import { PAL } from "../palettes";
 const STAGE = { Lead: "neutral", Qualified: "info", Proposal: "warn", Won: "good", Lost: "bad" } as const;
 
 export const crm: AppTemplate = {
-  slug: "app-crm-northwind", name: "Northwind CRM", category: "Business & Corporate", industry: "B2B sales", type: "Web app",
+  slug: "app-crm-northwind", name: "CRM for contacts & deals", category: "Business & Corporate", industry: "B2B sales", type: "Web app",
   styles: ["Corporate", "Minimal"], level: "Advanced", featured: true, added: "2026-11-18",
   tagline: "Pipeline, contacts and follow-ups for a 10-person sales team.",
   description: "A sales CRM for a B2B team: a revenue dashboard, a deal pipeline you can advance stage by stage, a searchable contact list with detail drawers, and a shared inbox for replies.",
@@ -44,7 +44,7 @@ export const crm: AppTemplate = {
 };
 
 export const projects: AppTemplate = {
-  slug: "app-project-tracker", name: "Atlas Projects", category: "Productivity & Workflow", industry: "Agencies and product teams", type: "Web app",
+  slug: "app-project-tracker", name: "Project & task tracker", category: "Productivity & Workflow", industry: "Agencies and product teams", type: "Web app",
   styles: ["Minimal", "Technical"], level: "Beginner-friendly", added: "2026-11-18",
   tagline: "Boards, timelines and workload for a team shipping client work.",
   description: "Project management for a small studio: a sprint board you can move cards across, project progress, a weekly schedule and a task list you can filter by owner.",
@@ -82,7 +82,7 @@ export const projects: AppTemplate = {
 };
 
 export const helpdesk: AppTemplate = {
-  slug: "app-helpdesk", name: "Relay Helpdesk", category: "Technology & SaaS", industry: "Customer support", type: "Internal tool",
+  slug: "app-helpdesk", name: "Customer support helpdesk", category: "Technology & SaaS", industry: "Customer support", type: "Internal tool",
   styles: ["Minimal", "Technical"], level: "Advanced", added: "2026-11-19",
   tagline: "A support inbox with SLAs, queues and customer context.",
   description: "Customer support for a software company: ticket queues with priority filters, a conversation view you can reply in, response-time metrics and a knowledge-base progress tracker.",
