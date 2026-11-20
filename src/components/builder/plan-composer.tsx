@@ -69,7 +69,6 @@ export function PlanComposer({ projectId, canPlan, planNow: offerPlan, aiReady }
     setResult({ ok: true, message: showing.message });
     setShowing(null);
     document.getElementById("plan")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- set only updates local state
   }, [showing, refreshing]);
 
   return (
