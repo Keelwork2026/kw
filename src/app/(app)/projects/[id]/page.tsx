@@ -19,9 +19,11 @@ import { sendMessage, requestPlan, approvePlan, decideApproval, controlRun, setS
 
 export const metadata = { title: "Builder" };
 
-export default async function BuilderPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ created?: string }> }) {
+export default async function BuilderPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ created?: string; copied?: string; install?: string }> }) {
   const { id } = await params;
-  const justCreated = (await searchParams).created === "1";
+  const sp = await searchParams;
+  const justCreated = sp.created === "1";
+  const copied = /^\d{1,5}$/.test(sp.copied ?? "") ? Number(sp.copied) : null;
   const { supabase, project, can, readOnly } = await loadProject(id);
   const writable = can("project.write");
 
@@ -50,7 +52,7 @@ export default async function BuilderPage({ params, searchParams }: { params: Pr
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <AutoRefresh active={Boolean(activeRun)} />
-      {justCreated ? <div className="xl:col-span-2"><Created name={project.name} hasIdea={Boolean(lastMsg)} aiReady={aiReady} /></div> : null}
+      {justCreated ? <div className="xl:col-span-2"><Created name={project.name} hasIdea={Boolean(lastMsg)} aiReady={aiReady} copied={copied} installFailed={sp.install === "failed"} /></div> : null}
       {next.length || !readOnly ? <div className="xl:col-span-2"><NextSteps items={next} projectId={project.id} /></div> : null}
       <div className="grid content-start gap-6">
         {!aiReady ? <Notice>AI isn&apos;t configured on this installation (AI_MODEL_CATALOG), so the planner can&apos;t answer yet. Your messages are still saved.</Notice> : null}

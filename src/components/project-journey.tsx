@@ -29,20 +29,21 @@ export function JourneySteps({ stages }: { stages: Stage[] }) {
 }
 
 /** Shown once after a project is created: what happened and what comes next. */
-export function Created({ name, hasIdea, aiReady }: { name: string; hasIdea: boolean; aiReady: boolean }) {
+export function Created({ name, hasIdea, aiReady, copied = null, installFailed = false }: { name: string; hasIdea: boolean; aiReady: boolean; copied?: number | null; installFailed?: boolean }) {
   return (
     <div role="status" className="kw-fade flex items-start gap-4 rounded-2xl border border-border bg-surface p-5">
       <span className="kw-pop grid h-11 w-11 shrink-0 place-items-center rounded-full bg-soft-accent text-soft-accent-ink">
         <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" className="kw-draw" aria-hidden><path d="M5 12.5l4.5 4.5L19 7" /></svg>
       </span>
       <div>
-        <p className="font-display text-lg font-bold">{name} is ready to plan</p>
+        <p className="font-display text-lg font-bold">{copied !== null ? `${name} is ready` : `${name} is ready to plan`}</p>
         <p className="mt-1 text-sm text-muted">
-          {!aiReady ? "Your idea is saved. The planner will answer once AI is configured on this installation."
+          {copied !== null ? `${copied} files were copied and committed. Secrets weren't copied — add the ones this app needs under Secrets.${installFailed ? " Installing packages didn't finish, so the preview may not start until they're installed." : " Start the preview to see it running."}`
+            : !aiReady ? "Your idea is saved. The planner will answer once AI is configured on this installation."
             : hasIdea ? "Your idea is with the Software Architect. Answer its questions in the chat, then approve the plan — nothing is built before that."
             : "Describe what it should do in the chat; the Software Architect turns it into a plan for you to approve."}
         </p>
-        <a href="#chat" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">Go to the chat <span aria-hidden>→</span></a>
+        <a href={copied !== null ? "#preview" : "#chat"} className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">{copied !== null ? "Go to the preview" : "Go to the chat"} <span aria-hidden>→</span></a>
       </div>
     </div>
   );
