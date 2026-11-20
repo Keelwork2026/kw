@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { HeroPrompt } from "@/components/marketing/hero-prompt";
-import { SITES, SITE_CATEGORIES, categorySlug, siteBySlug } from "@/lib/sites";
+import { SITES, SITE_CATEGORIES, siteBySlug } from "@/lib/sites";
 import { SiteThumb } from "@/components/sites/site-card";
 import { Art } from "@/components/sites/art";
 import { HeroInterface } from "@/components/marketing/hero-interface";
@@ -57,7 +57,7 @@ export default function HomePage() {
             const hero = t.pages[0]!.sections.find((x) => x.t === "hero");
             const img = hero && "img" in hero && hero.img ? hero.img : { art: "abstract" as const, alt: "" };
             return (
-              <li key={c}><Link href={`/starters?category=${categorySlug(c)}#gallery`} className="group block overflow-hidden rounded-3xl border border-border bg-surface transition hover:-translate-y-0.5 hover:border-accent">
+              <li key={c}><Link href={`/starters?q=${encodeURIComponent(c)}#gallery`} className="group block overflow-hidden rounded-3xl border border-border bg-surface transition hover:-translate-y-0.5 hover:border-accent">
                 <div className="aspect-[4/3] overflow-hidden"><Art kind={img.art} palette={t.palette} seed={img.seed} alt="" className="h-full w-full transition group-hover:scale-105" /></div>
                 <p className="px-3 pb-3 pt-2.5 text-sm font-semibold leading-tight">{c}</p>
               </Link></li>

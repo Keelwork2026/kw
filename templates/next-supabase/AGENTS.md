@@ -22,6 +22,15 @@ These rules are part of the project. Follow them in every change.
 - Add `data-kw-source="path/to/file.tsx:LINE"` to elements you render, so Design mode can tell which file and line to change.
 - `app/kw-inspector.tsx` and `app/kw-analytics.tsx` belong to Keelwork; keep them in the root layout.
 
+## Images
+- Use the owner's own images in `public/images` and real app screenshots in `public/screenshots`. `public/images/manifest.json` gives each file's alt text; use it.
+- Never hotlink, download or invent stock photos, logos or people. Where an image is needed and none exists, render a clearly labelled placeholder (e.g. "Photo of your studio — add one in Keelwork → Media") and mention it in your summary.
+- Use `next/image` with width and height, and the manifest's alt text.
+
+## Security headers
+- `middleware.ts` sends a Content-Security-Policy with a per-request nonce (built in `lib/csp.ts`). Keep it.
+- When you add a service the browser must reach (payments, maps, an embed, a CDN), add its exact origin to the matching directive in `lib/csp.ts` with a comment, and add a test in `tests/csp.test.ts`. Never add `'unsafe-eval'` in production, `*`, or `'unsafe-inline'` to `script-src`.
+
 ## Stack
 <!-- kw:stack:start -->
 - Backend: Supabase. Write migrations in `supabase/migrations`; every table enables row level security in the same migration and has policies.

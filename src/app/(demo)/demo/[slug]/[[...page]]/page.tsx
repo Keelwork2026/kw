@@ -5,16 +5,23 @@ import { pageBySlug, plain } from "@/lib/sites/text";
 import { SiteDocument } from "@/components/sites/render";
 import { PreviewBar } from "@/components/sites/preview-bar";
 import { siteUseHref } from "@/components/sites/site-card";
+import { APP_TEMPLATES, appBySlug, appUseHref } from "@/lib/apps";
+import { AppPreview } from "@/components/apps/render";
 
 /** Public, sign-in-free live demos of every website template. */
 type Params = { params: Promise<{ slug: string; page?: string[] }> };
 
 export function generateStaticParams() {
-  return SITES.flatMap((s) => s.pages.map((p) => ({ slug: s.slug, page: p.slug ? p.slug.split("/") : [] })));
+  return [
+    ...SITES.flatMap((s) => s.pages.map((p) => ({ slug: s.slug, page: p.slug ? p.slug.split("/") : [] }))),
+    ...APP_TEMPLATES.flatMap((a) => [{ slug: a.slug, page: [] }, ...a.screens.map((s) => ({ slug: a.slug, page: [s.slug] }))]),
+  ];
 }
 
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const { slug, page } = await params;
+  const app = appBySlug(slug);
+  if (app) return { title: { absolute: `${app.name} — interactive template preview` }, description: app.tagline, robots: { index: false, follow: true } };
   const site = siteBySlug(slug);
   const p = site && pageBySlug(site, page?.join("/") ?? "");
   if (!site || !p) return {};
@@ -32,6 +39,18 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export default async function DemoPage({ params }: Params) {
   const { slug, page } = await params;
+  const app = appBySlug(slug);
+  if (app) {
+    const screen = page?.[0];
+    if (page && page.length > 1) notFound();
+    if (screen && !app.screens.some((s) => s.slug === screen)) notFound();
+    return (
+      <>
+        <AppPreview app={app} initialScreen={screen} />
+        <PreviewBar name={`${app.name} (sample data)`} useHref={appUseHref(app, false)} detailHref={`/starters?t=${app.slug}#gallery`} />
+      </>
+    );
+  }
   const site = siteBySlug(slug);
   const p = site && pageBySlug(site, page?.join("/") ?? "");
   if (!site || !p) notFound();

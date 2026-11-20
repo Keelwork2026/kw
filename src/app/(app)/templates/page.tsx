@@ -3,38 +3,33 @@ import { requireOrg } from "@/lib/org";
 import { PageHeader, EmptyState } from "@/components/page-header";
 import { ActionForm } from "@/components/action-form";
 import { importWebsite } from "./actions";
-import { STARTERS, starterHref } from "@/lib/site/starters";
-import { StarterCard } from "@/components/site/blocks";
-import { SITES, siteBySlug } from "@/lib/sites";
-import { SiteCard } from "@/components/sites/site-card";
+import { CATALOG } from "@/lib/catalog";
+import { CatalogGallery } from "@/components/catalog/catalog-gallery";
 
 export const metadata = { title: "Templates" };
 
 export default async function TemplatesPage() {
   const { supabase, org, can } = await requireOrg();
-  const [{ data: items }, { data: projects }] = await Promise.all([
+  const [{ data: items }, { data: projects }, { data: used }] = await Promise.all([
     supabase.from("marketplace_items").select("id, title, description, category").eq("status", "approved").order("reviewed_at", { ascending: false }).limit(12),
     supabase.from("projects").select("id, name").eq("org_id", org.id).neq("status", "archived").order("updated_at", { ascending: false }),
+    supabase.from("projects").select("template_key").eq("org_id", org.id).not("template_key", "is", null).limit(1000),
   ]);
+  // Real counts of projects in this workspace started from each template.
+  const usage: Record<string, number> = {};
+  for (const p of used ?? []) if (p.template_key) usage[p.template_key] = (usage[p.template_key] ?? 0) + 1;
   return (
     <>
       <PageHeader title="Templates" description="Start from a designed starter, a reviewed marketplace template, or the structure of a site you own." actions={<Link href="/marketplace" className="btn btn-secondary">Browse the marketplace</Link>} />
       <section aria-labelledby="starters" className="mb-12">
-        <div className="flex flex-wrap items-end justify-between gap-3">
+        <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
           <div>
-            <h2 id="starters" className="text-xl">Website templates</h2>
-            <p className="text-sm text-muted">{SITES.length} complete multi-page websites. Use one with the AI builder, or write your own from your business details.</p>
+            <h2 id="starters" className="text-xl">Templates</h2>
+            <p className="text-sm text-muted">{CATALOG.length} websites and apps. Search in your own words, preview without leaving the page, then build from one.</p>
           </div>
-          {can("project.write") ? <Link href="/sites/new" className="btn btn-primary">Write a website from my details</Link> : null}
+          {can("project.write") ? <Link href="/sites/new" className="btn btn-secondary">Write a website from my details</Link> : null}
         </div>
-        <ul className="mt-4 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {SITES.map((s) => <li key={s.slug}><SiteCard site={s} /></li>)}
-        </ul>
-        <h3 className="mt-10 text-lg">App starters</h3>
-        <p className="mb-4 text-sm text-muted">Starting points for web apps. “Use this template” opens Create Project with the name and a detailed brief filled in — edit anything before planning.</p>
-        <ul className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
-          {STARTERS.filter((s) => !siteBySlug(s.slug)).map((s) => <li key={s.slug}><StarterCard s={s} href={starterHref(s, true)} /></li>)}
-        </ul>
+        <CatalogGallery signedIn usage={usage} />
       </section>
       <section aria-labelledby="reviewed">
         <h2 id="reviewed" className="mb-3 text-xl">From the marketplace</h2>

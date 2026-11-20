@@ -36,6 +36,10 @@
       "sharp",
       "@swc/core",
       "unrs-resolver"
-    ]
+    ],
+    "overrides": {
+      "postcss": "^8.5.23",
+      "@opennextjs/cloudflare>glob": "^14.0.2"
+    }
   }
 }

@@ -92,8 +92,7 @@ export function createPreviewProxy(o: ProxyOptions) {
       const upstream = httpRequest({ host: "127.0.0.1", port, method: req.method, path: req.url, headers }, (up) => {
         const out = { ...up.headers };
         delete out["x-frame-options"];
-        delete out["content-security-policy"];
-        out["content-security-policy"] = frame;
+        out["content-security-policy"] = withFrameAncestors(out["content-security-policy"], frame);
         res.writeHead(up.statusCode ?? 502, out);
         up.pipe(res);
       });
@@ -136,4 +135,14 @@ if (process.argv[1] && /preview-proxy\/proxy\.ts$/.test(process.argv[1])) {
   const port = Number(process.env.PORT ?? 8080);
   const host = process.env.HOST || "0.0.0.0";
   server.listen(port, host, () => console.log(`[preview-proxy] listening on ${host}:${port}`));
+}
+
+/**
+ * Keeps the app's own Content-Security-Policy (so previews behave like the
+ * deployed app) but lets only Keelwork frame it.
+ */
+export function withFrameAncestors(appCsp: string | string[] | undefined, frame: string): string {
+  const raw = Array.isArray(appCsp) ? appCsp.join("; ") : appCsp ?? "";
+  const kept = raw.split(";").map((d) => d.trim()).filter((d) => d && !/^frame-ancestors\b/i.test(d));
+  return [...kept, frame].join("; ");
 }

@@ -2,7 +2,7 @@ import { test, before, after } from "node:test";
 import assert from "node:assert/strict";
 import { createServer, request, type Server } from "node:http";
 import type { AddressInfo } from "node:net";
-import { createPreviewProxy } from "./proxy";
+import { createPreviewProxy, withFrameAncestors } from "./proxy";
 import { signPreviewToken, verifyPreviewToken, safeNext, projectFromHost } from "../../src/lib/preview/token";
 
 const SECRET = "s".repeat(40);
@@ -88,4 +88,11 @@ test("proxy refuses missing, foreign, expired and redirecting tokens", async () 
   assert.equal((await get("/", "evil.com", `kw_preview=${token}`)).status, 404);
   const stopped = signPreviewToken(SECRET, OTHER);
   assert.equal((await get(`/`, host(OTHER), `kw_preview=${stopped}`)).status, 503);
+});
+
+test("proxy keeps the app's CSP but only Keelwork may frame it", () => {
+  const f = "frame-ancestors https://app.keelwork.test";
+  assert.equal(withFrameAncestors(undefined, f), f);
+  assert.equal(withFrameAncestors("default-src 'self'; frame-ancestors 'none'; object-src 'none'", f), `default-src 'self'; object-src 'none'; ${f}`);
+  assert.equal(withFrameAncestors(["script-src 'self'", "FRAME-ANCESTORS *"], f), `script-src 'self'; ${f}`);
 });

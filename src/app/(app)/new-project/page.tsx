@@ -6,12 +6,16 @@ import { createProject } from "./actions";
 import Link from "next/link";
 import { STARTERS, starterHref } from "@/lib/site/starters";
 import { TemplatePreview } from "@/components/site/template-preview";
+import { entryBySlug } from "@/lib/catalog";
 
 export const metadata = { title: "Create Project" };
 
 export default async function NewProjectPage({ searchParams }: { searchParams: Promise<Record<string, string | undefined>> }) {
   const { org, can } = await requireOrg();
   const carry = onboardingParams(await searchParams);
+  // A template link may carry only its slug; the brief comes from the catalogue.
+  const entry = carry.template ? entryBySlug(carry.template) : undefined;
+  if (entry) { carry.name ??= entry.name_for_project; carry.prompt ??= entry.brief; }
   if (!can("project.write")) {
     return (<><PageHeader title="Create Project" /><EmptyState icon="users" title="You can't create projects here">Your role in {org.name} is read-only. Ask an owner or admin for the member role.</EmptyState></>);
   }
@@ -29,7 +33,7 @@ export default async function NewProjectPage({ searchParams }: { searchParams: P
           <textarea id="prompt" name="prompt" rows={6} maxLength={2000} className="input" defaultValue={carry.prompt ?? ""} placeholder="A booking app for my yoga studio with class passes and card payments" />
           <p className="mt-1 text-xs text-muted">Up to 2000 characters. You&apos;ll choose the backend and hosting before the first build.</p>
         </div>
-        {carry.template ? <p className="text-sm text-muted">Starting from the <strong>{carry.template}</strong> template.</p> : null}
+        {carry.template ? <p className="text-sm text-muted">Starting from the <strong>{entry?.name ?? carry.template}</strong> template.</p> : null}
       </ActionForm>
       <section aria-labelledby="start-from" className="mt-10">
         <div className="flex items-end justify-between gap-3"><h2 id="start-from" className="text-xl">Or start from a template</h2><Link href="/templates#starters" className="text-sm font-semibold text-accent">See details →</Link></div>

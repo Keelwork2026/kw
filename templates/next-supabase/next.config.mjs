@@ -1,7 +1,7 @@
 /**
- * Protective response headers for every route. A Content-Security-Policy isn't
- * set here because a correct one depends on the scripts and services the app
- * ends up using; add it once those are known (Keelwork's QA flags it until then).
+ * Protective response headers for every route. The Content-Security-Policy is
+ * set per request (with a nonce) in middleware.ts; see lib/csp.ts to allow a
+ * new service.
  * @type {import('next').NextConfig}
  */
 const securityHeaders = [

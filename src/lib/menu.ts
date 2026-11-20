@@ -258,6 +258,7 @@ export const PROJECT_TAB_HINTS: Record<ProjectTab, { hint: string; can: string[]
   "": { hint: "Plan and build with the agents", can: ["Choose the stack", "Chat with the planner and approve the plan", "Answer agent requests", "Preview and export"], jump: [{ label: "Stack", at: "stack" }, { label: "Chat", at: "chat" }, { label: "Plan", at: "plan" }, { label: "Waiting for you", at: "approvals" }, { label: "Board", at: "board" }, { label: "Preview", at: "preview" }] },
   code: { hint: "Browse, edit and commit files", can: ["Open any file in the editor", "Save changes as a commit", "See history and restore old versions"] },
   database: { hint: "Schema and migrations", can: ["Browse tables and policies", "Apply pending migrations"], jump: [{ label: "Tables", at: "tables" }, { label: "Migrations", at: "migrations" }] },
+  media: { hint: "Your photos and real app screenshots", can: ["Upload photos you own, with alt text", "Capture screenshots of the running app", "Remove images"], jump: [{ label: "Photos", at: "photos" }, { label: "Screenshots", at: "shots" }] },
   backend: { hint: "Routes and server actions", can: ["Review every endpoint for auth and validation"], jump: [{ label: "API routes", at: "routes" }, { label: "Server actions", at: "actions" }] },
   qa: { hint: "Quality assurance and release readiness", can: ["Run Quick or Full QA", "Triage issues and ask the agents to fix them", "See release readiness"], jump: [{ label: "Overview" }, { label: "Issues", query: "view=issues" }, { label: "Results", query: "view=tests" }, { label: "Release", query: "view=readiness" }, { label: "Reports", query: "view=reports" }] },
   tests: { hint: "Run checks and read logs", can: ["Run tests, lint, type checks and builds", "Read full logs"], jump: [{ label: "Run checks", at: "run" }, { label: "History", at: "history" }] },
@@ -304,7 +305,7 @@ export function itemForPath(pathname: string): { item: MenuItem; group: MenuGrou
 
 /** Inside a project, the sidebar highlights the studio that owns the open tab. */
 export const TAB_TO_MENU: Record<ProjectTab, string> = {
-  "": "builder", code: "builder", database: "database", backend: "backend", qa: "testing", tests: "testing", incidents: "testing",
+  "": "builder", code: "builder", database: "database", media: "builder", backend: "backend", qa: "testing", tests: "testing", incidents: "testing",
   security: "security", secrets: "security", deployments: "deployments", analytics: "analytics", automations: "automation", integrations: "integrations",
 };
 
