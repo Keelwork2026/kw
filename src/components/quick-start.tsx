@@ -23,7 +23,9 @@ export function QuickStart({ action }: { action: FormAction }) {
     // Only fill the opening phrase when the box is empty or still holds another kind's phrase.
     if (next && (!idea.trim() || IDEA_KINDS.some((x) => x.starter.trim() === idea.trim()))) setIdea(k.starter);
     if (!next && IDEA_KINDS.some((x) => x.starter.trim() === idea.trim())) setIdea("");
-    requestAnimationFrame(() => { const el = area.current; if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } });
+    // Focus now; put the caret at the end once React has written the new value.
+    area.current?.focus();
+    setTimeout(() => { const el = area.current; if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); } }, 0);
   };
 
   return (
