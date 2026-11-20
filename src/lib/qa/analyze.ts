@@ -18,7 +18,7 @@ export type BrowserSnap = { available: boolean; reason?: string; engine?: string
 
 export function hashHex(s: string): string {
   let a = 0x811c9dc5, b = 0x01000193 ^ s.length;
-  for (let i = 0; i < s.length; i++) { const c = s.charCodeAt(i); a = Math.imul(a ^ c, 0x01000193) >>> 0; b = Math.imul(b ^ c, 0x5bd1e995) >>> 0; b ^= b >>> 13; }
+  for (let i = 0; i < s.length; i++) { const c = s.charCodeAt(i); a = Math.imul(a ^ c, 0x01000193) >>> 0; b = Math.imul(b ^ c, 0x5bd1e995) >>> 0; b = (b ^ (b >>> 13)) >>> 0; }
   return a.toString(16).padStart(8, "0") + b.toString(16).padStart(8, "0");
 }
 

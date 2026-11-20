@@ -206,3 +206,9 @@ test("pentest needs authorisation; business rules become questions", async () =>
   const rules = businessRules(discover(files, { description: "shop" }));
   assert.ok(rules.length && rules.every((x) => x.status === "not_run"));
 });
+
+test("hashHex: always 16 lowercase hex characters (issue fingerprints)", async () => {
+  const { hashHex } = await import("./analyze");
+  for (let i = 0; i < 5000; i++) assert.match(hashHex(`security|header-${i}|/${i % 7}`), /^[0-9a-f]{16}$/);
+  for (const s of ["security|check-audit|", "security|header-xcto|/", "security|header-referrer|/"]) assert.match(hashHex(s), /^[0-9a-f]{16}$/);
+});
