@@ -63,7 +63,8 @@ export function createBrokerClient(cfg: BrokerConfig) {
     exec: (id: string, argv: string[], approved = false) =>
       call<ExecResult>("POST", `/sandboxes/${enc(id)}/exec`, { argv, approved }, 11 * 60_000),
     putEnv: (id: string, vars: Record<string, string>) => call<{ ok: true }>("PUT", `/sandboxes/${enc(id)}/env`, { vars }),
-    serve: (id: string) => call<{ ok: true }>("POST", `/sandboxes/${enc(id)}/serve`),
+    /** Starts the dev server, restarting it if one is running. With onlyIfRunning, only restarts. */
+    serve: (id: string, opts: { onlyIfRunning?: boolean } = {}) => call<{ ok: true }>("POST", `/sandboxes/${enc(id)}/serve`, { onlyIfRunning: opts.onlyIfRunning === true }),
     port: (id: string) => call<{ port: number }>("GET", `/sandboxes/${enc(id)}/port`),
   };
 }

@@ -80,7 +80,12 @@ function brokerSandbox(broker: BrokerClient, projectId: string): DeploySandbox {
     listTree,
     readFile: (p) => broker.readFileBytes(sb, p),
     writeFile: async (p, c) => { await broker.writeFile(sb, p, c); },
-    exec: (argv) => broker.exec(sb, argv),
+    exec: async (argv) => {
+      const r = await broker.exec(sb, argv);
+      // The deploy build rewrites .next under a running preview; restart it cleanly.
+      if (argv.includes("opennextjs-cloudflare") && argv.includes("build")) await broker.serve(sb, { onlyIfRunning: true }).catch(() => undefined);
+      return r;
+    },
   };
 }
 

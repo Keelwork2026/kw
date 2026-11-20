@@ -122,6 +122,13 @@ test("ux, journeys, performance, load, responsive, checks", () => {
   const resp = responsive(pages, { available: false, reason: "no browser", pages: [] });
   assert.equal(resp.find((r) => r.key === "resp:browser")!.status, "blocked");
   assert.equal(resp.find((r) => r.key === "browser:engines")!.status, "blocked");
+  const bp = (o: Partial<import("./analyze").BrowserPage>) => ({ path: "/", viewport: 1280, ok: true, status: 200, overflowX: 0, consoleErrors: [], smallTargets: 0, focusMissing: 0, focusChecked: 3, loadMs: 100, lcp: null, cls: null, ...o });
+  const errPage = responsive(pages, { available: true, pages: [bp({ ok: false, status: 500, focusMissing: null })] });
+  assert.equal(errPage.find((r) => r.key === "resp:overflow:/:1280")!.status, "blocked", "an error page's layout is never a pass");
+  assert.equal(errPage.find((r) => r.key === "a11y-b:focus:/:1280")!.status, "blocked");
+  assert.match(errPage.find((r) => r.key === "browser:load:/:1280")!.actual, /HTTP 500/);
+  const nothing = responsive(pages, { available: true, pages: [bp({ focusChecked: 0 })] });
+  assert.equal(nothing.find((r) => r.key === "a11y-b:focus:/:1280")!.status, "skipped", "no focusable elements isn't a pass");
   const ch = fromChecks([{ kind: "build", status: "failed", exit_code: 1, summary: {}, output: "err", finished_at: null }, { kind: "tests", status: "error", exit_code: null, summary: { error: "no sandbox" }, output: null, finished_at: null }]);
   assert.equal(ch[0]!.issue!.severity, "critical");
   assert.equal(ch[1]!.status, "blocked", "a check that couldn't run is never a pass");

@@ -73,6 +73,43 @@ function tokenMatches(given: string, expected: string): boolean {
   return timingSafeEqual(a, b) && given.length === expected.length;
 }
 
+/**
+ * Starts the sandbox's dev server, replacing one that is already running.
+ * - The server runs in its own process group (setsid) whose id is kept in
+ *   .keelwork/dev.pid, so a restart stops pnpm and Next together.
+ * - .next is cleared on start: a production build ("next build") writes the
+ *   same folder, and a dev server left on top of it fails with missing chunks.
+ * - No "--" before the flags: pnpm 10 forwards it, and Next then reads
+ *   "--port" as a project directory.
+ * - Output goes to .keelwork/dev.log (git-ignored) for diagnosing a failed start.
+ * With onlyIfRunning, nothing happens unless a dev server is currently running.
+ * Stopping is synchronous so nothing can mistake the old server for the new one.
+ */
+export function stopDevScript(): string {
+  return [
+    "mkdir -p .keelwork",
+    "[ -f .keelwork/.gitignore ] || echo '*' > .keelwork/.gitignore",
+    // A server started before pid tracking existed is found through /proc.
+    "if ! { [ -f .keelwork/dev.pid ] && kill -0 \"$(cat .keelwork/dev.pid)\" 2>/dev/null; }; then",
+    // (Patterns are built from variables so this script's own command line doesn't match.)
+    "  n=next; r=run; found=3",
+    "  for d in /proc/[0-9]*; do q=${d#/proc/}; [ \"$q\" = $$ ] && continue; c=$(tr '\\0' ' ' < \"$d/cmdline\" 2>/dev/null); case \"$c\" in *\"$n dev\"*|*\"$n-server\"*|*\"pnpm $r dev\"*) kill -KILL \"$q\" 2>/dev/null; found=0;; esac; done",
+    "  [ $found = 0 ] && sleep 1; exit $found",
+    "fi",
+    "p=$(cat .keelwork/dev.pid); kill -TERM -\"$p\" 2>/dev/null; i=0",
+    "while kill -0 \"$p\" 2>/dev/null && [ $i -lt 20 ]; do sleep 0.5; i=$((i+1)); done",
+    "kill -KILL -\"$p\" 2>/dev/null; exit 0",
+  ].join("\n");
+}
+export function startDevScript(): string {
+  return [
+    "mkdir -p .keelwork",
+    "[ -f .keelwork/.gitignore ] || echo '*' > .keelwork/.gitignore",
+    "rm -rf .next",
+    "exec setsid sh -c 'echo $$ > .keelwork/dev.pid; exec pnpm run dev --port 3000 --hostname 0.0.0.0' > .keelwork/dev.log 2>&1",
+  ].join("\n");
+}
+
 async function readJson(req: IncomingMessage, limit = 4_000_000): Promise<Record<string, unknown>> {
   const chunks: Buffer[] = [];
   let size = 0;
@@ -256,11 +293,11 @@ export function createBroker(opts: BrokerOptions) {
     }
 
     if (sub === "serve" && method === "POST") {
+      const body = await readJson(req);
       await requireDocker(); await requireSandbox(id);
-      // No "--" before the flags: pnpm 10 forwards it to the script, and Next
-      // then reads "--port" as a project directory. Output goes to
-      // .keelwork/dev.log (git-ignored) so a failed start can be diagnosed.
-      const r = await exec(id, ["sh", "-c", "mkdir -p .keelwork && { [ -f .keelwork/.gitignore ] || echo '*' > .keelwork/.gitignore; } && exec pnpm run dev --port 3000 --hostname 0.0.0.0 > .keelwork/dev.log 2>&1"], { detach: true });
+      const stopped = await exec(id, ["sh", "-c", stopDevScript()], { timeoutMs: 30_000 });
+      if (body.onlyIfRunning === true && stopped.code === 3) return send(res, 200, { ok: true, started: false });
+      const r = await exec(id, ["sh", "-c", startDevScript()], { detach: true });
       if (r.code !== 0) throw new HttpError(500, "couldn't start the dev server");
       return send(res, 200, { ok: true });
     }

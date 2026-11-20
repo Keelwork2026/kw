@@ -137,3 +137,17 @@ test("sandbox memory: room for the in-memory workspace, clamped", async () => {
   const a = buildRunArgs({ projectId: id, memoryMb: 4096 });
   assert.equal(a[a.indexOf("--memory-swap") + 1], "4096m", "no swap beyond the limit");
 });
+
+test("broker: serve stops the old dev server first, then starts one detached", async () => {
+  assert.equal((await call(baseUp, "POST", "/sandboxes", { projectId: PID })).status, 200);
+  const before = upCalls.length;
+  assert.equal((await call(baseUp, "POST", `/sandboxes/${SB}/serve`)).status, 200);
+  const execs = upCalls.slice(before).filter((c) => c.args[0] === "exec");
+  assert.equal(execs.length, 2);
+  assert.ok(!execs[0]!.args.includes("-d") && execs[0]!.args.at(-1)!.includes("kill -TERM"));
+  assert.ok(execs[1]!.args.includes("-d"));
+  const start = execs[1]!.args.at(-1)!;
+  assert.match(start, /rm -rf \.next/);
+  assert.match(start, /pnpm run dev --port 3000 --hostname 0\.0\.0\.0/);
+  assert.doesNotMatch(start, /dev -- /);
+});

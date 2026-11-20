@@ -8,3 +8,9 @@ next-env.d.ts
 # Secrets never enter the repository. Keelwork writes .env.local from the vault.
 .env*
 !.env.example
+
+# Sandbox package stores and caches
+.pnpm-store/
+.pnpm-home/
+.npm-cache/
+.cache/

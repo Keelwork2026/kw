@@ -6,7 +6,12 @@ FROM node:22-bookworm-slim
 # prepared version wouldn't be found and the latest pnpm would be fetched.
 RUN corepack disable && npm install -g pnpm@10.28.0 && rm -rf /root/.npm \
  && apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
- && rm -rf /var/lib/apt/lists/*
+ && rm -rf /var/lib/apt/lists/* \
+ && printf '%s\n' '.pnpm-store/' '.pnpm-home/' '.npm-cache/' '.npm/' '.cache/' '.local/' > /etc/gitignore-sandbox \
+ && git config --system core.excludesFile /etc/gitignore-sandbox
+# HOME is the project folder (/workspace), so package-manager stores and caches
+# land beside the code. The system-wide excludes file above keeps them out of
+# commits, exports and code scans.
 # pnpm's store lives in the writable /workspace tmpfs (the root filesystem is read-only).
 # Lower install concurrency: with the defaults pnpm's own memory peaked above
 # 2 GB, and the sandbox's memory limit also has to hold the /workspace tmpfs.

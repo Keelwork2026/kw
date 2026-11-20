@@ -99,6 +99,9 @@ export async function processChecks(ctx: WorkerContext) {
       }
       if (!argv) throw new Error(`no command for ${kind}`);
       const res = await ctx.broker.exec(sb, argv);
+      // "next build" writes the same .next folder the dev server uses, which
+      // leaves a running preview serving missing chunks; give it a clean restart.
+      if (kind === "build") await ctx.broker.serve(sb, { onlyIfRunning: true }).catch(() => undefined);
       const output = scrub(`$ ${argv.join(" ")}\n${res.stdout}\n${res.stderr}`);
       const summary: Record<string, unknown> = { timedOut: res.timedOut, selective: kind === "affected_tests" };
       if (kind === "tests" || kind === "affected_tests") summary.tests = parseTestSummary(output);

@@ -42,7 +42,13 @@ if (chromium) {
         });
         const t0 = Date.now();
         let ok = true;
-        try { await page.goto(new URL(path, cfg.base).href, { waitUntil: "networkidle", timeout: 25000 }); } catch { ok = false; }
+        let status = null;
+        try {
+          const resp = await page.goto(new URL(path, cfg.base).href, { waitUntil: "networkidle", timeout: 25000 });
+          status = resp ? resp.status() : null;
+          // An error page isn't the page: layout and focus checks on it would be meaningless.
+          if (status === null || status >= 400) ok = false;
+        } catch { ok = false; }
         const loadMs = Date.now() - t0;
         let m = { overflowX: 0, smallTargets: 0, lcp: null, cls: null };
         try {
@@ -61,24 +67,37 @@ if (chromium) {
           });
         } catch { ok = false; }
         let focusMissing = null;
+        let focusChecked = 0;
         if (ok && width >= 1000) {
-          focusMissing = 0;
-          for (let i = 0; i < 15; i++) {
+          // Tab through the page and judge each distinct element once. The
+          // framework's own dev-mode tools (Next's <nextjs-portal>) aren't part
+          // of the app and are skipped.
+          const seen = new Set();
+          const missing = new Set();
+          for (let i = 0; i < 25; i++) {
             await page.keyboard.press("Tab");
-            const visible = await page.evaluate(() => {
+            const r = await page.evaluate(() => {
               const el = document.activeElement;
-              if (!el || el === document.body) return true;
+              if (!el || el === document.body || el === document.documentElement) return null;
+              if (el.tagName === "NEXTJS-PORTAL" || el.closest("nextjs-portal")) return { skip: true };
+              if (!el.dataset.kwFocusId) el.dataset.kwFocusId = String(Math.random()).slice(2);
               const s = getComputedStyle(el);
-              return (s.outlineStyle !== "none" && parseFloat(s.outlineWidth) > 0) || (s.boxShadow && s.boxShadow !== "none");
-            }).catch(() => true);
-            if (!visible) focusMissing++;
+              const visible = (s.outlineStyle !== "none" && parseFloat(s.outlineWidth) > 0) || (s.boxShadow && s.boxShadow !== "none");
+              return { id: el.dataset.kwFocusId, visible };
+            }).catch(() => null);
+            if (!r || r.skip) continue;
+            if (seen.has(r.id)) break; // wrapped around
+            seen.add(r.id);
+            if (!r.visible) missing.add(r.id);
           }
+          focusChecked = seen.size;
+          focusMissing = missing.size;
         }
         let screenshot;
         if (ok && path === cfg.browserPaths[0]) {
           try { screenshot = "data:image/jpeg;base64," + (await page.screenshot({ type: "jpeg", quality: 35 })).toString("base64"); } catch { /* no screenshot */ }
         }
-        result.pages.push({ path, viewport: width, ok, overflowX: m.overflowX, consoleErrors: consoleErrors.slice(0, 10).map((x) => x.slice(0, 400)), smallTargets: m.smallTargets, focusMissing, loadMs, lcp: m.lcp, cls: m.cls, screenshot });
+        result.pages.push({ path, viewport: width, ok, status, focusChecked, overflowX: m.overflowX, consoleErrors: consoleErrors.slice(0, 10).map((x) => x.slice(0, 400)), smallTargets: m.smallTargets, focusMissing, loadMs, lcp: m.lcp, cls: m.cls, screenshot });
         await ctx.close();
       }
     }
