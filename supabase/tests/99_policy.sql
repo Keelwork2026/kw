@@ -24,7 +24,7 @@ select kwtest.login('pol.member@example.com');
 set role authenticated;
 select kwtest.eq((select count(*) from public.policy_events where id = kwtest.uuid('ev'))::int, 1, 'members see their organization''s policy decisions');
 select kwtest.throws(format('insert into public.policy_events(org_id, source, level, summary, excerpt, text_hash) values (%L, ''chat'', 2, ''x'', ''x'', %L)', kwtest.get('org'), repeat('b', 64)), 'permission denied', 'people can''t write policy records');
-select kwtest.eq(kwtest.val(format('with u as (update public.policy_events set status = ''overturned'' where id = %L returning 1) select count(*) from u', kwtest.get('ev')))::int, 0, 'people can''t change a decision directly');
+select kwtest.throws(format('update public.policy_events set status = ''overturned'' where id = %L', kwtest.get('ev')), 'permission denied', 'people can''t change a decision directly');
 select kwtest.login('pol.outsider@example.com');
 select kwtest.eq((select count(*) from public.policy_events where id = kwtest.uuid('ev'))::int, 0, 'other organizations can''t see them');
 

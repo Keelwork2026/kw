@@ -31,7 +31,8 @@ export function envReads(src: string): string[] {
   return [...names];
 }
 
-const NOT_PLATFORM = new Set(["NODE_ENV", "HOME"]);
+// NODE_PATH is read by scripts Keelwork runs inside sandboxes (to find Playwright), not by Keelwork itself.
+const NOT_PLATFORM = new Set(["NODE_ENV", "HOME", "NODE_PATH"]);
 // Read through billing_plans.stripe_price_env rather than a literal.
 // Read indirectly: plan price ids through billing_plans.stripe_price_env, and the
 // AI keys through the catalogue's apiKeyEnv (the Kimi + DeepSeek preset's names).
