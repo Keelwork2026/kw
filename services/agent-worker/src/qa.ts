@@ -121,7 +121,11 @@ async function execute(ctx: WorkerContext, run: Run, note: (s: string) => void) 
     await ctx.broker.writeFile(sb, ".keelwork/qa/wait.mjs", `for (let i = 0; i < 60; i++) { try { const r = await fetch(${JSON.stringify(BASE)}, { signal: AbortSignal.timeout(5000) }); if (r.status < 600) process.exit(0); } catch {} await new Promise((r) => setTimeout(r, 2000)); } process.exit(1);\n`);
     const wait = await ctx.broker.exec(sb, ["node", ".keelwork/qa/wait.mjs"]);
     live = wait.exitCode === 0;
-    if (!live) liveReason = "The app's dev server didn't respond within 2 minutes. Open the project, start the sandbox and check the build log.";
+    if (!live) {
+      const devLog = await ctx.broker.readFile(sb, ".keelwork/dev.log").catch(() => "");
+      const tail = devLog.trim().split("\n").slice(-6).join("\n").slice(-600);
+      liveReason = "The app's dev server didn't respond within 2 minutes." + (tail ? ` Last lines of its output:\n${tail}` : " Open the project, start the sandbox and check the build log.");
+    }
   } catch (e) {
     liveReason = `The sandbox isn't available: ${(e as Error).message}`;
   }

@@ -257,7 +257,10 @@ export function createBroker(opts: BrokerOptions) {
 
     if (sub === "serve" && method === "POST") {
       await requireDocker(); await requireSandbox(id);
-      const r = await exec(id, ["pnpm", "run", "dev", "--", "--port", "3000", "--hostname", "0.0.0.0"], { detach: true });
+      // No "--" before the flags: pnpm 10 forwards it to the script, and Next
+      // then reads "--port" as a project directory. Output goes to
+      // .keelwork/dev.log (git-ignored) so a failed start can be diagnosed.
+      const r = await exec(id, ["sh", "-c", "mkdir -p .keelwork && { [ -f .keelwork/.gitignore ] || echo '*' > .keelwork/.gitignore; } && exec pnpm run dev --port 3000 --hostname 0.0.0.0 > .keelwork/dev.log 2>&1"], { detach: true });
       if (r.code !== 0) throw new HttpError(500, "couldn't start the dev server");
       return send(res, 200, { ok: true });
     }
