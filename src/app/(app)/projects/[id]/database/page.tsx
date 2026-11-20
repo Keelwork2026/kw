@@ -59,7 +59,7 @@ export default async function DatabasePage({ params }: { params: Promise<{ id: s
               </article>
             ))}
           </div>
-        ) : <EmptyState title="No tables yet">The Database Engineer writes migrations into {dir}.</EmptyState>}
+        ) : <EmptyState icon="database" title="No tables yet" action={{ label: "Describe your data in the chat", href: `/projects/${project.id}#chat` }}>Tables, policies and migrations appear here once the Database Engineer writes them into {dir}. Tell the planner what your app needs to store.</EmptyState>}
       </section>
 
       <section aria-labelledby="migrations">

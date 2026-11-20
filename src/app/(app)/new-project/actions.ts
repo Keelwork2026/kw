@@ -20,7 +20,7 @@ export async function createProject(_prev: ActionResult, form: FormData): Promis
     if (/project limit/.test(error.message)) return { ok: false, message: "Your plan's project limit is reached. Archive a project or upgrade on the Billing page." };
     return { ok: false, message: /permission/.test(error.message) ? "You don't have permission to create projects." : "Couldn't create the project. Try again." };
   }
-  redirect(`/projects/${data}`);
+  redirect(`/projects/${data}?created=1`);
 }
 
 /**
@@ -43,5 +43,5 @@ export async function quickStart(_prev: ActionResult, form: FormData): Promise<A
     if (/project limit/.test(error.message)) return { ok: false, message: "Your plan's project limit is reached. Archive a project or upgrade on the Billing page." };
     return { ok: false, message: /permission/.test(error.message) ? "You don't have permission to create projects." : "Couldn't create the project. Try again." };
   }
-  redirect(`/projects/${data}#chat`);
+  redirect(`/projects/${data}?created=1#chat`);
 }

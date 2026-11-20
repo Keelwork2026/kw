@@ -167,3 +167,18 @@ export async function archiveProject(_prev: ActionResult, form: FormData): Promi
   revalidatePath("/dashboard");
   redirect("/projects?archived=1");
 }
+
+/** Renames the project. Names are free text up to 80 characters. */
+export async function renameProject(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const { supabase, project, can } = await loadProject(str(form, "projectId"));
+  if (!can("project.write")) return fail("You can't rename this project.");
+  const name = str(form, "name").replace(/[\u0000-\u001f\u007f]/g, "").trim();
+  if (!name || name.length > 80) return fail("Use a name of 1–80 characters.");
+  if (name === project.name) return { ok: true, message: "That's already its name." };
+  const { error } = await supabase.from("projects").update({ name }).eq("id", project.id);
+  if (error) return fail("Couldn't rename the project. Try again.");
+  revalidatePath("/projects");
+  revalidatePath("/dashboard");
+  revalidatePath(`/projects/${project.id}`, "layout");
+  return { ok: true, message: `Renamed to “${name}”.` };
+}

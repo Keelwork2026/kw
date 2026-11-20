@@ -11,15 +11,17 @@ import { AGENTS } from "@/lib/agents/graph";
 import { BACKENDS, DEPLOY_TARGETS } from "@/lib/stack/backends";
 import { brokerConfig } from "@/lib/sandbox/client";
 import { previewLinkFor } from "@/lib/preview/link";
-import { NextSteps } from "@/components/project-journey";
+import { Created } from "@/components/project-journey";
+import { NextSteps } from "@/components/next-steps";
 import { loadJourneyState } from "@/lib/journey-state";
 import { suggestions } from "@/lib/journey";
 import { sendMessage, requestPlan, approvePlan, decideApproval, controlRun, setStack, startSandbox } from "./actions";
 
 export const metadata = { title: "Builder" };
 
-export default async function BuilderPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function BuilderPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ created?: string }> }) {
   const { id } = await params;
+  const justCreated = (await searchParams).created === "1";
   const { supabase, project, can, readOnly } = await loadProject(id);
   const writable = can("project.write");
 
@@ -48,7 +50,8 @@ export default async function BuilderPage({ params }: { params: Promise<{ id: st
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <AutoRefresh active={Boolean(activeRun)} />
-      {next.length || !readOnly ? <div className="xl:col-span-2"><NextSteps items={next} /></div> : null}
+      {justCreated ? <div className="xl:col-span-2"><Created name={project.name} hasIdea={Boolean(lastMsg)} aiReady={aiReady} /></div> : null}
+      {next.length || !readOnly ? <div className="xl:col-span-2"><NextSteps items={next} projectId={project.id} /></div> : null}
       <div className="grid content-start gap-6">
         {!aiReady ? <Notice>AI isn&apos;t configured on this installation (AI_MODEL_CATALOG), so the planner can&apos;t answer yet. Your messages are still saved.</Notice> : null}
 

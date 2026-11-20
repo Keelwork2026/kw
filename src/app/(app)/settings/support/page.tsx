@@ -31,7 +31,7 @@ export default async function SupportPage() {
             </li>
           ))}
         </ul>
-      ) : <EmptyState title="No support requests" />}
+      ) : <EmptyState icon="chat" title="No support requests">Requests you open, and any support access you grant, appear here with their status.</EmptyState>}
       {!owner ? <p className="mt-4 text-sm text-muted">Only owners can approve or revoke support access.</p> : null}
     </>
   );

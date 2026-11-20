@@ -205,7 +205,7 @@ type ProfileJson = { appType: string; appTypeReason: string; framework: string; 
 
 export function PlanView({ ctx }: { ctx: Ctx }) {
   const p = ctx.detail?.profile as ProfileJson | null | undefined;
-  if (!p) return <EmptyState title="No application profile yet">Run Quick QA and Keelwork inspects the project — routes, endpoints, forms, auth, integrations and database — and builds a test plan from what it finds.<div className="mt-4 flex justify-center"><RunControls ctx={ctx} compact /></div></EmptyState>;
+  if (!p) return <EmptyState icon="search" title="No application profile yet">Run Quick QA and Keelwork inspects the project — routes, endpoints, forms, auth, integrations and database — and builds a test plan from what it finds.<div className="mt-4 flex justify-center"><RunControls ctx={ctx} compact /></div></EmptyState>;
   const pages = p.routes.filter((r) => r.kind === "page");
   const apis = p.routes.filter((r) => r.kind === "api");
   return (
@@ -270,7 +270,7 @@ export function TestsView({ ctx }: { ctx: Ctx }) {
   const rs = ctx.results.filter((r) => (!cat || r.category === cat) && (!statusF || r.status === statusF)).sort((a, b) => (a.status === "failed" ? -1 : 0) - (b.status === "failed" ? -1 : 0) || SEVERITIES.indexOf(a.severity) - SEVERITIES.indexOf(b.severity));
   const href = (c: string | null, s = statusF) => `${base(ctx)}?view=tests${c ? `&category=${c}` : ""}${s ? `&status=${s}` : ""}${ctx.sp.run ? `&run=${ctx.sp.run}` : ""}`;
   const run = ctx.runs.find((r) => r.id === ctx.selectedRunId);
-  if (!run) return <EmptyState title="No results yet">Run QA to see results here.<div className="mt-4 flex justify-center"><RunControls ctx={ctx} compact /></div></EmptyState>;
+  if (!run) return <EmptyState icon="flask" title="No results yet">Run QA to see results here.<div className="mt-4 flex justify-center"><RunControls ctx={ctx} compact /></div></EmptyState>;
   return (
     <div className="grid gap-5">
       <div className="flex flex-wrap items-center gap-2 text-sm"><span className="text-muted">Run:</span><span className="font-semibold">{MODE_LABEL[run.mode]} · {new Date(run.created_at).toUTCString().slice(5, 22)} UTC</span>{ctx.sp.run ? <Link href={`${base(ctx)}?view=tests`} className="text-accent">Latest run</Link> : null}</div>
@@ -311,7 +311,7 @@ export function TestsView({ ctx }: { ctx: Ctx }) {
             </li>
           ))}
         </ul>
-      ) : <EmptyState title={cat ? `No ${CATEGORY_INFO[cat].label.toLowerCase()} results in this run` : "No results match"}>{cat ? "This category wasn't part of the run. Run it on its own with the button above." : "Try another filter."}</EmptyState>}
+      ) : <EmptyState icon="filter" title={cat ? `No ${CATEGORY_INFO[cat].label.toLowerCase()} results in this run` : "No results match"}>{cat ? "This category wasn't part of the run. Run it on its own with the button above." : "Try another filter."}</EmptyState>}
     </div>
   );
 }
@@ -358,14 +358,14 @@ export function IssuesView({ ctx }: { ctx: Ctx }) {
           {ctx.can.write ? <label className="grid gap-1 text-sm font-semibold">Note for the agents (optional)<input name="note" className="input" maxLength={1000} placeholder="e.g. keep the current colours" /></label> : null}
           <p className="text-xs text-muted">The planner proposes a plan first; nothing changes until you approve it on the Build tab. Afterwards, retest the issues here.</p>
         </ActionForm>
-      ) : <EmptyState title={status === "open" ? "No open issues" : "No issues match"}>{ctx.issues.length ? "Try another filter." : "Issues appear here when a QA run finds problems."}</EmptyState>}
+      ) : <EmptyState icon={status === "open" && !ctx.issues.length ? "success" : "filter"} title={status === "open" ? "No open issues" : "No issues match"}>{ctx.issues.length ? "Try another filter." : "Issues appear here when a QA run finds problems."}</EmptyState>}
     </div>
   );
 }
 
 export function IssueDetail({ ctx, id }: { ctx: Ctx; id: string }) {
   const i = ctx.issues.find((x) => x.id === id);
-  if (!i) return <EmptyState title="Issue not found"><Link href={`${base(ctx)}?view=issues`} className="text-accent">Back to issues</Link></EmptyState>;
+  if (!i) return <EmptyState icon="search" title="Issue not found" action={{ label: "Back to issues", href: `${base(ctx)}?view=issues` }}>It may have been from another project, or the link is out of date.</EmptyState>;
   const isOpen = OPEN.includes(i.status);
   const soon = new Date(Date.now() + 30 * 86400_000).toISOString().slice(0, 10);
   return (
@@ -424,7 +424,7 @@ export function IssueDetail({ ctx, id }: { ctx: Ctx; id: string }) {
 
 export function JourneysView({ ctx }: { ctx: Ctx }) {
   const outcomes = ((ctx.detail?.outcomes as { journeys?: JourneyOutcome[] } | null)?.journeys ?? []) as JourneyOutcome[];
-  if (!outcomes.length) return <EmptyState title="No journey results yet">Journeys are checked in Full QA and Pre-deployment QA (or choose “User journeys” in a custom run).<div className="mt-4 flex justify-center"><RunControls ctx={ctx} compact /></div></EmptyState>;
+  if (!outcomes.length) return <EmptyState icon="workflow" title="No journey results yet">Journeys are checked in Full QA and Pre-deployment QA (or choose “User journeys” in a custom run).<div className="mt-4 flex justify-center"><RunControls ctx={ctx} compact /></div></EmptyState>;
   const label: Record<string, [string, string]> = { found: ["✓", "Works and reachable"], missing: ["✕", "No page for this step"], unreachable: ["!", "Exists but nothing links to it"], needs_sign_in: ["🔒", "Needs a signed-in test session"], error: ["✕", "Returns an error"] };
   return (
     <div className="grid gap-5">
@@ -570,7 +570,7 @@ export function ReadinessView({ ctx }: { ctx: Ctx }) {
 
 export function ReportsView({ ctx }: { ctx: Ctx }) {
   const r = ctx.latest;
-  if (!r) return <EmptyState title="No reports yet">Reports are generated from real runs. Run QA first.</EmptyState>;
+  if (!r) return <EmptyState icon="download" title="No reports yet" action={{ label: "Go to QA overview", href: base(ctx) }}>Reports (HTML, CSV and JSON) are generated from real runs, so there&apos;s nothing to export until QA has run.</EmptyState>;
   const kinds: [string, string, string][] = [["executive", "Executive QA report", "Quality, readiness, major risks and what to fix first."], ["functional", "Functional testing", "Coverage, results and failures by feature, API and journey."], ["security", "Security & penetration", "Vulnerabilities, evidence, impact, remediation and retest status."], ["ux", "UX report", "First impressions, journeys, forms, content, trust and friction."], ["performance", "Performance & load", "Response times, page weight, vitals and load results."], ["accessibility", "Accessibility", "WCAG findings and the items that need manual review."], ["responsive", "Responsive & devices", "Viewport results and which browsers were tested."], ["regression", "Regression", "What changed against the previous run."], ["full", "Full QA report", "Everything above in one document."]];
   const href = (k: string, f: string) => `/projects/${ctx.project.id}/qa/report?run=${r.id}&kind=${k}&format=${f}`;
   return (

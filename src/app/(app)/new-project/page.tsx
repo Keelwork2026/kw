@@ -13,7 +13,7 @@ export default async function NewProjectPage({ searchParams }: { searchParams: P
   const { org, can } = await requireOrg();
   const carry = onboardingParams(await searchParams);
   if (!can("project.write")) {
-    return (<><PageHeader title="Create Project" /><EmptyState title="You can't create projects here">Your role in {org.name} is read-only. Ask an owner or admin for the member role.</EmptyState></>);
+    return (<><PageHeader title="Create Project" /><EmptyState icon="users" title="You can't create projects here">Your role in {org.name} is read-only. Ask an owner or admin for the member role.</EmptyState></>);
   }
   return (
     <>

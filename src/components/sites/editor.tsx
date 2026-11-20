@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { CopyButton } from "../copy-button";
 import type { Section, Site } from "@/lib/sites/types";
 import { setAt, textFields, plain } from "@/lib/sites/text";
 import { regenerateSection } from "@/lib/sites/engine/generate";
@@ -118,7 +119,7 @@ export function SiteEditor({ id, initial, version: initialVersion, shareToken, c
           {canEdit && <button type="button" className="btn btn-secondary min-h-9 px-3" onClick={toggleShare} disabled={pending}>{token ? "Stop sharing" : "Share link"}</button>}
           <a className="btn btn-primary min-h-9 px-3" href={`/new-project?${new URLSearchParams({ name: site.name, template: initial.slug.slice(0, 48), prompt: `Build the website "${site.name}" exactly as designed in my Keelwork website draft (${site.pages.length} pages: ${site.pages.map((p) => p.title).join(", ")}). Keep the copy, layout, palette and SEO; make it a production Next.js site with working forms connected to email, and keep every [[placeholder]] visible until I fill it in.`.slice(0, 2000) })}`}>Send to builder</a>
         </div>
-        {shareUrl && <p className="w-full text-xs text-muted">Anyone with this link can view (not edit): <a className="font-mono text-accent underline" href={shareUrl} target="_blank" rel="noopener">{shareUrl}</a> <button type="button" className="ml-1 underline" onClick={() => navigator.clipboard?.writeText(shareUrl)}>Copy</button></p>}
+        {shareUrl && <p className="w-full text-xs text-muted">Anyone with this link can view (not edit): <a className="font-mono text-accent underline" href={shareUrl} target="_blank" rel="noopener">{shareUrl}</a> <CopyButton text={shareUrl} label="Copy link" className="ml-1" /></p>}
         {message && <p role="alert" className="w-full text-sm text-danger">{message}</p>}
         {site.lang && site.lang !== "en" && <p className="w-full text-xs text-muted">The parts written from your answers are in your chosen language. Example sections from the template are still in English — use <b>Change language</b> with AI on each section, or edit the text directly.</p>}
       </div>

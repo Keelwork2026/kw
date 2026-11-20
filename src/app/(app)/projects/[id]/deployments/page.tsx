@@ -62,7 +62,7 @@ export default async function DeploymentsPage({ params }: { params: Promise<{ id
               </li>
             ))}
           </ul>
-        ) : <div className="p-5"><EmptyState title="Nothing deployed yet" /></div>}
+        ) : <div className="p-5"><EmptyState icon="rocket" title="Nothing deployed yet" action={{ label: "Deploy a preview", href: "#deploy" }} secondary={{ label: "Check readiness in QA", href: `/projects/${project.id}/qa?view=readiness` }}>Each deployment appears here with its URL, status and a one-click rollback. Start with a preview; promote it when you&apos;re happy.</EmptyState></div>}
       </section>
     </div>
   );

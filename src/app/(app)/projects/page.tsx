@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { requireOrg } from "@/lib/org";
 import { PageHeader, EmptyState, StatusPill, timeAgo } from "@/components/page-header";
+import { ProjectActions } from "@/components/project-actions";
+import { renameProject, archiveProject } from "./[id]/actions";
 
 export const metadata = { title: "My Projects" };
 
@@ -20,17 +22,24 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
       {data?.length ? (
         <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {data.map((p) => (
-            <li key={p.id}>
-              <Link href={`/projects/${p.id}`} className="panel block h-full p-5 hover:border-accent">
+            <li key={p.id} className="relative">
+              <Link href={`/projects/${p.id}`} className="panel block h-full p-5 pb-12 hover:border-accent">
                 <div className="flex items-start justify-between gap-2"><p className="font-display text-lg font-bold">{p.name}</p><StatusPill status={p.status} /></div>
                 {p.description ? <p className="mt-2 line-clamp-2 text-sm text-muted">{p.description}</p> : null}
                 <p className="mt-4 font-mono text-xs text-muted">{p.backend} · {p.deploy_target} · {timeAgo(p.updated_at)}</p>
               </Link>
+              {!showArchived ? <div className="absolute bottom-2 right-2"><ProjectActions project={p} canWrite={can("project.write")} canManage={can("project.manage")} rename={renameProject} archive={archiveProject} /></div> : null}
             </li>
           ))}
         </ul>
       ) : (
-        <EmptyState title={showArchived ? "No archived projects" : "No projects yet"}>{can("project.write") ? <Link className="font-semibold text-accent" href="/new-project">Create your first project</Link> : "Ask an owner or admin for write access to create projects."}</EmptyState>
+        showArchived ? (
+          <EmptyState icon="archive" title="No archived projects" action={{ label: "Back to active projects", href: "/projects" }}>Archived projects are read-only and kept here with their code, history and deployments. They don&apos;t count toward your plan&apos;s project limit.</EmptyState>
+        ) : (
+          <EmptyState icon="folder" title="No projects yet" action={can("project.write") ? { label: "Create your first project", href: "/new-project" } : undefined} secondary={can("project.write") ? { label: "Explore templates", href: "/templates#starters" } : undefined}>
+            {can("project.write") ? "Your projects will appear here. Start with an idea — one sentence is enough — and the planner works it through with you before anything is built." : "Projects in this workspace will appear here. Ask an owner or admin for the member role to create one."}
+          </EmptyState>
+        )
       )}
     </>
   );

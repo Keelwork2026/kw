@@ -39,7 +39,7 @@ export default async function IncidentsPage({ params, searchParams }: { params: 
             ) : null}
           </article>
         );
-      }) : <EmptyState title={all ? "No incidents yet" : "Nothing is failing"} />}
+      }) : <EmptyState icon={all ? "inbox" : "success"} title={all ? "No incidents yet" : "Nothing is failing"}>Failed checks, deployments and automations open an incident here, with what failed and a proposed fix.</EmptyState>}
     </div>
   );
 }

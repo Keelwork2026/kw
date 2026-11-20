@@ -56,7 +56,7 @@ export default async function SecurityPage({ params, searchParams }: { params: P
             </li>
           ))}
         </ul>
-      ) : <EmptyState title={`No ${status} findings`}>{status === "open" ? "Run a scan to check this project." : null}</EmptyState>}
+      ) : <EmptyState icon="shield" title={`No ${status} findings`}>{status === "open" ? "Run a scan to check this project." : null}</EmptyState>}
     </div>
   );
 }

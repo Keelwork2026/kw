@@ -52,7 +52,7 @@ export default async function AnalyticsPage({ params, searchParams }: { params: 
             {s.days.map((d) => <div key={d.day} title={`${d.day}: ${d.pageviews} views, ${d.visitors} visitors`} className="flex-1 rounded-t bg-accent kw-bar" style={{ height: `${(d.pageviews / max) * 100}%` }} />)}
           </div>
         </figure>
-      ) : <EmptyState title="No visits yet">Add NEXT_PUBLIC_KW_ANALYTICS_URL={collector} to the app&apos;s variables and redeploy.</EmptyState>}
+      ) : <EmptyState icon="chart" title="No visits yet">Add NEXT_PUBLIC_KW_ANALYTICS_URL={collector} to the app&apos;s variables and redeploy.</EmptyState>}
       <div className="grid gap-4 lg:grid-cols-3">
         {[["Top pages", paths.data], ["Referrers", refs.data], ["Devices", devices.data]].map(([title, rows]) => (
           <section key={title as string} className="panel p-5"><h2 className="text-base">{title as string}</h2>

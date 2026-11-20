@@ -11,7 +11,7 @@ type Summary = { plan_key: string; plan_name: string; balance_micros: number; mo
 export default async function BillingPage({ searchParams }: { searchParams: Promise<{ paid?: string; subscribed?: string }> }) {
   const { supabase, org, can } = await requireOrg();
   const sp = await searchParams;
-  if (!can("usage.read")) return (<><PageHeader title="Billing and Usage" /><EmptyState title="You need the usage.read permission">Owners, admins and billing managers can see billing.</EmptyState></>);
+  if (!can("usage.read")) return (<><PageHeader title="Billing and Usage" /><EmptyState icon="card" title="You need the usage.read permission">Owners, admins and billing managers can see billing.</EmptyState></>);
   const [{ data: summaryRaw }, { data: ledger }, { data: plans }] = await Promise.all([
     supabase.rpc("billing_summary", { p_org: org.id }),
     supabase.from("credit_ledger").select("id, kind, amount_micros, reference, description, created_at").eq("org_id", org.id).order("created_at", { ascending: false }).limit(50),
@@ -77,7 +77,7 @@ export default async function BillingPage({ searchParams }: { searchParams: Prom
                 <td className={`px-5 py-2 text-right font-mono ${l.amount_micros < 0 ? "" : "text-success"}`}>{l.amount_micros < 0 ? "−" : "+"}{formatMicros(Math.abs(l.amount_micros))}</td></tr>
             ))}</tbody>
           </table>
-        ) : <div className="p-5"><EmptyState title="No usage yet" /></div>}
+        ) : <div className="p-5"><EmptyState icon="chart" title="No usage yet">AI and build usage appears here as it happens, priced per request, so there are no surprises at the end of the month.</EmptyState></div>}
       </section>
     </>
   );

@@ -189,6 +189,17 @@ code, kbd, pre, samp { font-family: var(--font-mono); }
   .tile-yellow { background: #fff6d6; color: #8a6100; }
   .tile-navy   { background: #efebe4; color: #1c1b19; }
   .tile-accent { background: var(--soft-accent); color: var(--soft-accent-ink); }
+
+  /* Icon-only actions: 40px target, visible hover and focus, tooltip from data-tip. */
+  .kw-icon-btn { position: relative; display: inline-grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 9999px; color: var(--text-muted); transition: background-color .15s, color .15s; }
+  .kw-icon-btn:hover:not(:disabled) { background: var(--surface-2); color: var(--text); }
+  .kw-icon-btn:disabled { opacity: .5; cursor: not-allowed; }
+  [data-tip]::after { content: attr(data-tip); position: absolute; left: 50%; bottom: calc(100% + 6px); transform: translate(-50%, 2px); white-space: nowrap; pointer-events: none;
+    background: var(--text); color: var(--bg); font-size: .75rem; font-weight: 600; line-height: 1; padding: .4rem .55rem; border-radius: .4rem; opacity: 0; transition: opacity .12s, transform .12s; z-index: 50; }
+  [data-tip]:hover::after, [data-tip]:focus-visible::after { opacity: 1; transform: translate(-50%, 0); }
+
+  /* Empty states: an icon tile, a purpose, and what to do next. */
+  .kw-empty-icon { display: inline-grid; place-items: center; width: 3.5rem; height: 3.5rem; border-radius: 1.1rem; background: var(--soft-accent); color: var(--soft-accent-ink); }
 }
 
 /* ------------------------------------------------------------------
@@ -220,6 +231,11 @@ code, kbd, pre, samp { font-family: var(--font-mono); }
 .kw-rise { animation: kw-rise 3s ease-in-out infinite; }
 .kw-bar { animation: kw-bar 1.2s ease-out both; transform-origin: left; }
 .kw-fade { animation: kw-fade 0.18s ease-out both; }
+@keyframes kw-pop { 0% { transform: scale(.6); opacity: 0; } 60% { transform: scale(1.08); opacity: 1; } 100% { transform: scale(1); } }
+@keyframes kw-draw { from { stroke-dashoffset: 24; } to { stroke-dashoffset: 0; } }
+/* Success acknowledgment: a quick pop and a drawn tick — once, never looping. */
+.kw-pop { animation: kw-pop .32s cubic-bezier(.2,.9,.3,1.2) both; }
+.kw-draw path { stroke-dasharray: 24; animation: kw-draw .35s .12s ease-out both; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

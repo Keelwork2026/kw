@@ -29,9 +29,8 @@ export default async function SitesPage() {
           ))}
         </ul>
       ) : (
-        <EmptyState title="No websites yet">
-          <p className="mx-auto mt-2 max-w-md text-sm text-muted">Answer a few questions about your business and Keelwork writes a complete multi-page website — headlines, services, about, contact, SEO and legal pages — ready to edit.</p>
-          {can("project.write") ? <Link href="/sites/new" className="btn btn-primary mt-5">Create a website</Link> : null}
+        <EmptyState icon="globe" title="No websites yet" action={can("project.write") ? { label: "Create a website", href: "/sites/new" } : undefined} secondary={{ label: "See website templates", href: "/starters" }}>
+          Answer a few questions about your business and Keelwork writes a complete multi-page website — headlines, services, about, contact, SEO and legal pages — ready to edit.
         </EmptyState>
       )}
     </>

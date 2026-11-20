@@ -6,7 +6,7 @@ export const metadata = { title: "Audit log" };
 export default async function AuditPage() {
   const { supabase, org, can } = await requireOrg();
   if (!can("audit.read")) {
-    return (<><PageHeader title="Audit log" /><EmptyState title="You need the audit.read permission">Owners and admins can read the audit log.</EmptyState></>);
+    return (<><PageHeader title="Audit log" /><EmptyState icon="shield" title="You need the audit.read permission">Owners and admins can read the audit log.</EmptyState></>);
   }
   const { data } = await supabase.from("audit_events").select("id, actor_id, action, target_type, target_id, metadata, created_at").eq("org_id", org.id).order("created_at", { ascending: false }).limit(200);
   return (
@@ -29,7 +29,7 @@ export default async function AuditPage() {
             </tbody>
           </table>
         </div>
-      ) : <EmptyState title="No events yet" />}
+      ) : <EmptyState icon="history" title="No events yet">Sign-ins, role changes, approvals, deployments and other sensitive actions are recorded here.</EmptyState>}
     </>
   );
 }

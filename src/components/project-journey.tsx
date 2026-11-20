@@ -1,5 +1,5 @@
 import Link from "next/link";
-import type { Stage, Suggestion } from "@/lib/journey";
+import type { Stage } from "@/lib/journey";
 
 /** Describe → Plan → Build → Preview → Test → Deploy, from the project's real state. */
 export function JourneySteps({ stages }: { stages: Stage[] }) {
@@ -28,32 +28,22 @@ export function JourneySteps({ stages }: { stages: Stage[] }) {
   );
 }
 
-const KIND: Record<Suggestion["kind"], { label: string; className: string }> = {
-  attention: { label: "Needs you", className: "bg-[color-mix(in_oklab,var(--danger)_14%,transparent)] text-danger" },
-  next: { label: "Next step", className: "bg-soft-accent text-soft-accent-ink" },
-  discover: { label: "Worth trying now", className: "bg-surface-2 text-text" },
-};
-
-/** The most useful things to do next. Empty means there's nothing pressing — and we say so. */
-export function NextSteps({ items, title = "What's next", compact = false }: { items: Suggestion[]; title?: string; compact?: boolean }) {
+/** Shown once after a project is created: what happened and what comes next. */
+export function Created({ name, hasIdea, aiReady }: { name: string; hasIdea: boolean; aiReady: boolean }) {
   return (
-    <section aria-labelledby="next-steps" className={compact ? "" : "panel p-5"}>
-      <h2 id="next-steps" className="text-lg">{title}</h2>
-      {items.length ? (
-        <ul className={`mt-3 grid gap-3 ${compact ? "" : "md:grid-cols-3"}`}>
-          {items.map((s) => (
-            <li key={s.key}>
-              <Link href={s.href} className="group flex h-full flex-col rounded-2xl border border-border bg-surface p-4 transition hover:-translate-y-0.5 hover:border-accent">
-                <span className={`w-fit rounded-full px-2.5 py-0.5 text-[0.7rem] font-bold uppercase tracking-wide ${KIND[s.kind].className}`}>{KIND[s.kind].label}</span>
-                <span className="mt-2 font-semibold group-hover:underline">{s.title} <span aria-hidden>→</span></span>
-                <span className="mt-1 text-sm text-muted">{s.why}</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className="mt-2 text-sm text-muted">Nothing needs you right now. Describe a change in the chat whenever you have the next idea.</p>
-      )}
-    </section>
+    <div role="status" className="kw-fade flex items-start gap-4 rounded-2xl border border-border bg-surface p-5">
+      <span className="kw-pop grid h-11 w-11 shrink-0 place-items-center rounded-full bg-soft-accent text-soft-accent-ink">
+        <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.25" strokeLinecap="round" strokeLinejoin="round" className="kw-draw" aria-hidden><path d="M5 12.5l4.5 4.5L19 7" /></svg>
+      </span>
+      <div>
+        <p className="font-display text-lg font-bold">{name} is ready to plan</p>
+        <p className="mt-1 text-sm text-muted">
+          {!aiReady ? "Your idea is saved. The planner will answer once AI is configured on this installation."
+            : hasIdea ? "Your idea is with the Software Architect. Answer its questions in the chat, then approve the plan — nothing is built before that."
+            : "Describe what it should do in the chat; the Software Architect turns it into a plan for you to approve."}
+        </p>
+        <a href="#chat" className="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-accent hover:underline">Go to the chat <span aria-hidden>→</span></a>
+      </div>
+    </div>
   );
 }

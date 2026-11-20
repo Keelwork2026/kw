@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { Icon, type IconName } from "./icons";
 export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: React.ReactNode }) {
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
@@ -10,11 +12,26 @@ export function PageHeader({ title, description, actions }: { title: string; des
   );
 }
 
-export function EmptyState({ title, children }: { title: string; children?: React.ReactNode }) {
+/**
+ * An empty section is an introduction, not missing content: an icon, what
+ * will appear here and why, and what to do first (plus an optional second
+ * route, like a template). Actions only link to things that work.
+ */
+export function EmptyState({ title, children, icon = "inbox", action, secondary }: {
+  title: string; children?: React.ReactNode; icon?: IconName;
+  action?: { label: string; href: string }; secondary?: { label: string; href: string };
+}) {
   return (
-    <div className="panel p-8 text-center">
-      <p className="font-display text-lg font-bold">{title}</p>
-      {children ? <div className="mt-2 text-sm text-muted">{children}</div> : null}
+    <div className="panel grid justify-items-center gap-1 px-6 py-10 text-center">
+      <span className="kw-empty-icon" aria-hidden><Icon name={icon} size={26} /></span>
+      <p className="mt-3 font-display text-lg font-bold">{title}</p>
+      {children ? <div className="max-w-md text-sm text-muted">{children}</div> : null}
+      {action || secondary ? (
+        <div className="mt-4 flex flex-wrap justify-center gap-2">
+          {action ? <Link href={action.href} className="btn btn-gradient">{action.label}</Link> : null}
+          {secondary ? <Link href={secondary.href} className="btn btn-secondary">{secondary.label}</Link> : null}
+        </div>
+      ) : null}
     </div>
   );
 }

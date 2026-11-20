@@ -33,7 +33,7 @@ export default async function SecretsPage({ params }: { params: Promise<{ id: st
               ))}
             </tbody>
           </table>
-        ) : <div className="p-5"><EmptyState title="No secrets yet">Agents ask for secrets when they need them; you can also add them here.</EmptyState></div>}
+        ) : <div className="p-5"><EmptyState icon="key" title="No secrets yet" action={{ label: "Add a secret", href: "#set-secret" }}>API keys and tokens your app needs, encrypted at rest and never shown again. Agents ask for them when they need one.</EmptyState></div>}
       </section>
       <section className="card" aria-labelledby="set-secret">
         <h2 id="set-secret" className="text-lg">Set or replace a secret</h2>

@@ -38,7 +38,7 @@ export default async function BackendPage({ params }: { params: Promise<{ id: st
                 </tr>
               ))}</tbody>
             </table>
-          ) : <div className="p-5"><EmptyState title="Nothing found" /></div>}
+          ) : <div className="p-5"><EmptyState icon="code" title="No routes or server actions found">API routes and server actions appear here as the agents build them. Clear the search if you filtered the list.</EmptyState></div>}
         </section>
       ))}
     </div>

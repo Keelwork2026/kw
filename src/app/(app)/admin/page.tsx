@@ -83,7 +83,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
               </tr>
             ))}</tbody>
           </table>
-        ) : <div className="p-5"><EmptyState title="No organizations match">Try a different name, or clear the filters.</EmptyState></div>}
+        ) : <div className="p-5"><EmptyState icon="search" title="No organizations match">Try a different name, or clear the filters.</EmptyState></div>}
       </section>
 
       <section className="mt-8" aria-labelledby="mine">
@@ -124,7 +124,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                 ))}
               </div>
             </article>
-          )) : <EmptyState title="Nothing waiting for review" />}
+          )) : <EmptyState icon="success" title="Nothing waiting for review">Templates and listings submitted to the marketplace appear here for review.</EmptyState>}
         </section>
       ) : null}
     </>

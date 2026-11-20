@@ -66,7 +66,7 @@ export default async function TestsPage({ params, searchParams }: { params: Prom
               );
             })}
           </ul>
-        ) : <div className="p-5"><EmptyState title="No checks have run yet" /></div>}
+        ) : <div className="p-5"><EmptyState icon="flask" title="No checks have run yet" action={{ label: "Run checks", href: "#run" }} secondary={{ label: "Run Quick QA", href: `/projects/${project.id}/qa` }}>Tests, type checks, lint and builds run in the project&apos;s sandbox; each run keeps its full log here.</EmptyState></div>}
       </section>
     </div>
   );

@@ -44,7 +44,7 @@ export default async function TemplatesPage() {
               <li key={i.id}><Link href={`/marketplace/${i.id}`} className="panel block h-full p-5 hover:border-accent"><p className="font-semibold">{i.title}</p><p className="mt-1 line-clamp-3 text-sm text-muted">{i.description}</p><p className="mt-3 text-xs text-muted">{i.category}</p></Link></li>
             ))}
           </ul>
-        ) : <EmptyState title="No reviewed templates yet">Templates appear here once a reviewer approves them in the marketplace.</EmptyState>}
+        ) : <EmptyState icon="layers" title="No reviewed templates yet" action={{ label: "Open the marketplace", href: "/marketplace" }}>Templates appear here once a reviewer approves them in the marketplace.</EmptyState>}
       </section>
 
       <section className="card mt-10 max-w-2xl" aria-labelledby="import">

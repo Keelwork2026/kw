@@ -28,7 +28,7 @@ export default async function MarketplacePage({ searchParams }: { searchParams: 
         <ul id="browse" aria-label="Published templates" className="grid scroll-mt-6 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((i) => <li key={i.id}><Link href={`/marketplace/${i.id}`} className="panel block h-full p-5 hover:border-accent"><p className="font-semibold">{i.title}</p><p className="mt-1 line-clamp-3 text-sm text-muted">{i.description}</p><p className="mt-3 text-xs text-muted">{i.category}</p></Link></li>)}
         </ul>
-      ) : <EmptyState title="No templates here yet" />}
+      ) : <EmptyState icon="layers" title="No templates here yet" action={{ label: "Browse starter templates", href: "/templates#starters" }}>Reviewed community templates appear here. Starter templates are always available.</EmptyState>}
 
       <div className="mt-10 grid gap-6 lg:grid-cols-2">
         {can("project.manage") && projects?.length ? (

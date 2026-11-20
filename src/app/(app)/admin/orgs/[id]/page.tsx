@@ -41,7 +41,7 @@ export default async function AdminOrgPage({ params }: { params: Promise<{ id: s
         </section>
       )}
       <section className="mt-6"><h2 className="mb-2 text-lg">Your requests</h2>
-        {grants?.length ? <ul className="grid gap-2 text-sm">{grants.map((g) => <li key={g.id}><StatusPill status={g.status} /> {g.reason}</li>)}</ul> : <EmptyState title="None yet" />}
+        {grants?.length ? <ul className="grid gap-2 text-sm">{grants.map((g) => <li key={g.id}><StatusPill status={g.status} /> {g.reason}</li>)}</ul> : <EmptyState icon="shield" title="No support access granted">Support can only see this organization when an owner grants time-limited access.</EmptyState>}
       </section>
     </>
   );

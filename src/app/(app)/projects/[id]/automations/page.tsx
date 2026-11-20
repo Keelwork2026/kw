@@ -77,7 +77,7 @@ export default async function AutomationsPage({ params, searchParams }: { params
               );
             })}
           </ul>
-        ) : <EmptyState title="No automations yet">Start from a template above, or write steps below.</EmptyState>}
+        ) : <EmptyState icon="workflow" title="No automations yet" action={{ label: "Start from a template", href: "#starters" }} secondary={{ label: "Write your own", href: "#editor" }}>Automations run on a schedule or a webhook — send a weekly report, sync records, or clean up old data — with a history of every run.</EmptyState>}
       </section>
 
       {write ? (
