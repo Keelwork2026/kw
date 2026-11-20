@@ -60,7 +60,7 @@ export function NavMenu({ isAdmin, staffQueue = 0, onNavigate }: { isAdmin: bool
           <h2 id="menu-staff" className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">Staff</h2>
           <ul><li>
             <Link href="/admin" onClick={onNavigate} aria-current={pathname.startsWith("/admin") ? "page" : undefined} className={`flex min-h-10 items-center justify-between gap-2 rounded-xl px-3 py-1.5 text-sm hover:bg-surface-2 ${pathname.startsWith("/admin") ? "bg-surface-2 font-semibold" : "font-medium text-muted hover:text-text"}`}>
-              <span><span className="block">Platform admin</span><span className={hints ? "block text-[11px] font-normal leading-4 text-muted" : "sr-only"}>Organizations, support access and reviews</span></span>
+              <span><span className="block">Back office</span><span className={hints ? "block text-[11px] font-normal leading-4 text-muted" : "sr-only"}>Staff: overview, workspaces, safety and reviews</span></span>
               {staffQueue ? <span className="pill bg-soft-accent text-soft-accent-ink" aria-label={`${staffQueue} waiting for review`}>{staffQueue}</span> : null}
             </Link>
           </li></ul>

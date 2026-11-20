@@ -47,7 +47,7 @@ export function CommandPalette({ projects, isAdmin }: { projects: { id: string; 
     }
     for (const p of projects) out.push({ key: `p-${p.id}`, label: p.name, hint: "Open project", group: "Projects", href: `/projects/${p.id}` });
     for (const t of STARTERS) out.push({ key: `t-${t.slug}`, label: `${t.name} template`, hint: t.tagline, group: "Templates", href: starterHref(t, true) });
-    if (isAdmin) out.push({ key: "admin", label: "Platform admin", hint: "Organizations, support access, reviews", group: "Staff", href: "/admin" });
+    if (isAdmin) out.push({ key: "admin", label: "Back office", hint: "Staff overview, workspaces, safety, reviews", group: "Staff", href: "/admin" });
     return out;
   }, [projects, projectId, isAdmin]);
 

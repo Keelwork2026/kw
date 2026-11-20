@@ -31,6 +31,9 @@ create table if not exists auth.users (
   raw_user_meta_data jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now()
 );
+-- Columns Supabase Auth has that staff tools read.
+alter table auth.users add column if not exists last_sign_in_at timestamptz;
+alter table auth.users add column if not exists banned_until timestamptz;
 
 create or replace function auth.uid() returns uuid
 language sql stable as $$

@@ -1,5 +1,4 @@
-import { notFound } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { requireStaff } from "@/lib/admin/server";
 import { PageHeader, EmptyState, timeAgo } from "@/components/page-header";
 import { ActionForm } from "@/components/action-form";
 import { decidePolicy } from "../actions";
@@ -7,9 +6,7 @@ import { decidePolicy } from "../actions";
 export const metadata = { title: "Policy appeals" };
 
 export default async function PolicyAppealsPage() {
-  const supabase = await createClient();
-  const { data: isAdmin } = await supabase.rpc("is_platform_admin");
-  if (!isAdmin) notFound();
+  const { supabase } = await requireStaff("policy");
   const { data } = await supabase.from("policy_events").select("id, org_id, level, rules, summary, excerpt, appeal_note, appealed_at, created_at").eq("status", "appealed").order("appealed_at").limit(100);
   return (
     <>

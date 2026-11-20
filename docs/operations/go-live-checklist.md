@@ -111,7 +111,22 @@ It exits non-zero on anything that blocks a deployment (missing or placeholder v
 6. k6 thresholds are green (`loadtest/k6-smoke.js` against staging).
 7. The restore drill and a real PITR restore succeed.
 8. Real prices replace `[PRICE]` on the pricing page and in Stripe.
-9. The first platform admin is inserted by hand: `insert into platform_admins(user_id, role) values ('<uuid>', 'superadmin');`
+9. The first superadmin is inserted by hand once: `insert into platform_admins(user_id, role) values ('<uuid>', 'superadmin');`. After that, superadmins add, re-role and remove staff in the back office (`/admin/staff`); the database keeps at least one superadmin.
 10. A CDN / WAF is in front of the app.
 11. A privacy policy, terms, a vulnerability disclosure policy and an incident response plan are published (then link them from the footer).
 12. An independent penetration test is done before taking payment.
+
+## Staff back office (`/admin`)
+
+| Role | Can |
+|---|---|
+| Support | Overview, workspaces (metadata), people search, owner-approved read-only support access, announcements |
+| Security | Overview, workspaces, people (ban/unban), abuse reports, suspensions, policy appeals, staff audit log |
+| Reviewer | Overview, marketplace review, policy appeals |
+| Superadmin | Everything, plus staff management, credit adjustments and platform switches |
+
+- Suspending a workspace keeps its people's read access and billing, refuses every other permission, cancels queued builds, automation runs and deployments, and blocks new ones in the database (triggers), whichever service tries.
+- Platform switches (`signups_open`, `builds_open`, `marketplace_submissions_open`) are enforced by database triggers, so OAuth sign-ups and background services obey them too.
+- Bans use Supabase Auth (`ban_duration`); the database checks the staff role, refuses to ban staff and records the action first.
+- Every staff action is in `platform_audit_events` (append-only), and actions on a workspace also go to that workspace's own audit log.
+- Public abuse reports come in through `/report` (rate-limited, honeypot) and are visible only to security staff and superadmins.

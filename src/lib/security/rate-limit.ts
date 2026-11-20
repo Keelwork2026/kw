@@ -7,6 +7,7 @@ export const LIMITS = {
   collect: { capacity: 120, refillPerSecond: 2 },
   invite: { capacity: 20, refillPerSecond: 1 / 180 },
   aiMessage: { capacity: 30, refillPerSecond: 1 / 10 },
+  report: { capacity: 5, refillPerSecond: 1 / 600 },
 } as const;
 export type Scope = keyof typeof LIMITS;
 

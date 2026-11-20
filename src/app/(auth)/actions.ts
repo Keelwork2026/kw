@@ -1,7 +1,7 @@
 "use server";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createServiceClient } from "@/lib/supabase/server";
 import { safeRedirectPath, onboardingParams } from "@/lib/auth/redirect";
 import { enabledProviders, type OAuthProvider } from "@/lib/auth/providers";
 import { limitOrMessage } from "@/lib/security/server-limit";
@@ -44,6 +44,9 @@ export async function signUp(_prev: ActionResult, form: FormData): Promise<Actio
 
   const limited = await limitOrMessage("signIn", `${email}|${await clientIp()}`);
   if (limited) return { ok: false, message: limited };
+  // Staff can close sign-ups (the database enforces it too); say so plainly instead of a generic error.
+  const { data: open } = await createServiceClient().rpc("platform_flag", { p_key: "signups_open" });
+  if (open === false) return { ok: false, message: "New sign-ups are closed for a short while. Please try again later." };
 
   const carry = onboardingParams({ prompt: str(form, "prompt"), template: str(form, "template"), name: str(form, "name") });
   const next = new URLSearchParams({ ...(carry.prompt ? { prompt: carry.prompt } : {}), ...(carry.template ? { template: carry.template } : {}), ...(carry.name ? { name: carry.name } : {}) });

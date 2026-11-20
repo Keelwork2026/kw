@@ -34,7 +34,7 @@ select kwtest.login('pol.member@example.com');
 select kwtest.throws(format('select public.appeal_policy_event(%L, ''short'')', kwtest.get('ev')), 'at least 10 characters', 'an appeal needs a reason');
 select kwtest.lives(format('select public.appeal_policy_event(%L, ''It is phishing-awareness training for our own staff.'')', kwtest.get('ev')), 'the person concerned can ask for a review');
 select kwtest.throws(format('select public.appeal_policy_event(%L, ''Again, please review this one.'')', kwtest.get('ev')), 'already been reviewed or appealed', 'one appeal per decision');
-select kwtest.throws(format('select public.decide_policy_event(%L, ''overturned'', ''Looks fine'')', kwtest.get('ev')), 'platform staff only', 'members can''t decide their own appeal');
+select kwtest.throws(format('select public.decide_policy_event(%L, ''overturned'', ''Looks fine'')', kwtest.get('ev')), 'platform admin', 'members can''t decide their own appeal');
 
 -- Decision
 select kwtest.login('pol.staff@example.com');

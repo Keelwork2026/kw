@@ -23,7 +23,7 @@ A production-grade AI software engineering platform. A person describes an app, 
 
 | Area | Files |
 |---|---|
-| Database (19 migrations, RLS everywhere, self-checking) | `supabase/migrations/*.sql`, checks in `supabase/tests/*.sql`, runner `scripts/test-db.sh` |
+| Database (20 migrations, RLS everywhere, self-checking) | `supabase/migrations/*.sql`, checks in `supabase/tests/*.sql`, runner `scripts/test-db.sh` |
 | Design language "Ultramarine & Acid" | `src/app/globals.css`, `src/app/layout.tsx`, `design/canvas.html` (Main, Nav, Auth, Builder, Dashboard, Pricing) |
 | Marketing site | `src/app/(marketing)/{page,pricing,layout}.tsx`, `src/components/marketing/{site-nav,menu-data,icon,hero-prompt}.tsx` |
 | Auth | `src/app/(auth)/*`, `src/app/auth/{callback,confirm}`, `src/lib/auth/redirect.ts`, `src/middleware.ts` |
@@ -44,7 +44,8 @@ A production-grade AI software engineering platform. A person describes an app, 
 | Deployments, export | `src/lib/deploy/{state,health,cloudflare,vercel}.ts`, `services/agent-worker/src/{deploy,deploy-cloudflare}.ts`, `src/lib/export/{zip,collect}.ts`, `projects/[id]/export/route.ts` |
 | Billing | `src/lib/billing/{stripe,server}.ts`, `src/app/api/stripe/webhook`, Billing page |
 | Self-healing, test selection | `src/lib/heal/incident.ts`, `src/lib/testselect/graph.ts`, Incidents tab |
-| Marketplace, analytics, admin | `src/lib/marketplace/package.ts`, `src/lib/analytics/collect.ts`, `src/app/api/collect/[key]`, `src/app/(app)/{marketplace,admin,settings/support}` |
+| Marketplace, analytics | `src/lib/marketplace/package.ts`, `src/lib/analytics/collect.ts`, `src/app/api/collect/[key]`, `src/app/(app)/{marketplace,settings/support}` |
+| Staff back office (roles, overview, workspaces, people, trust & safety, appeals, marketplace review, announcements & switches, audit log, staff) | `supabase/migrations/20261123000100_staff_backoffice.sql`, `src/lib/admin/*`, `src/app/(app)/admin/**`, public `/report` |
 | Hardening | `src/lib/security/{headers,rate-limit,server-limit,readiness}.ts`, `src/app/api/{health,ready}`, `scripts/backup-restore-drill.sh`, `loadtest/k6-smoke.js` |
 | Docs | `docs/security/threat-model.md`, `docs/operations/{backup-restore,go-live-checklist,cloudflare-infrastructure}.md`, `docs/compliance/evidence-checklist.md` |
 | Tooling | `scripts/{check-sources,mutation-check,env-vars,print-stack-catalog,preflight}.ts`, `.github/workflows/ci.yml` |
