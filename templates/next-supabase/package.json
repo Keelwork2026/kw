@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "packageManager": "pnpm@10.28.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -26,5 +27,14 @@
     "eslint-config-next": "^15.5.0",
     "prettier": "^3.6.0",
     "typescript": "^5.9.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "workerd",
+      "sharp",
+      "@swc/core",
+      "unrs-resolver"
+    ]
   }
 }
