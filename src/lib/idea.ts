@@ -19,7 +19,15 @@ export function nameFromIdea(idea: string, kindLabel?: string): string {
   if (!text) return kindLabel ? `New ${kindLabel.toLowerCase()}` : "New project";
   const rest = text.replace(LEAD, "");
   // Stop at the first clause break, then keep up to five meaningful words.
-  const clause = rest.split(/[.,;:!?()\n]| - | — | that | which | where | so | to help /i)[0] ?? rest;
+  const parts = rest.split(/[.,;:!?()\n]| - | — | that | which | where | so | to help /i);
+  let clause = parts[0] ?? rest;
+  // "A web app that tracks reading goals" — the generic noun says nothing; name it after what it does.
+  const generic = /^(?:web ?app|app|application|website|web ?site|site|dashboard|ai tool|tool|saas(?: product| app)?|platform|product|service)$/i.exec(clause.trim());
+  if (generic && parts[1]?.trim()) {
+    const doing = parts[1].trim().split(" ");
+    if (doing.length > 1 && /^(?:[a-z]+s|lets|helps|allows)$/i.test(doing[0]!)) doing.shift();
+    clause = doing.filter((w) => !SMALL.has(w.toLowerCase())).length >= 2 ? doing.join(" ") : `${generic[0]} for ${doing.join(" ")}`;
+  }
   const words = clause.split(" ").filter(Boolean).slice(0, 6);
   while (words.length > 1 && SMALL.has(words.at(-1)!.toLowerCase())) words.pop();
   const titled = words.map((w, i) => (i > 0 && LOWER.has(w.toLowerCase()) ? w.toLowerCase() : /^[a-z]/.test(w) ? w[0]!.toUpperCase() + w.slice(1) : w)).join(" ");
