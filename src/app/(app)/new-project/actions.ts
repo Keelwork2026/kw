@@ -34,6 +34,7 @@ export async function quickStart(_prev: ActionResult, form: FormData): Promise<A
   const idea = String(form.get("idea") ?? "").replace(/\s+$/g, "").trim();
   const kind = IDEA_KINDS.find((k) => k.key === String(form.get("kind") ?? ""));
   if (idea.length < 8) return { ok: false, message: "Describe the idea in a few words (at least 8 characters)." };
+  if (IDEA_KINDS.some((k) => k.starter.trim().toLowerCase() === idea.toLowerCase())) return { ok: false, message: "Finish the sentence: say what it should do or who it's for." };
   if (idea.length > 2000) return { ok: false, message: "Keep the description under 2000 characters." };
   const { data, error } = await supabase.rpc("create_project", {
     p_org: org.id, p_name: nameFromIdea(idea, kind?.label), p_description: idea.slice(0, 280), p_prompt: idea, p_template: null,

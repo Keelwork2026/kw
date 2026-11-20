@@ -38,7 +38,7 @@ export function QuickStart({ action }: { action: FormAction }) {
           <textarea
             id="quick-idea" ref={area} name="idea" rows={2} maxLength={2000} required minLength={8}
             value={idea} onChange={(e) => setIdea(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); formRef.current?.requestSubmit(); } }}
+            onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); if (!IDEA_KINDS.some((k) => k.starter.trim() === idea.trim())) formRef.current?.requestSubmit(); } }}
             placeholder="A booking site for my yoga studio with class passes and card payments"
             className="min-h-14 flex-1 resize-none bg-transparent px-3 py-2 text-base outline-none placeholder:text-muted"
             aria-describedby="quick-idea-hint"
