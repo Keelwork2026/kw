@@ -280,5 +280,5 @@ async function execute(ctx: WorkerContext, run: Run, note: (s: string) => void) 
     outcomes: { journeys: journeyOut.outcomes, browser: { available: browser.available, engine: browser.engine ?? null, reason: browser.reason ?? null, shots: browser.pages.filter((p) => p.screenshot).map((p) => ({ path: p.path, viewport: p.viewport, screenshot: p.screenshot })) }, live: { ok: live, reason: liveReason || null, pages: probe.pages.length, endpoints: probe.apis.length } },
     progress: { phase: "Done", done: phases.length, total: phases.length, results: all.length },
   }).eq("id", run.id);
-  note(`Done: ${counts.passed} passed, ${counts.failed} failed, ${counts.blocked + counts.not_run + counts.skipped} not run. Release status: ${rd.status}.`);
+  note(`Done: ${counts.passed} passed, ${counts.failed} failed, ${(counts.blocked ?? 0) + (counts.not_run ?? 0) + (counts.skipped ?? 0)} not run. Release status: ${rd.status}.`);
 }

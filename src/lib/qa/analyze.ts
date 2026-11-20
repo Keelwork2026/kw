@@ -1,5 +1,5 @@
 import type { Category, Confidence, Evidence, Finding, Method, Profile, Result, Route, Severity, Status } from "./types";
-import { ACTION_WORDS, GENERIC_LINK_TEXT, internalPaths, parse, type Doc } from "./html";
+import { ACTION_WORDS, GENERIC_LINK_TEXT, internalPaths, parse } from "./html";
 import { matchRoute, type SourceFile } from "./discover";
 
 /**

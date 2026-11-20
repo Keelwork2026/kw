@@ -257,7 +257,7 @@ function EvidenceList({ ev }: { ev: Evidence[] }) {
           {e.kind === "measure" && <p>{e.name}: <b>{e.value ?? "—"} {e.unit}</b>{e.note ? <span className="text-muted"> · {e.note}</span> : null}</p>}
           {e.kind === "log" && <pre className="whitespace-pre-wrap font-mono">{e.text}</pre>}
           {e.kind === "html" && <p><span className="font-mono">{e.page}</span>: <span className="text-muted">{e.snippet}</span></p>}
-          {e.kind === "screenshot" && e.dataUrl && /^data:image\/(jpeg|png);base64,/.test(e.dataUrl) ? <figure className="m-0">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={e.dataUrl} alt={`Screenshot of ${e.page} at ${e.viewport}px`} className="max-h-72 rounded-lg border border-border" /><figcaption className="text-muted">{e.page} @ {e.viewport}px</figcaption></figure> : null}
+          {e.kind === "screenshot" && e.dataUrl && /^data:image\/(jpeg|png);base64,/.test(e.dataUrl) ? <figure className="m-0"><img src={e.dataUrl} alt={`Screenshot of ${e.page} at ${e.viewport}px`} className="max-h-72 rounded-lg border border-border" /><figcaption className="text-muted">{e.page} @ {e.viewport}px</figcaption></figure> : null}
         </li>
       ))}
     </ul>
@@ -376,7 +376,7 @@ export function IssueDetail({ ctx, id }: { ctx: Ctx; id: string }) {
           <h2 className="mt-2 text-2xl">{i.title}</h2>
           <p className="mt-2 flex flex-wrap items-center gap-2 text-sm"><span className="font-mono text-muted">QA-{i.ref}</span><SeverityChip s={i.severity} /><span className="pill bg-surface-2">{i.priority}</span><span className="pill bg-surface-2">{i.status.replace(/_/g, " ")}</span><span className="pill bg-surface-2">{i.confidence.replace("_", " ")}</span><span className="text-muted">{CATEGORY_INFO[i.category]?.label}{i.wcag ? ` · WCAG ${i.wcag}` : ""}</span></p>
           <dl className="mt-5 grid gap-4 text-sm">
-            <div><dt className="font-semibold">What's wrong</dt><dd className="mt-1">{i.description}</dd></div>
+            <div><dt className="font-semibold">What&apos;s wrong</dt><dd className="mt-1">{i.description}</dd></div>
             <div><dt className="font-semibold">Why it matters</dt><dd className="mt-1">{i.impact}</dd></div>
             {i.target ? <div><dt className="font-semibold">Where</dt><dd className="mt-1 font-mono text-xs">{i.target}</dd></div> : null}
             <div><dt className="font-semibold">How to fix it</dt><dd className="mt-1">{i.recommendation}</dd></div>
@@ -408,7 +408,7 @@ export function IssueDetail({ ctx, id }: { ctx: Ctx; id: string }) {
         {ctx.can.manage && isOpen ? (
           <ActionForm action={acceptRisk} submitLabel="Accept the risk" submitClassName="btn btn-secondary min-h-9" className="panel grid gap-2 p-4" confirm="Accept this risk? It's recorded in the audit log with your name.">
             <Hidden ctx={ctx} /><input type="hidden" name="issueId" value={i.id} />
-            <p className="text-sm text-muted">For a known issue you've decided to live with for now. {i.severity === "critical" ? "Critical risks must be reviewed within 90 days." : ""}</p>
+            <p className="text-sm text-muted">For a known issue you&apos;ve decided to live with for now. {i.severity === "critical" ? "Critical risks must be reviewed within 90 days." : ""}</p>
             <label className="grid gap-1 text-sm font-semibold">Reason<textarea name="reason" required minLength={10} rows={3} className="input" /></label>
             <label className="grid gap-1 text-sm font-semibold">Review by<input type="date" name="expires" required defaultValue={soon} className="input" /></label>
           </ActionForm>
@@ -445,7 +445,7 @@ export function JourneysView({ ctx }: { ctx: Ctx }) {
           {o.friction.length ? <ul className="mt-3 grid gap-1 text-sm">{o.friction.map((f) => <li key={f}>Friction: {f}</li>)}</ul> : null}
         </Section>
       ))}
-      <p className="text-xs text-muted">Steps behind sign-in need a signed-in test session; until one is configured they're shown as blocked, not passed.</p>
+      <p className="text-xs text-muted">Steps behind sign-in need a signed-in test session; until one is configured they&apos;re shown as blocked, not passed.</p>
     </div>
   );
 }
@@ -483,7 +483,7 @@ export function ResponsiveView({ ctx }: { ctx: Ctx }) {
       </Section>
       {b?.shots?.length ? (
         <Section title="Same page, different screens" sub={b.shots[0]!.path}>
-          <div className="flex flex-wrap items-start gap-4">{b.shots.filter((s) => /^data:image\/(jpeg|png);base64,/.test(s.screenshot)).map((s) => <figure key={s.viewport} className="m-0">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={s.screenshot} alt={`${s.path} at ${s.viewport}px wide`} className="max-h-[420px] rounded-xl border border-border" style={{ width: Math.min(360, s.viewport / 3.2) }} /><figcaption className="mt-1 text-center text-xs text-muted">{s.viewport}px</figcaption></figure>)}</div>
+          <div className="flex flex-wrap items-start gap-4">{b.shots.filter((s) => /^data:image\/(jpeg|png);base64,/.test(s.screenshot)).map((s) => <figure key={s.viewport} className="m-0"><img src={s.screenshot} alt={`${s.path} at ${s.viewport}px wide`} className="max-h-[420px] rounded-xl border border-border" style={{ width: Math.min(360, s.viewport / 3.2) }} /><figcaption className="mt-1 text-center text-xs text-muted">{s.viewport}px</figcaption></figure>)}</div>
         </Section>
       ) : null}
       <Section title="Responsive and browser results">
