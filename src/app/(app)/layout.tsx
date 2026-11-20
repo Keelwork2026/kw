@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { requireOrg } from "@/lib/org";
 import { Sidebar } from "@/components/sidebar";
 import { MobileMenu } from "@/components/mobile-menu";
@@ -45,7 +46,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
         {orgState?.suspended_at ? (
           <div role="alert" className="mb-4 rounded-2xl border border-[#f3c1b8] bg-[#fde8e4] px-4 py-3 text-sm text-[#7a1d12]">
             <p className="font-semibold">{org.name} is suspended.</p>
-            <p className="mt-0.5">{orgState.suspended_reason} You can still read your projects, export them and manage billing; builds, automations, deployments and changes are paused. If you think this is a mistake, contact us through the <a className="font-semibold underline" href="/trust">Trust page</a>.</p>
+            <p className="mt-0.5">{orgState.suspended_reason} You can still read your projects, export them and manage billing; builds, automations, deployments and changes are paused. If you think this is a mistake, contact us through the <Link className="font-semibold underline" href="/trust">Trust page</Link>.</p>
           </div>
         ) : null}
         <PageHints />{children}
