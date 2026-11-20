@@ -2,8 +2,10 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseSource, selectorFor, buildSelection, inspectorActive } from "../lib/inspector.ts";
 
-function el(tagName: string, attrs: Record<string, string> = {}, parent: any = null, text = ""): any {
-  const node: any = { tagName: tagName.toUpperCase(), id: attrs.id ?? "", classList: (attrs.class ?? "").split(" ").filter(Boolean), parentElement: parent, textContent: text, children: [] as any[], getAttribute: (n: string) => attrs[n] ?? null };
+type FakeEl = { tagName: string; id: string; classList: string[]; parentElement: FakeEl | null; textContent: string; children: FakeEl[]; getAttribute(n: string): string | null };
+
+function el(tagName: string, attrs: Record<string, string> = {}, parent: FakeEl | null = null, text = ""): FakeEl {
+  const node: FakeEl = { tagName: tagName.toUpperCase(), id: attrs.id ?? "", classList: (attrs.class ?? "").split(" ").filter(Boolean), parentElement: parent, textContent: text, children: [], getAttribute: (n: string) => attrs[n] ?? null };
   if (parent) parent.children.push(node);
   return node;
 }
