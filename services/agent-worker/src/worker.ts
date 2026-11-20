@@ -5,8 +5,8 @@
  * template into the project's sandbox, builds the task graph from the
  * approved plan and runs ready tasks (WORKER_CONCURRENCY at a time) through
  * gateway → protocol → policy → broker. It commits a Git checkpoint after
- * every finished task. The same process runs checks (checks.ts) and
- * deployments (deploy.ts).
+ * every finished task. The same process runs checks (checks.ts),
+ * deployments (deploy.ts) and QA runs (qa.ts).
  *
  * Needs: NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY,
  * SANDBOX_BROKER_URL, SANDBOX_BROKER_TOKEN, AI_MODEL_CATALOG (+ its keys),
@@ -30,6 +30,7 @@ import { safeRequest } from "../../../src/lib/import/safe-fetch";
 import { runTask, type TaskDeps } from "./core";
 import { processChecks } from "./checks";
 import { processDeployments } from "./deploy";
+import { processQa } from "./qa";
 
 const WORKER_ID = `worker-${randomUUID().slice(0, 8)}`;
 const CONCURRENCY = Math.max(1, Math.min(8, Number(process.env.WORKER_CONCURRENCY ?? 3) || 3));
@@ -63,6 +64,7 @@ async function main() {
       for (const run of runs ?? []) await processRun(ctx, run).catch((e) => failRun(db, run.id, e));
       await processChecks(ctx).catch((e) => console.error(`[${WORKER_ID}] checks:`, (e as Error).message));
       await processDeployments(ctx).catch((e) => console.error(`[${WORKER_ID}] deployments:`, (e as Error).message));
+      await processQa(ctx).catch((e) => console.error(`[${WORKER_ID}] qa:`, (e as Error).message));
     } catch (e) {
       console.error(`[${WORKER_ID}] poll failed:`, (e as Error).message);
     }

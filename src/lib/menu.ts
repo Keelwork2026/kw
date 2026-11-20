@@ -144,9 +144,14 @@ export const MENU: readonly MenuGroup[] = [
         can: ["Meet the eight specialist agents", "See which AI model each one uses", "Understand what needs your approval"],
       },
       {
-        slug: "testing", label: "Testing Centre", hint: "Tests, type checks, lint and builds",
-        can: ["Run tests, only the affected tests, lint, type checks or a build", "Read the full log of any run", "See failures turned into incidents"],
+        slug: "testing", label: "Testing & QA", hint: "Quality, security, UX and release readiness",
+        can: ["Run Quick, Full or pre-deployment QA against the running app", "See scores, issues, journeys and release readiness", "Ask the agents to fix issues, then retest", "Run tests, lint, type checks or a build", "See failures turned into incidents"],
         children: [
+          { label: "QA overview", hint: "Scores, readiness and what to fix first", to: { tab: "qa" } },
+          { label: "Issues", hint: "Findings from every QA run", to: { tab: "qa", query: "view=issues" } },
+          { label: "Release readiness", hint: "Why a version can or can't ship", to: { tab: "qa", query: "view=readiness" } },
+          { label: "Test plan", hint: "What the app is and what gets tested", to: { tab: "qa", query: "view=plan" } },
+          { label: "Reports", hint: "Executive, security, UX and more", to: { tab: "qa", query: "view=reports" } },
           { label: "Run checks", hint: "Start a test or build", to: { tab: "tests", at: "run" } },
           { label: "Run history", hint: "Past runs and logs", to: { tab: "tests", at: "history" } },
           { label: "Incidents", hint: "Failures and proposed fixes", to: { tab: "incidents" } },
@@ -254,6 +259,7 @@ export const PROJECT_TAB_HINTS: Record<ProjectTab, { hint: string; can: string[]
   code: { hint: "Browse, edit and commit files", can: ["Open any file in the editor", "Save changes as a commit", "See history and restore old versions"] },
   database: { hint: "Schema and migrations", can: ["Browse tables and policies", "Apply pending migrations"], jump: [{ label: "Tables", at: "tables" }, { label: "Migrations", at: "migrations" }] },
   backend: { hint: "Routes and server actions", can: ["Review every endpoint for auth and validation"], jump: [{ label: "API routes", at: "routes" }, { label: "Server actions", at: "actions" }] },
+  qa: { hint: "Quality assurance and release readiness", can: ["Run Quick or Full QA", "Triage issues and ask the agents to fix them", "See release readiness"], jump: [{ label: "Overview" }, { label: "Issues", query: "view=issues" }, { label: "Results", query: "view=tests" }, { label: "Release", query: "view=readiness" }, { label: "Reports", query: "view=reports" }] },
   tests: { hint: "Run checks and read logs", can: ["Run tests, lint, type checks and builds", "Read full logs"], jump: [{ label: "Run checks", at: "run" }, { label: "History", at: "history" }] },
   incidents: { hint: "What's failing and fixes", can: ["See failures from checks, deploys and automations", "Ask for a proposed fix, or dismiss"], jump: [{ label: "Show closed", query: "all=1" }] },
   security: { hint: "Findings from scans and reviews", can: ["Run scans", "Fix or accept findings"], jump: [{ label: "Run a scan", at: "scans" }, { label: "Findings", at: "findings" }, { label: "Accepted", query: "status=accepted" }] },
@@ -285,7 +291,7 @@ export function pickerTarget(sp: { to?: string; at?: string; q?: string }): { ta
   const tab = sp.to === "build" ? "" : sp.to;
   if (!TAB_SLUGS.has(tab)) return null;
   const at = sp.at && ANCHOR_RE.test(sp.at) ? sp.at : null;
-  const query = sp.q && /^(status=(open|accepted|resolved)|all=1)$/.test(sp.q) ? sp.q : null;
+  const query = sp.q && /^(status=(open|accepted|resolved)|all=1|view=(issues|tests|readiness|plan|reports|history|settings))$/.test(sp.q) ? sp.q : null;
   return { tab, at, query };
 }
 
@@ -298,7 +304,7 @@ export function itemForPath(pathname: string): { item: MenuItem; group: MenuGrou
 
 /** Inside a project, the sidebar highlights the studio that owns the open tab. */
 export const TAB_TO_MENU: Record<ProjectTab, string> = {
-  "": "builder", code: "builder", database: "database", backend: "backend", tests: "testing", incidents: "testing",
+  "": "builder", code: "builder", database: "database", backend: "backend", qa: "testing", tests: "testing", incidents: "testing",
   security: "security", secrets: "security", deployments: "deployments", analytics: "analytics", automations: "automation", integrations: "integrations",
 };
 

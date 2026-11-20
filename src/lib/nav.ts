@@ -44,6 +44,7 @@ export const PROJECT_TABS = [
   { slug: "code", label: "Code" },
   { slug: "database", label: "Database" },
   { slug: "backend", label: "Backend" },
+  { slug: "qa", label: "QA" },
   { slug: "tests", label: "Tests" },
   { slug: "incidents", label: "Incidents" },
   { slug: "security", label: "Security" },

@@ -11,6 +11,7 @@ export async function deploy(_prev: ActionResult, form: FormData): Promise<Actio
   if (environment === "production" && form.get("confirm") !== "yes") return { ok: false, message: "Tick the box to confirm a production deployment." };
   const { error } = await supabase.rpc("request_deployment", { p_project: project.id, p_environment: environment, p_confirm: environment === "production" });
   if (error) {
+    if (/QA release gate/.test(error.message)) return { ok: false, message: `${error.message.replace(/^.*QA release gate: /, "QA release gate: ")}. Run QA (or approve the release) on the QA tab.` };
     if (/critical/.test(error.message)) return { ok: false, message: "Open critical security findings block deployments. Fix them on the Security tab first." };
     if (/one_active/.test(error.message)) return { ok: false, message: `A ${environment} deployment is already in progress.` };
     return { ok: false, message: error.message };
