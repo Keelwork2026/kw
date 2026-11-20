@@ -225,3 +225,9 @@ test("performance: bundle size comes from the production build, never the dev se
   assert.match(prod.actual, /\/dashboard at 410 KB/);
   assert.equal(performance([], devAssets, undefined, { buildOutput: out.replace("410 kB", "200 kB") }).find((r) => r.key === "perf-js")!.status, "passed");
 });
+
+test("report CSV: formulas from page content are neutralised", async () => {
+  const { csv } = await import("./report");
+  const out = csv([{ a: "=HYPERLINK(\"http://x\")", b: "+1", c: "-3", d: "@SUM(A1)", e: "plain, text" }]);
+  assert.equal(out.split("\n")[1], `"'=HYPERLINK(""http://x"")",'+1,-3,'@SUM(A1),"plain, text"`);
+});

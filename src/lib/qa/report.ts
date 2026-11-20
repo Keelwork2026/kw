@@ -5,7 +5,9 @@ import { CATEGORY_INFO, METHOD_LABEL, RELEASE_LABEL, type ReleaseStatus } from "
 export type IssueRow = { ref: number; title: string; category: string; severity: string; priority: string; status: string; confidence: string; target: string | null; description: string; impact: string; recommendation: string; verify: string; first_seen: string; last_seen: string };
 export type RunInfo = { id: string; mode: string; status: string; created_at: string; finished_at: string | null; commit: string | null; project: string; overall: number | null; coverage: number; release: ReleaseStatus; reasons: string[]; areas: { label: string; value: number | null; basis: string; executed: number; total: number }[] };
 
-const cell = (v: unknown) => { const s = v === null || v === undefined ? "" : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+// Text that a spreadsheet would run as a formula (=, +, -, @, tab, CR) is
+// prefixed with an apostrophe; findings can quote page content.
+const cell = (v: unknown) => { let s = v === null || v === undefined ? "" : String(v); if (typeof v === "string" && /^[=+\-@\t\r]/.test(s) && !/^-?\d+(\.\d+)?$/.test(s)) s = `'${s}`; return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
 export function csv(rows: Record<string, unknown>[]): string {
   if (!rows.length) return "";
   const cols = Object.keys(rows[0]!);
