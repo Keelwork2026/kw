@@ -105,6 +105,7 @@ export type BrokerOptions = {
   image?: string;
   network?: string;
   runtime?: string;
+  memoryMb?: number;
 };
 
 export function createBroker(opts: BrokerOptions) {
@@ -166,7 +167,7 @@ export function createBroker(opts: BrokerOptions) {
         }
         return send(res, 200, { id: name, status: "running" });
       }
-      const r = await docker.run(buildRunArgs({ projectId, image: opts.image, network: opts.network, runtime: opts.runtime, appOrigin: opts.appOrigin }), { timeoutMs: 120_000 });
+      const r = await docker.run(buildRunArgs({ projectId, image: opts.image, network: opts.network, runtime: opts.runtime, appOrigin: opts.appOrigin, memoryMb: opts.memoryMb }), { timeoutMs: 120_000 });
       if (r.code !== 0) throw new HttpError(500, "couldn't create the sandbox");
       return send(res, 201, { id: name, status: "running" });
     }
@@ -285,6 +286,7 @@ if (process.argv[1] && /sandbox-broker\/server\.ts$/.test(process.argv[1])) {
   const server = createBroker({
     token, docker: realDocker(), appOrigin: process.env.KW_APP_ORIGIN,
     image: process.env.SANDBOX_IMAGE, network: process.env.SANDBOX_NETWORK, runtime: process.env.SANDBOX_RUNTIME,
+    memoryMb: process.env.SANDBOX_MEMORY_MB ? Number(process.env.SANDBOX_MEMORY_MB) : undefined,
   });
   const port = Number(process.env.PORT ?? 7070);
   const host = process.env.HOST || "0.0.0.0";

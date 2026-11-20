@@ -10,6 +10,8 @@ export type SandboxOptions = {
   /** "runsc" for gVisor. */
   runtime?: string;
   diskMb?: number;
+  /** Memory limit. The /workspace tmpfs counts against it, so it must exceed the installed app's size. */
+  memoryMb?: number;
   cpus?: string;
   appOrigin?: string;
 };
@@ -36,6 +38,7 @@ export function safeAppOrigin(origin: string | undefined): string | null {
 export function buildRunArgs(o: SandboxOptions): string[] {
   const name = containerName(o.projectId);
   const disk = Math.max(256, Math.min(8192, Math.floor(o.diskMb ?? 2048)));
+  const memory = Math.max(1024, Math.min(16384, Math.floor(o.memoryMb ?? 3072)));
   const cpus = /^\d+(\.\d+)?$/.test(o.cpus ?? "") ? o.cpus! : "1";
   const network = o.network && /^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,62}$/.test(o.network) && o.network !== "host" ? o.network : "none";
   const args = [
@@ -43,7 +46,7 @@ export function buildRunArgs(o: SandboxOptions): string[] {
     "--name", name,
     "--label", "keelwork.sandbox=1",
     "--label", `keelwork.project=${o.projectId}`,
-    "--memory", "1024m", "--memory-swap", "1024m",
+    "--memory", `${memory}m`, "--memory-swap", `${memory}m`,
     "--cpus", cpus,
     "--pids-limit", "256",
     "--read-only",

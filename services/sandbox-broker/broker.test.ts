@@ -126,3 +126,14 @@ test("docker-args: deny-first flags, network none by default, gVisor opt-in", ()
 test("realDocker reports unavailable when the daemon isn't reachable", async () => {
   assert.equal(await realDocker("/nonexistent/docker").available(), false);
 });
+
+test("sandbox memory: room for the in-memory workspace, clamped", async () => {
+  const { buildRunArgs } = await import("./docker-args");
+  const id = "3f1c2b8e-1a2b-4c3d-8e9f-0a1b2c3d4e5f";
+  const mem = (a: string[]) => a[a.indexOf("--memory") + 1];
+  assert.equal(mem(buildRunArgs({ projectId: id })), "3072m");
+  assert.equal(mem(buildRunArgs({ projectId: id, memoryMb: 100 })), "1024m");
+  assert.equal(mem(buildRunArgs({ projectId: id, memoryMb: 99999 })), "16384m");
+  const a = buildRunArgs({ projectId: id, memoryMb: 4096 });
+  assert.equal(a[a.indexOf("--memory-swap") + 1], "4096m", "no swap beyond the limit");
+});
