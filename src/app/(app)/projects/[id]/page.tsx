@@ -11,6 +11,9 @@ import { AGENTS } from "@/lib/agents/graph";
 import { BACKENDS, DEPLOY_TARGETS } from "@/lib/stack/backends";
 import { brokerConfig } from "@/lib/sandbox/client";
 import { previewLinkFor } from "@/lib/preview/link";
+import { NextSteps } from "@/components/project-journey";
+import { loadJourneyState } from "@/lib/journey-state";
+import { suggestions } from "@/lib/journey";
 import { sendMessage, requestPlan, approvePlan, decideApproval, controlRun, setStack, startSandbox } from "./actions";
 
 export const metadata = { title: "Builder" };
@@ -40,10 +43,12 @@ export default async function BuilderPage({ params }: { params: Promise<{ id: st
   const preview = sandbox.data?.status === "running" ? previewLinkFor(project.id) : null;
   const inspect = preview ? previewLinkFor(project.id, "/?kw-inspect=1") : null;
   const lastMsg = messages.data?.at(-1);
+  const next = project.status === "archived" ? [] : suggestions(await loadJourneyState(supabase, project, writable));
 
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <AutoRefresh active={Boolean(activeRun)} />
+      {next.length || !readOnly ? <div className="xl:col-span-2"><NextSteps items={next} /></div> : null}
       <div className="grid content-start gap-6">
         {!aiReady ? <Notice>AI isn&apos;t configured on this installation (AI_MODEL_CATALOG), so the planner can&apos;t answer yet. Your messages are still saved.</Notice> : null}
 

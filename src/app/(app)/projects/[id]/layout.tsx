@@ -2,10 +2,14 @@ import Link from "next/link";
 import { loadProject } from "@/lib/project";
 import { StatusPill } from "@/components/page-header";
 import { ProjectTabs } from "@/components/project-tabs";
+import { JourneySteps } from "@/components/project-journey";
+import { loadJourneyState } from "@/lib/journey-state";
+import { stages } from "@/lib/journey";
 
 export default async function ProjectLayout({ children, params }: { children: React.ReactNode; params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const { project, readOnly } = await loadProject(id);
+  const { supabase, project, readOnly, can } = await loadProject(id);
+  const journey = project.status === "archived" ? null : await loadJourneyState(supabase, project, can("project.write"));
   return (
     <>
       <div className="mb-6">
@@ -15,6 +19,7 @@ export default async function ProjectLayout({ children, params }: { children: Re
           <StatusPill status={project.status} />
           {readOnly ? <span className="pill bg-surface-2">Read-only</span> : null}
         </div>
+        {journey ? <JourneySteps stages={stages(journey)} /> : null}
         <ProjectTabs projectId={project.id} />
       </div>
       {children}

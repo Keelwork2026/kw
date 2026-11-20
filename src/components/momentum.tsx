@@ -3,40 +3,34 @@ import { TemplatePreview } from "./site/template-preview";
 import { starterHref, type Starter } from "@/lib/site/starters";
 import type { progress as computeProgress } from "@/lib/engagement";
 
-const NEXT: Record<string, { label: string; at: string }> = {
-  draft: { label: "Plan it with the AI", at: "chat" },
-  planning: { label: "Review and approve the plan", at: "plan" },
-  building: { label: "Watch the build", at: "board" },
-  live: { label: "Preview, polish and ship", at: "preview" },
-};
-
 /**
  * Dashboard row: pick up where you left off, the milestones you have
  * reached (no streaks or countdowns), and three ideas for today.
  */
-export function Momentum({ last, progress, ideas }: {
+export function Momentum({ last, next, progress, ideas }: {
   last: { id: string; name: string; status: string; updated_at: string } | null;
+  /** The real next step for the last project (from lib/journey), if there is one. */
+  next: { title: string; href: string } | null;
   progress: ReturnType<typeof computeProgress>;
   ideas: Starter[];
 }) {
-  const next = last ? NEXT[last.status] ?? NEXT.draft! : null;
   return (
     <section aria-label="Keep building" className="mb-8 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="relative overflow-hidden rounded-3xl p-6 text-white" style={{ background: "var(--grad-button)" }}>
           <div aria-hidden className="kw-blob-a absolute -right-8 -top-8 h-36 w-36 rounded-full bg-white/20 blur-2xl" />
           <p className="relative text-xs font-bold uppercase tracking-[0.12em] text-white/85">Continue building</p>
-          {last && next ? (
+          {last ? (
             <>
               <p className="relative mt-2 font-display text-2xl font-bold">{last.name}</p>
-              <p className="relative mt-1 text-sm text-white/85">Next: {next.label.toLowerCase()}</p>
-              <Link href={`/projects/${last.id}#${next.at}`} className="btn relative mt-5 bg-white text-[#1c1b19] hover:bg-white/90">{next.label} →</Link>
+              <p className="relative mt-1 text-sm text-white/85">{next ? `Next: ${next.title.charAt(0).toLowerCase()}${next.title.slice(1)}` : "Nothing is waiting on you here."}</p>
+              <Link href={next?.href ?? `/projects/${last.id}`} className="btn relative mt-5 bg-white text-[#1c1b19] hover:bg-white/90">{next ? next.title : "Open project"} →</Link>
             </>
           ) : (
             <>
               <p className="relative mt-2 font-display text-2xl font-bold">Your first project</p>
               <p className="relative mt-1 text-sm text-white/85">One sentence is enough to start.</p>
-              <Link href="/new-project" className="btn relative mt-5 bg-white text-[#1c1b19] hover:bg-white/90">Start building →</Link>
+              <Link href="#quick-idea" className="btn relative mt-5 bg-white text-[#1c1b19] hover:bg-white/90">Start building →</Link>
             </>
           )}
         </div>

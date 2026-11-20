@@ -1,0 +1,28 @@
+/**
+ * Quick start: turn a one-line idea into a project name so starting takes a
+ * single field. The name is only a default — it can be renamed any time.
+ */
+export const IDEA_KINDS = [
+  { key: "website", label: "Website", starter: "A website for " },
+  { key: "web-app", label: "Web app", starter: "A web app that " },
+  { key: "dashboard", label: "Dashboard", starter: "A dashboard that shows " },
+  { key: "ai-tool", label: "AI tool", starter: "An AI tool that " },
+  { key: "saas", label: "SaaS", starter: "A SaaS product for " },
+] as const;
+
+const LEAD = /^(?:(?:please|pls)\s+)?(?:(?:i\s+(?:want|need|would\s+like)(?:\s+to)?|can\s+you|let'?s|help\s+me)\s+)?(?:(?:build|make|create|design|develop|generate)\s+)?(?:me\s+)?(?:(?:a|an|the|my|our)\s+)?/i;
+const SMALL = new Set(["a", "an", "and", "the", "for", "of", "to", "in", "on", "with", "my", "our", "that", "which", "where", "who", "by", "at", "from"]);
+const LOWER = new Set(["a", "an", "and", "the", "for", "of", "to", "in", "on", "with", "by", "at", "from"]);
+
+export function nameFromIdea(idea: string, kindLabel?: string): string {
+  const text = idea.replace(/\s+/g, " ").trim();
+  if (!text) return kindLabel ? `New ${kindLabel.toLowerCase()}` : "New project";
+  const rest = text.replace(LEAD, "");
+  // Stop at the first clause break, then keep up to five meaningful words.
+  const clause = rest.split(/[.,;:!?()\n]| - | — | that | which | where | so | to help /i)[0] ?? rest;
+  const words = clause.split(" ").filter(Boolean).slice(0, 6);
+  while (words.length > 1 && SMALL.has(words.at(-1)!.toLowerCase())) words.pop();
+  const titled = words.map((w, i) => (i > 0 && LOWER.has(w.toLowerCase()) ? w.toLowerCase() : /^[a-z]/.test(w) ? w[0]!.toUpperCase() + w.slice(1) : w)).join(" ");
+  const name = titled.replace(/[^\p{L}\p{N}\s&'’+-]/gu, "").trim().slice(0, 60).trim();
+  return name.length >= 2 ? name : kindLabel ? `New ${kindLabel.toLowerCase()}` : "New project";
+}

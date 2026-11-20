@@ -5,6 +5,10 @@ import { GettingStarted, type Step } from "@/components/getting-started";
 import { Momentum } from "@/components/momentum";
 import { progress } from "@/lib/engagement";
 import { ideasForDay } from "@/lib/site/starters";
+import { QuickStart } from "@/components/quick-start";
+import { quickStart } from "../new-project/actions";
+import { loadJourneyState } from "@/lib/journey-state";
+import { suggestions } from "@/lib/journey";
 
 export const metadata = { title: "Dashboard" };
 
@@ -12,7 +16,7 @@ export default async function DashboardPage() {
   const { supabase, org, can } = await requireOrg();
   const [members, projects, incidents, approvals, live, billing] = await Promise.all([
     supabase.from("org_members").select("user_id", { count: "exact", head: true }).eq("org_id", org.id).eq("status", "active"),
-    supabase.from("projects").select("id, name, status, updated_at").eq("org_id", org.id).neq("status", "archived").order("updated_at", { ascending: false }).limit(6),
+    supabase.from("projects").select("id, name, status, description, updated_at").eq("org_id", org.id).neq("status", "archived").order("updated_at", { ascending: false }).limit(6),
     supabase.from("incidents").select("id, project_id, title, status, count, last_seen").eq("org_id", org.id).in("status", ["open", "fix_proposed"]).order("last_seen", { ascending: false }).limit(8),
     supabase.from("approvals").select("id, project_id, kind, summary, requested_at").eq("org_id", org.id).eq("status", "pending").order("requested_at", { ascending: false }).limit(8),
     supabase.from("deployments").select("id, project_id, url, provider, live_at").eq("org_id", org.id).eq("environment", "production").eq("status", "live").limit(10),
@@ -25,6 +29,8 @@ export default async function DashboardPage() {
     count("sandboxes"), count("project_secrets"), count("deployments"), count("invitations"),
   ]);
   const now = new Date();
+  const lastProject = (projects.data?.[0] as { id: string; name: string; status: string; description: string | null; updated_at: string } | undefined) ?? null;
+  const lastNext = lastProject ? suggestions(await loadJourneyState(supabase, lastProject, can("project.write")), 1)[0] ?? null : null;
   const steps: Step[] = [
     { key: "project", label: "Create your first project", hint: "Describe the app you want", href: "/new-project", done: (projects.data?.length ?? 0) > 0 },
     { key: "plan", label: "Approve a plan", hint: "Chat with the planner, then approve", href: "/builder?to=build&at=plan", done: plansApproved > 0 },
@@ -37,7 +43,8 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader title={org.name} description="Your workspace at a glance. Everything below is live data." actions={<Link href="/new-project" className="btn btn-gradient">New project</Link>} />
-      <Momentum last={(projects.data?.[0] as { id: string; name: string; status: string; updated_at: string } | undefined) ?? null} progress={progress(steps)} ideas={ideasForDay(now)} />
+      {can("project.write") ? <QuickStart action={quickStart} /> : null}
+      <Momentum last={lastProject} next={lastNext} progress={progress(steps)} ideas={ideasForDay(now)} />
       <GettingStarted steps={steps} />
       <div className="grid gap-4 sm:grid-cols-3">
         <Stat label="Active members" value={String(members.count ?? 0)} href="/team" />
