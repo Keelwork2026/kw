@@ -38,7 +38,7 @@ export function Created({ name, hasIdea, aiReady, copied = null, installFailed =
       <div>
         <p className="font-display text-lg font-bold">{copied !== null ? `${name} is ready` : `${name} is ready to plan`}</p>
         <p className="mt-1 text-sm text-muted">
-          {copied !== null ? `${copied} files were copied and committed. Secrets weren't copied — add the ones this app needs under Secrets.${installFailed ? " Installing packages didn't finish, so the preview may not start until they're installed." : " Start the preview to see it running."}`
+          {copied !== null ? `${copied} files were copied and committed. Secrets weren't copied — add the ones this app needs under Secrets.${installFailed ? " Installing packages didn't finish, so the preview may not start until they're installed." : " Its preview is starting."}`
             : !aiReady ? "Your idea is saved. The planner will answer once AI is configured on this installation."
             : hasIdea ? "Your idea is with the Software Architect. Answer its questions in the chat, then approve the plan — nothing is built before that."
             : "Describe what it should do in the chat; the Software Architect turns it into a plan for you to approve."}

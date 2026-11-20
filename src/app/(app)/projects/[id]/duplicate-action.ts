@@ -66,7 +66,9 @@ export async function duplicateProject(_prev: ActionResult, form: FormData): Pro
     // Install packages now so the copy's preview starts like the original's.
     const install = await broker.exec(dst, ["pnpm", "install"]).catch(() => null);
     installed = install?.exitCode === 0;
-    await createServiceClient().from("sandboxes").upsert({ project_id: copyId, org_id: org.id, status: "stopped", error: null }, { onConflict: "project_id" });
+    // With packages installed, start the preview so the copy is live like the original.
+    const serving = installed ? await broker.serve(dst).then(() => true).catch(() => false) : false;
+    await createServiceClient().from("sandboxes").upsert({ project_id: copyId, org_id: org.id, status: serving ? "running" : "stopped", container: serving ? dst : null, error: null }, { onConflict: "project_id" });
   } catch (e) {
     revalidatePath("/projects");
     return fail(`The copy “${name}” was created, but its code couldn't be written (${(e as Error).message.slice(0, 120)}). Open it and start the sandbox, or archive it.`);
