@@ -1,5 +1,6 @@
 "use server";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { loadProject } from "@/lib/project";
 import { createServiceClient } from "@/lib/supabase/server";
 import { gatewayFor, serverCatalog } from "@/lib/ai/server";
@@ -153,4 +154,16 @@ export async function startSandbox(_prev: ActionResult, form: FormData): Promise
     await db.from("sandboxes").update({ status: "failed", error: (e as Error).message.slice(0, 500) }).eq("project_id", project.id);
     return fail(`The sandbox didn't start: ${(e as Error).message}`);
   }
+}
+
+/** Archives the project (owners and admins): it becomes read-only and stops counting toward the plan's project limit. Code, history and deployments are kept. */
+export async function archiveProject(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const { supabase, project, can } = await loadProject(str(form, "projectId"));
+  if (!can("project.manage")) return fail("Only owners and admins can archive projects.");
+  if (str(form, "confirmName").trim() !== project.name) return fail(`Type the project name (${project.name}) to confirm.`);
+  const { error } = await supabase.rpc("archive_project", { p_project: project.id });
+  if (error) return fail(/project\.manage|permission/.test(error.message) ? "Only owners and admins can archive projects." : "Couldn't archive the project. Try again.");
+  revalidatePath("/projects");
+  revalidatePath("/dashboard");
+  redirect("/projects?archived=1");
 }
