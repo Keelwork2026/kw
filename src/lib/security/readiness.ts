@@ -20,4 +20,5 @@ export const EXPECTED_MIGRATIONS = [
   "20261122000200_onboarding",
   "20261122000300_policy_events",
   "20261123000100_staff_backoffice",
+  "20261124000100_simple_feedback",
 ] as const;

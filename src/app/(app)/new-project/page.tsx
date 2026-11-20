@@ -8,6 +8,7 @@ import { STARTERS, starterHref } from "@/lib/site/starters";
 import { TemplatePreview } from "@/components/site/template-preview";
 import { entryBySlug } from "@/lib/catalog";
 import { ProjectSetupFields } from "@/components/project-setup";
+import { Simple, OnlySimple } from "@/components/simple/simple";
 
 export const metadata = { title: "Create Project" };
 
@@ -26,11 +27,12 @@ export default async function NewProjectPage({ searchParams }: { searchParams: P
       <ActionForm action={createProject} submitLabel="Create and start planning" pendingLabel="Creating your project…" submitClassName="btn btn-gradient" className="card grid max-w-5xl gap-4">
         {carry.template ? <input type="hidden" name="template" value={carry.template} /> : null}
         <ProjectSetupFields name={carry.name ?? ""} prompt={carry.prompt ?? ""} template={carry.template} />
-        {carry.template ? <p className="text-sm text-muted">Starting from the <strong>{entry?.name ?? carry.template}</strong> template.</p> : null}
+        {carry.template ? <p className="text-sm text-muted"><Simple simple={<>You&apos;re starting from the <strong>{entry?.name ?? carry.template}</strong> design. Change anything you like.</>}>Starting from the <strong>{entry?.name ?? carry.template}</strong> template.</Simple></p> : null}
+        <OnlySimple className="rounded-xl bg-surface-2 p-3 text-sm"><strong>What happens when you press the button?</strong> We save your idea and an AI planner writes a plan. You read it and say yes or ask for changes. Nothing is built until you say yes.</OnlySimple>
       </ActionForm>
       <section aria-labelledby="start-from" className="mt-10">
-        <div className="flex items-end justify-between gap-3"><h2 id="start-from" className="text-xl">Or start from a template</h2><Link href="/templates#starters" className="text-sm font-semibold text-accent">See details →</Link></div>
-        <p className="mt-1 text-sm text-muted">Fills in the name and a detailed brief. You can still change everything.</p>
+        <div className="flex items-end justify-between gap-3"><h2 id="start-from" className="text-xl"><Simple simple="Or start from a ready-made design">Or start from a template</Simple></h2><Link href="/templates#starters" className="text-sm font-semibold text-accent">See details →</Link></div>
+        <p className="mt-1 text-sm text-muted"><Simple simple="We fill in the name and description for you. You can still change everything.">Fills in the name and a detailed brief. You can still change everything.</Simple></p>
         <ul className="mt-4 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
           {STARTERS.map((s) => (
             <li key={s.slug}>

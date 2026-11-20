@@ -21,6 +21,7 @@ export const STAFF_SECTIONS: StaffSection[] = [
   { slug: "marketplace", label: "Marketplace", roles: ["reviewer", "superadmin"] },
   { slug: "platform", label: "Announcements & switches", roles: ["support", "superadmin"] },
   { slug: "audit", label: "Audit log", roles: ["security", "superadmin"] },
+  { slug: "simple", label: "Simple Mode feedback", roles: "all" },
   { slug: "staff", label: "Staff", roles: "all" },
 ];
 

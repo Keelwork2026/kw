@@ -366,6 +366,7 @@ code, kbd, pre, samp { font-family: var(--font-mono); }
 
 /* Less motion: no travel, no loops, no celebration; changes still show as quick fades. */
 @media (prefers-reduced-motion: reduce) {
+  .kw-spotlight { animation: none; }
   .kw-eli5, .kw-eli5:hover { transition: none; transform: none; }
   :root { --kw-move: 0px; --kw-lift: 0px; }
   *, *::before, *::after { scroll-behavior: auto !important; }
@@ -395,6 +396,8 @@ html[data-simple="on"] .kw-std, html[data-simple="on"] .kw-std-block { display: 
 .kw-eli5:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -10px color-mix(in srgb, var(--accent) 80%, transparent); }
 .kw-eli5:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
 .kw-eli5[aria-pressed="true"] { color: var(--accent-contrast); background: var(--grad-button, var(--accent)); border-color: transparent; }
+.kw-eli5-sub { margin-left: 0.4rem; font-weight: 500; opacity: 0.75; }
+@media (max-width: 1279px) { .kw-eli5-sub { display: none; } }
 .kw-eli5-compact { min-height: 2.75rem; padding: 0 0.75rem; font-size: 0.8125rem; }
 
 .kw-guide {
@@ -415,6 +418,12 @@ html[data-simple="on"] .kw-std, html[data-simple="on"] .kw-std-block { display: 
 .kw-term:hover, .kw-term[aria-expanded="true"] { border-color: var(--accent); }
 .kw-term-i { display: grid; place-items: center; width: 1rem; height: 1rem; border-radius: 999px; font-size: 0.65rem; background: var(--accent); color: var(--accent-contrast); }
 .kw-term-pop { position: absolute; left: 0; top: calc(100% + 6px); z-index: 30; width: min(18rem, 80vw); border-radius: 14px; padding: 0.7rem 0.85rem; font-size: 0.875rem; line-height: 1.45; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 20px 50px -24px rgba(0,0,0,0.35); }
+
+.kw-showme { flex-shrink: 0; align-self: center; border-radius: 999px; padding: 0.3rem 0.75rem; font-size: 0.8125rem; font-weight: 700; color: var(--accent-contrast); background: var(--accent); }
+.kw-showme:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.kw-spotlight { outline: 3px solid var(--accent) !important; outline-offset: 4px; border-radius: 12px; animation: kw-spot 1.2s var(--kw-ease, ease) 2; }
+@keyframes kw-spot { 50% { outline-offset: 9px; } }
+.kw-guide-line { display: flex; width: 100%; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.7rem 1rem; text-align: left; }
 
 /* In Simple Mode: a little larger and calmer, and the main action stands out. */
 html[data-simple="on"] main { font-size: 1.0625rem; }

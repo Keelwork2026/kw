@@ -13,7 +13,13 @@ import type { ProjectTab } from "@/lib/menu";
 export const SIMPLE_COOKIE = "kw_simple";
 export const SIMPLE_EVENT = "kw-simple-change";
 
-export type Step = { title: string; say: string };
+export type Step = {
+  title: string; say: string;
+  /** CSS selector of what to do this step with; the guide offers "Show me". */
+  target?: string;
+  /** CSS selector that exists once the step is really done; the guide ticks it by itself. */
+  doneWhen?: string;
+};
 export type Guide = {
   /** The page in plain words. */
   title: string;
@@ -77,7 +83,7 @@ export const SIMPLE_ITEMS: Record<string, Guide & { label: string; hint: string 
   dashboard: {
     label: "Home", hint: "See how everything is going",
     title: "Your home page", what: "This page shows what is happening with all your projects.", like: "Think of it like the front page of a newspaper about your work.",
-    steps: [{ title: "Look at your projects", say: "Your newest projects are near the top." }, { title: "Check for anything waiting", say: "If something needs your yes, it shows here." }, { title: "Pick what to do next", say: "Open a project, or start a new one." }],
+    steps: [{ title: "Look at your projects", say: "Your newest projects are near the top.", target: "#recent" }, { title: "Check for anything waiting", say: "If something needs your yes, it shows here.", target: "#approvals" }, { title: "Pick what to do next", say: "Open a project, or start a new one." }],
     next: { label: "Make something new", href: "/new-project" }, terms: ["app", "agent", "incident"],
   },
   projects: {
@@ -90,7 +96,7 @@ export const SIMPLE_ITEMS: Record<string, Guide & { label: string; hint: string 
     label: "Connect my apps", hint: "Link the other apps you already use",
     title: "Connect your apps", what: "Here you link Keelwork to apps you already use, like payments or email.", like: "Connectors are like bridges. They help two different apps talk to each other.",
     why: "Your app can then take payments, send emails, or use maps.",
-    steps: [{ title: "Find the app you want", say: "Search for it, or tap a group like “Communications”." }, { title: "Open it", say: "You will see what it does and what it needs." }, { title: "Add its private key", say: "Copy the key from that app's website and paste it here. We keep it locked away." }],
+    steps: [{ title: "Find the app you want", say: "Search for it, or tap a group like “Communications”.", target: "#cq" }, { title: "Open it", say: "You will see what it does and what it needs.", doneWhen: "#cp-title" }, { title: "Add its private key", say: "Copy the key from that app's website and paste it here. We keep it locked away." }],
     terms: ["connector", "secret", "api"],
   },
   automation: {
@@ -102,7 +108,7 @@ export const SIMPLE_ITEMS: Record<string, Guide & { label: string; hint: string 
   "new-project": {
     label: "Make something new", hint: "Describe it and we plan it with you",
     title: "Let's make something new!", what: "Tell us what you want to make. We plan it with you before anything is built.", like: "Like telling a builder what house you want. They draw it first, and you say yes before they start.",
-    steps: [{ title: "Give it a name", say: "Any name is fine. You can change it later." }, { title: "Say what it should do", say: "For example: “A booking website for my hair salon.”" }, { title: "Check the plan", say: "We show you a plan. Nothing is built until you say yes." }],
+    steps: [{ title: "Give it a name", say: "Any name is fine. You can change it later.", target: "#name", doneWhen: "#name:not(:placeholder-shown)" }, { title: "Say what it should do", say: "For example: “A booking website for my hair salon.”", target: "#prompt", doneWhen: "#prompt:not(:placeholder-shown)" }, { title: "Check the plan", say: "Press the colored button. We show you a plan. Nothing is built until you say yes.", target: "main form button[type=submit]" }],
     terms: ["plan", "agent"],
   },
   builder: {
@@ -192,7 +198,7 @@ export const SIMPLE_ITEMS: Record<string, Guide & { label: string; hint: string 
   billing: {
     label: "Payments", hint: "Your balance and what you've spent",
     title: "Payments and what you've used", what: "See how many credits you have and what you spent them on.", like: "Credits are like tokens at an arcade. The AI uses a few each time it works for you.",
-    steps: [{ title: "Check your balance", say: "Your credits are shown at the top." }, { title: "Set a limit", say: "Pick the most you want to spend each month. We stop there." }, { title: "Add credits if needed", say: "Buy more only when you need them." }],
+    steps: [{ title: "Check your balance", say: "Your credits are shown at the top." }, { title: "Set a limit", say: "Pick the most you want to spend each month. We stop there.", target: "#limit-in" }, { title: "Add credits if needed", say: "Buy more only when you need them.", target: "#packs" }],
     terms: ["credits"],
   },
   settings: {
@@ -229,7 +235,7 @@ export const SIMPLE_SUB: Record<string, string> = {
 
 /** Project tabs. */
 export const SIMPLE_TABS: Record<ProjectTab, Guide & { label: string }> = {
-  "": { label: "Build", title: "Build your app", what: "Talk to the AI helpers and watch your app get built.", like: "Like a building site with a window where you can watch.", steps: [{ title: "Tell the planner what you want", say: "Type in the chat box, like you would text a friend." }, { title: "Say yes to the plan", say: "Nothing is built until you approve." }, { title: "Watch it get built", say: "Each job moves across the board." }, { title: "Look at your app", say: "Open the preview to see it." }], terms: ["plan", "agent", "preview"] },
+  "": { label: "Build", title: "Build your app", what: "Talk to the AI helpers and watch your app get built.", like: "Like a building site with a window where you can watch.", steps: [{ title: "Tell the planner what you want", say: "Type in the chat box, like you would text a friend.", target: "#chat", doneWhen: "[data-guide^='plan-']" }, { title: "Say yes to the plan", say: "Read it. If it looks right, press “Yes, build it”. Nothing is built until you approve.", target: "#plan", doneWhen: "[data-guide^='build-']" }, { title: "Watch it get built", say: "Each job moves across the board.", target: "#board", doneWhen: "[data-guide='build-succeeded'], [data-guide='build-done'], [data-guide='build-completed']" }, { title: "Look at your app", say: "Start the practice copy, then look at your app.", target: "#preview", doneWhen: "[data-guide='preview-running']" }], terms: ["plan", "agent", "preview"] },
   code: { label: "Instructions", title: "Your app's written instructions", what: "These are the files that make your app work. You don't need to touch them.", like: "Code is like a recipe the computer follows.", steps: [{ title: "Just looking is fine", say: "The AI helpers write and change these for you." }, { title: "Change a file if you want", say: "Every change is saved, and old versions can be brought back." }], terms: ["code", "repository"] },
   database: { label: "Stored info", title: "Where your app keeps information", what: "See the boxes your app uses to store things, like customers or orders.", like: "Like a cupboard with labeled boxes.", steps: [{ title: "Look at the boxes", say: "Each table is one box." }, { title: "Apply waiting changes", say: "New boxes wait here until you say yes." }], terms: ["database", "migration"] },
   backend: { label: "Behind the scenes", title: "Behind the scenes", what: "The hidden jobs your app does, and whether each one is safe.", like: "Like a restaurant kitchen.", steps: [{ title: "Look for warnings", say: "A warning means a safety check is missing." }], terms: ["backend", "api"] },
@@ -238,11 +244,11 @@ export const SIMPLE_TABS: Record<ProjectTab, Guide & { label: string }> = {
   tests: { label: "Checks", title: "Run checks", what: "Run checks that make sure your app still works after changes.", like: "Like tasting the soup before serving.", steps: [{ title: "Press Run", say: "Pick a check and start it." }, { title: "Read the result", say: "Green is good. Red shows what broke." }], terms: ["test"] },
   incidents: { label: "Problems", title: "Things that broke", what: "When something stops working, it shows up here.", like: "Like a warning light on a car dashboard.", steps: [{ title: "Read what happened", say: "Each card says what broke and when." }, { title: "Ask for a fix", say: "The helpers suggest a fix. You decide." }], terms: ["incident"] },
   security: { label: "Safety", title: "Keep it safe", what: "Look for safety problems and fix them.", like: "Like checking the locks before you leave home.", steps: [{ title: "Run a safety check", say: "It looks through your app for you." }, { title: "Fix each problem", say: "Serious ones must be fixed before going online." }], terms: ["security", "secret"] },
-  deployments: { label: "Put online", title: "Put your app online", what: "Make your app available on the internet.", like: "Like opening the doors of your shop.", steps: [{ title: "Make a private preview", say: "Only you can see it." }, { title: "Check it", say: "Click around. Does it look right?" }, { title: "Put it online for everyone", say: "If something goes wrong, go back to an earlier version." }], terms: ["deploy", "preview", "rollback", "environment"] },
+  deployments: { label: "Put online", title: "Put your app online", what: "Make your app available on the internet.", like: "Like opening the doors of your shop.", steps: [{ title: "Make a private preview", say: "Press “Make a private preview”. Only you can see it.", target: "#deploy", doneWhen: "[data-guide='deploy-preview-live'], [data-guide='deploy-preview-superseded']" }, { title: "Check it", say: "Open its web address below and click around. Does it look right?", target: "#hist" }, { title: "Put it online for everyone", say: "Tick the box and press the colored button. If something goes wrong, go back to an earlier version.", target: "#deploy", doneWhen: "[data-guide='deploy-production-live'], [data-guide='deploy-production-superseded']" }], terms: ["deploy", "preview", "rollback", "environment"] },
   analytics: { label: "Visitors", title: "See who visits", what: "See how many people visit and which pages they like.", like: "Like counting people who walk into your shop.", steps: [{ title: "Switch it on", say: "Press the button once." }, { title: "Come back later", say: "Numbers appear as people visit." }], terms: ["analytics"] },
   automations: { label: "Automatic tasks", title: "Tasks that run by themselves", what: "Set up jobs your app does on its own, like a daily email.", like: "Like setting an alarm clock.", steps: [{ title: "Start from a ready-made one", say: "Pick a template below." }, { title: "Choose when it runs", say: "A time, or when something happens." }, { title: "Try it", say: "Press Run once to see it work." }], terms: ["automation", "webhook"] },
   integrations: { label: "Connected apps", title: "Apps connected to this project", what: "See which other apps this project can use, like payments or email.", like: "Like bridges between your app and other apps.", steps: [{ title: "Pick an app", say: "Open it to see what it needs." }, { title: "Add its key", say: "Paste the private key from that app's website." }], terms: ["connector", "secret"] },
-  secrets: { label: "Private keys", title: "Private keys", what: "Keys let your app use other services. We lock them away and never show them again.", like: "Like house keys. Keep them safe and never share them.", steps: [{ title: "Copy the key", say: "Get it from the other app's website." }, { title: "Paste it here", say: "Give it the name shown, then press Save." }, { title: "That's it", say: "Even we can't read it after you save." }], terms: ["secret", "environment"] },
+  secrets: { label: "Private keys", title: "Private keys", what: "Keys let your app use other services. We lock them away and never show them again.", like: "Like house keys. Keep them safe and never share them.", steps: [{ title: "Copy the key", say: "Get it from the other app's website." }, { title: "Paste it here", say: "Give it the name shown, then press Save.", target: "#set-secret", doneWhen: "[data-guide='secret-row']" }, { title: "That's it", say: "Even we can't read it after you save.", doneWhen: "[data-guide='secret-row']" }], terms: ["secret", "environment"] },
 };
 
 /** Pages outside the app menu. Longest prefix wins. */
@@ -292,7 +298,7 @@ export const SIMPLE_ACTIONS: Record<string, string> = {
   "Archive project": "Put this project away", "Restore project": "Bring this project back", "Submit for review": "Send it to be checked",
   "Approve for release": "Yes, it's ready", "Save stack": "Save these choices", "Revoke": "Take back access", "Revoke now": "Take back access now",
   "Sign out other sessions": "Sign out on other computers", "Open the billing portal": "Manage my payments", "Continue to checkout": "Go to payment",
-  "Save limit": "Save my limit", "Add to project": "Add to my project", "Authorise": "Allow it", "Withdraw authorisation": "Stop allowing it",
+  "Save limit": "Save my limit", "Start sandbox": "Start the practice copy", "Restart sandbox": "Restart the practice copy", "Resume": "Carry on", "Cancel": "Stop", "Add to project": "Add to my project", "Authorise": "Allow it", "Withdraw authorisation": "Stop allowing it",
 };
 
 export const SIMPLE_STATUS: Record<string, string> = {

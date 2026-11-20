@@ -4,8 +4,8 @@ import { CAN, canOpen, dollarsToMicros, sectionsFor } from "./staff";
 import { grantView } from "@/lib/admin-view";
 
 test("staff: each role sees only what it can act on", () => {
-  assert.deepEqual(sectionsFor("reviewer").map((s) => s.slug), ["", "policy", "marketplace", "staff"]);
-  assert.ok(sectionsFor("superadmin").length === 9);
+  assert.deepEqual(sectionsFor("reviewer").map((s) => s.slug), ["", "policy", "marketplace", "simple", "staff"]);
+  assert.ok(sectionsFor("superadmin").length === 10);
   assert.ok(!canOpen("support", "audit") && canOpen("security", "audit"));
   assert.ok(!canOpen("support", "safety") && canOpen("security", "safety"));
   assert.ok(!canOpen(null, ""));

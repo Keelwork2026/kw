@@ -28,7 +28,7 @@ export function useSimpleMode(): boolean {
 }
 
 /**
- * The one-click "Explain Like I'm 5" switch. Shown in every header (app,
+ * The one-click Simple Mode ("Explain Like I'm 5") switch. Shown in every header (app,
  * marketing, sign-in, onboarding), never inside a menu. When on, it becomes
  * "Exit Simple Mode". Both labels are rendered so the first paint is right.
  */
@@ -43,11 +43,12 @@ export function SimpleToggle({ compact = false, className = "" }: { compact?: bo
   return (
     <>
       <button type="button" onClick={flip} aria-pressed={on} className={`kw-eli5 ${compact ? "kw-eli5-compact" : ""} ${className}`}
-        title="Explain everything in simple words. Nothing about your work changes.">
+        title="Explain like I'm 5: everything in simple words. Nothing about your work changes."
+        aria-label={on ? "Exit Simple Mode" : "Simple Mode — explain everything like I'm 5"}>
         <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
           <path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.4 1 1.1 1 1.8V16h5v-.3c0-.7.4-1.4 1-1.8A6 6 0 0 0 12 3z" />
         </svg>
-        <span className="kw-std">{compact ? "Simple Mode" : "Explain Like I'm 5"}</span>
+        <span className="kw-std">{compact ? "Simple Mode" : <>Simple Mode<span className="kw-eli5-sub">Explain like I&apos;m 5</span></>}</span>
         <span className="kw-simple">{compact ? "Exit simple" : "Exit Simple Mode"}</span>
       </button>
       <span className="sr-only" role="status" aria-live="polite">{said}</span>

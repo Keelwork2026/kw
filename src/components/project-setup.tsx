@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { parseQuery } from "@/lib/catalog/search";
 import { Check } from "@/components/motion";
+import { Simple } from "@/components/simple/simple";
 
 /**
  * Create Project fields with a live card that takes shape as you type: the
@@ -13,9 +14,9 @@ export function ProjectSetupFields({ name: initialName, prompt: initialPrompt, t
   const [prompt, setPrompt] = useState(initialPrompt);
   const kinds = prompt.trim().length > 8 ? parseQuery(prompt).types.slice(0, 2) : [];
   const steps = [
-    { label: "Name it", done: name.trim().length > 1 },
-    { label: "Describe what it should do", done: prompt.trim().length >= 20 },
-    { label: "Plan it with the Software Architect", done: false, next: true },
+    { label: "Name it", simple: "Give it a name", done: name.trim().length > 1 },
+    { label: "Describe what it should do", simple: "Say what it should do", done: prompt.trim().length >= 20 },
+    { label: "Plan it with the Software Architect", simple: "Check the plan with the AI planner", done: false, next: true },
   ];
   const ready = steps.filter((s) => s.done).length;
   const initials = name.trim().split(/\s+/).slice(0, 2).map((w) => w[0]?.toUpperCase()).join("") || "?";
@@ -25,13 +26,13 @@ export function ProjectSetupFields({ name: initialName, prompt: initialPrompt, t
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_18rem]">
       <div className="grid content-start gap-4">
         <div>
-          <label className="label" htmlFor="name">Project name</label>
+          <label className="label" htmlFor="name"><Simple simple="What do you want to call it?">Project name</Simple></label>
           <input id="name" name="name" required maxLength={80} className="input" placeholder="e.g. Class booking app" value={name} onChange={(e) => setName(e.target.value)} />
         </div>
         <div>
-          <label className="label" htmlFor="prompt">What should it do?</label>
+          <label className="label" htmlFor="prompt"><Simple simple="Tell us what it should do, in your own words">What should it do?</Simple></label>
           <textarea id="prompt" name="prompt" rows={6} maxLength={2000} className="input" value={prompt} onChange={(e) => setPrompt(e.target.value)} placeholder="A booking app for my yoga studio with class passes and card payments" />
-          <p className="mt-1 flex justify-between text-xs text-muted"><span>You&apos;ll choose the backend and hosting before the first build.</span><span aria-live="polite">{prompt.length}/2000</span></p>
+          <p className="mt-1 flex justify-between text-xs text-muted"><span><Simple simple="Write it like a message to a friend. Later we help you pick where it lives online — you don't need to know that now.">You&apos;ll choose the backend and hosting before the first build.</Simple></span><span aria-live="polite">{prompt.length}/2000</span></p>
         </div>
       </div>
 
@@ -45,14 +46,14 @@ export function ProjectSetupFields({ name: initialName, prompt: initialPrompt, t
               <p className="text-xs text-muted">Draft · {template ? "from a template" : "from your description"}</p>
             </div>
           </div>
-          <p className="relative mt-3 line-clamp-3 min-h-[3.75rem] text-sm text-muted">{firstLine || "Describe it on the left and it shows up here."}</p>
+          <p className="relative mt-3 line-clamp-3 min-h-[3.75rem] text-sm text-muted">{firstLine || <Simple simple="Start typing and your idea shows up here.">Describe it on the left and it shows up here.</Simple>}</p>
           {kinds.length ? <div className="relative mt-2 flex flex-wrap gap-1.5">{kinds.map((k) => <span key={k} className="kw-status pill bg-soft-accent text-accent">{k}</span>)}</div> : null}
         </div>
         <ol className="grid gap-2 rounded-2xl border border-border p-4 text-sm" aria-label="Setup steps">
           {steps.map((s) => (
             <li key={s.label} className="flex items-center gap-2.5">
               <span className={`grid h-6 w-6 shrink-0 place-items-center rounded-full transition-colors duration-200 ${s.done ? "bg-[color-mix(in_srgb,var(--success)_15%,transparent)] text-success" : s.next ? "border border-dashed border-border text-muted" : "border border-border"}`} aria-hidden>{s.done ? <Check size={14} /> : null}</span>
-              <span className={s.done ? "font-semibold" : "text-muted"}>{s.label}</span>
+              <span className={s.done ? "font-semibold" : "text-muted"}><Simple simple={s.simple}>{s.label}</Simple></span>
               <span className="sr-only">{s.done ? "done" : "to do"}</span>
             </li>
           ))}

@@ -6,12 +6,13 @@ import { Icon, type IconName } from "./icons";
 import { ThemeSwitch } from "./theme-switch";
 import { QuickStart } from "./quick-start";
 import type { FormAction } from "./action-form";
+import { isSimpleOn, setSimple } from "./simple/toggle";
 
 type Experience = "new" | "some" | "developer";
 type Kind = "website" | "web-app" | "dashboard" | "ai-tool" | "saas" | "unsure";
 
 const EXPERIENCE: { value: Experience; title: string; body: string }[] = [
-  { value: "new", title: "I'm new to building apps", body: "Plain-language guidance, with menu hints on." },
+  { value: "new", title: "I'm new to building apps", body: "Simple Mode suggested, with menu hints on." },
   { value: "some", title: "I've built a few things", body: "Menu hints on; switch them off when you know your way." },
   { value: "developer", title: "I'm a developer", body: "Menu hints off. Code, logs and git history are one click away." },
 ];
@@ -69,6 +70,9 @@ export function Onboarding({ initial, canRenameOrg, carry, quickStart, complete 
   const [experience, setExperience] = useState<Experience | null>(initial.experience);
   const [orgName, setOrgName] = useState(initial.orgName);
   const [hints, setHints] = useState<boolean | null>(null);
+  const [simple, setSimpleChoice] = useState<boolean | null>(null);
+  const [simpleNow, setSimpleNow] = useState(false);
+  useEffect(() => { setSimpleNow(isSimpleOn()); }, []);
   const [kind, setKind] = useState<Kind | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, start] = useTransition();
@@ -76,13 +80,16 @@ export function Onboarding({ initial, canRenameOrg, carry, quickStart, complete 
 
   useEffect(() => { heading.current?.focus(); }, [step]);
   const hintsOn = hints ?? experience !== "developer";
+  // Suggested for people new to building; always their choice, and it applies at once.
+  const simpleOn = simple ?? (simpleNow || experience === "new");
+  const chooseSimple = (v: boolean) => { setSimpleChoice(v); setSimple(v); };
 
   const saveHints = () => { try { localStorage.setItem(HINTS_KEY, hintsOn ? "1" : "0"); } catch { /* storage unavailable */ } };
   // "Skip for now" saves nothing but the fact that onboarding was offered; "Finish" saves the answers.
   const finish = (then: "start" | "dashboard") => start(async () => {
     setError(null);
     const r = await complete(then === "dashboard" ? {} : { displayName: name, experience: experience ?? undefined, orgName: canRenameOrg ? orgName : undefined });
-    if (then === "start") saveHints();
+    if (then === "start") { saveHints(); setSimple(simpleOn); }
     if (!r.ok) { setError(r.message ?? "Something went wrong."); return; }
     if (then === "dashboard") router.push("/dashboard"); else setStep(4);
   });
@@ -161,6 +168,10 @@ export function Onboarding({ initial, canRenameOrg, carry, quickStart, complete 
             <label className="mt-6 flex items-start gap-3 rounded-2xl border border-border bg-bg p-4">
               <input type="checkbox" className="mt-1" checked={hintsOn} onChange={(e) => setHints(e.target.checked)} />
               <span><span className="font-semibold">Show hints in the menu</span><span className="block text-sm text-muted">A short line under each menu entry explaining what it does. You can switch it off later from the menu. {experience === "developer" ? "Off by default for developers." : "Recommended while you find your way around."}</span></span>
+            </label>
+            <label className="mt-3 flex items-start gap-3 rounded-2xl border border-border bg-bg p-4">
+              <input type="checkbox" className="mt-1" checked={simpleOn} onChange={(e) => chooseSimple(e.target.checked)} />
+              <span><span className="font-semibold">Use Simple Mode</span><span className="block text-sm text-muted">Everything explained in everyday words, with a step-by-step guide on each page — like having a patient friend beside you. Nothing is hidden or switched off. Turn it off any time with the Simple Mode button at the top. {experience === "new" ? "Suggested because you're new to building apps." : ""}</span></span>
             </label>
           </>
         ) : step === 3 ? (
