@@ -23,7 +23,7 @@ A production-grade AI software engineering platform. A person describes an app, 
 
 | Area | Files |
 |---|---|
-| Database (14 migrations, RLS everywhere, self-checking) | `supabase/migrations/*.sql`, checks in `supabase/tests/*.sql`, runner `scripts/test-db.sh` |
+| Database (19 migrations, RLS everywhere, self-checking) | `supabase/migrations/*.sql`, checks in `supabase/tests/*.sql`, runner `scripts/test-db.sh` |
 | Design language "Ultramarine & Acid" | `src/app/globals.css`, `src/app/layout.tsx`, `design/canvas.html` (Main, Nav, Auth, Builder, Dashboard, Pricing) |
 | Marketing site | `src/app/(marketing)/{page,pricing,layout}.tsx`, `src/components/marketing/{site-nav,menu-data,icon,hero-prompt}.tsx` |
 | Auth | `src/app/(auth)/*`, `src/app/auth/{callback,confirm}`, `src/lib/auth/redirect.ts`, `src/middleware.ts` |
@@ -36,7 +36,10 @@ A production-grade AI software engineering platform. A person describes an app, 
 | Code view, Design mode | `src/lib/code/{tree,git}.ts`, `src/lib/design/bridge.ts`, `src/app/(app)/projects/[id]/code`, `src/components/builder/preview-pane.tsx`, template `app/kw-inspector.tsx` |
 | Secrets vault | `src/lib/secrets/{vault,load,server,redact}.ts`, Secrets tab |
 | Database Studio, Backend Studio | `src/lib/db/{schema,apply}.ts`, `src/lib/backend/routes.ts`, Database and Backend tabs |
-| Automations, webhooks, integrations | `src/lib/automation/*`, `services/automation-runner/{runner,executors}.ts`, `src/app/api/hooks/[id]`, `src/lib/integrations/catalog.ts` |
+| Automations hub, webhooks, Connectors hub | `src/lib/automation/*` (incl. `describe.ts` for plain-words diagrams), `services/automation-runner/{runner,executors}.ts`, `src/app/api/hooks/[id]`, `src/lib/integrations/{catalog,hub}.ts`, `src/app/(app)/{automation,integrations}` |
+| Templates: websites, interactive apps, natural-language search | `src/lib/sites`, `src/lib/apps`, `src/lib/catalog/{index,search}.ts`, `src/components/{apps,catalog}/*`, `/demo/[slug]` |
+| Media (owner photos, real app screenshots) | `src/lib/media/*`, `src/app/(app)/projects/[id]/media`, `src/app/api/projects/[id]/media` |
+| Prohibited-project policy, appeals | `src/lib/policy/*`, `settings/policy`, `admin/policy`, `/acceptable-use` |
 | Testing & Security Centres | `src/lib/checks/{plan,parsers,secret-scan,audit,review}.ts`, `services/agent-worker/src/checks.ts`, Tests and Security tabs |
 | Deployments, export | `src/lib/deploy/{state,health,cloudflare,vercel}.ts`, `services/agent-worker/src/{deploy,deploy-cloudflare}.ts`, `src/lib/export/{zip,collect}.ts`, `projects/[id]/export/route.ts` |
 | Billing | `src/lib/billing/{stripe,server}.ts`, `src/app/api/stripe/webhook`, Billing page |
@@ -44,9 +47,29 @@ A production-grade AI software engineering platform. A person describes an app, 
 | Marketplace, analytics, admin | `src/lib/marketplace/package.ts`, `src/lib/analytics/collect.ts`, `src/app/api/collect/[key]`, `src/app/(app)/{marketplace,admin,settings/support}` |
 | Hardening | `src/lib/security/{headers,rate-limit,server-limit,readiness}.ts`, `src/app/api/{health,ready}`, `scripts/backup-restore-drill.sh`, `loadtest/k6-smoke.js` |
 | Docs | `docs/security/threat-model.md`, `docs/operations/{backup-restore,go-live-checklist,cloudflare-infrastructure}.md`, `docs/compliance/evidence-checklist.md` |
-| Tooling | `scripts/{check-sources,mutation-check,env-vars,print-stack-catalog}.ts`, `.github/workflows/ci.yml` |
+| Tooling | `scripts/{check-sources,mutation-check,env-vars,print-stack-catalog,preflight}.ts`, `.github/workflows/ci.yml` |
 
-## Verification status — 19 November 2026
+## Verification status — 20 November 2026
+
+Latest commit checked in CI (GitHub Actions) and on the Mac mini that runs the full stack.
+
+| Check | Status | Count / detail |
+|---|---|---|
+| CI: lint, strict `tsc`, source checks, unit tests, starter tests, `next build` | **Passed** | `app` job green |
+| CI: database checks on PostgreSQL 16 | **Passed** | 19 migrations; 494 checks in 20 files |
+| CI: backup and restore drill | **Passed** | `restore-drill` job green |
+| Unit and integration tests | **Passed** | 229 tests (`pnpm test`) |
+| Starter template's own tests | **Passed** | 11 tests, including its Content-Security-Policy |
+| Starter dependencies | **Clean** | `pnpm audit`: no known vulnerabilities (postcss and glob pinned to patched versions) |
+| Full stack on the Mac mini (Supabase CLI, Docker via Colima, broker, preview proxy, agent worker, automation runner) | **Passed by hand** | Sign-in; templates gallery with search and in-place preview; interactive app demos; Connectors (search, detail, connect flow to Secrets); Automations (template added as a draft, diagram, counts); Media (real screenshots captured in the sandbox's headless browser and served back); QA Center runs; policy refusal and appeal flow |
+| k6 against staging | **Not run yet** | needs a staging deployment |
+| Live Stripe purchases, Cloudflare/Vercel deploys from a customer account, OAuth and MFA | **Not run yet** | need production accounts; adapters are tested against fakes |
+| A real PITR restore | **Not run yet** | needs the production Supabase project |
+
+Before deploying, run `pnpm preflight <production env file>`: it checks every variable each process reads (missing, placeholder, http or localhost URLs, short tokens, malformed master keys, a service-role key used as the anon key, mismatched broker tokens) without printing any value. See `docs/operations/go-live-checklist.md`.
+
+<details><summary>Earlier verification (19 November 2026)</summary>
+
 
 Run in a Linux workspace with PostgreSQL 16.15 and Node 22.23 (tsx). Package installs were not available, so nothing that needs `node_modules` was run.
 
@@ -78,6 +101,8 @@ Note on the unit count: the main suite has 139 tests and the template has 6, 145
 
 **Fixed during verification** (each caught by a check before commit; CI later caught 15 type-only errors in three files, fixed in `6db870a`): `decide_approval` missing an enum cast; a CTE inside a subquery in a test; `set_project_secret` letting a NULL `jsonb_typeof` slip through (plaintext envelopes would have been accepted); the support-grant policy calling an internal helper clients can't execute; the Cloudflare adapter crashing on an unknown asset hash; `toDotenv` rejecting one-letter names; import specifiers returned out of source order; file references inside `(…)` in stack traces being missed.
 
+</details>
+
 ## Not done yet
 
 - Live previews need the preview proxy and a wildcard certificate for `*.PREVIEW_BASE_DOMAIN`.
@@ -87,7 +112,8 @@ Note on the unit count: the main suite has 139 tests and the template has 6, 145
 - The Database Studio shows the migration-defined schema, not the live one.
 - Prices are set in Stripe; the pricing page shows `[PRICE]` until real prices exist.
 - Automations need the runner (`pnpm runner`) deployed; until then runs stay queued and the UI says so.
-- The sandbox workspace is a tmpfs, as specified: stopping a sandbox discards its files (export first).
+- Browser QA and Media screenshots need sandboxes on the `keelwork/runtime-browser` image (`SANDBOX_IMAGE`); otherwise the UI says they are unavailable.
+- Each sandbox keeps its workspace on a per-project Docker volume, so stopping it keeps the files; deleting the volume discards them (export first).
 - Commits are one per phase (13), not the original's 17.
 
 ## How to run

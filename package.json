@@ -18,6 +18,7 @@
     "check": "tsx scripts/check-sources.ts",
     "mutations": "tsx scripts/mutation-check.ts",
     "env:list": "tsx scripts/env-vars.ts",
+    "preflight": "tsx scripts/preflight.ts",
     "drill": "bash scripts/backup-restore-drill.sh",
     "broker": "tsx services/sandbox-broker/server.ts",
     "proxy": "tsx services/preview-proxy/proxy.ts",

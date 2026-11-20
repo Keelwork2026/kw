@@ -33,11 +33,16 @@ export function describeCondition(c: Condition): string {
   return `only if ${left} ${OP[c.op]}${c.right !== undefined ? ` ${JSON.stringify(c.right)}` : ""}`;
 }
 
+/** Shows template references as readable placeholders: {{trigger.body.name}} → [name]. */
+export function humanize(text: string): string {
+  return text.replace(/\{\{\s*([^}]+?)\s*\}\}/g, (_, ref: string) => `[${ref.split(".").pop()!.replace(/_/g, " ")}]`);
+}
+
 export function describeStep(s: Step): { title: string; detail: string } {
   switch (s.type) {
     case "http": { let host = s.url; try { host = new URL(s.url).host; } catch { /* template url */ } return { title: `${s.method} request`, detail: host }; }
-    case "email": return { title: "Send email", detail: s.subject };
-    case "slack": return { title: "Post to Slack", detail: s.text.length > 60 ? `${s.text.slice(0, 57)}…` : s.text };
+    case "email": return { title: "Send email", detail: humanize(s.subject) };
+    case "slack": { const t = humanize(s.text); return { title: "Post to Slack", detail: t.length > 60 ? `${t.slice(0, 57)}…` : t }; }
     case "transform": return { title: "Reshape data", detail: Object.keys(s.output).join(", ") };
     case "delay": { const sec = s.seconds; return { title: "Wait", detail: sec % 86400 === 0 ? `${sec / 86400} day${sec === 86400 ? "" : "s"}` : sec % 3600 === 0 ? `${sec / 3600} hour${sec === 3600 ? "" : "s"}` : sec % 60 === 0 ? `${sec / 60} min` : `${sec} s` }; }
   }

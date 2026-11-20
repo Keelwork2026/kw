@@ -27,6 +27,7 @@ Generated from every `process.env` read in the code (`pnpm tsx scripts/env-vars.
 **Web app**
 
 - `AI_MODEL_CATALOG`
+- `AUTH_PROVIDERS`
 - `CREDIT_PACKS`
 - `DEEPSEEK_API_KEY`
 - `INVITE_FROM_EMAIL`
@@ -71,26 +72,38 @@ Generated from every `process.env` read in the code (`pnpm tsx scripts/env-vars.
 **Sandbox broker**
 
 - `BROKER_TOKEN`
+- `HOST`
 - `KW_APP_ORIGIN`
 - `PORT`
-- `SANDBOX_IMAGE`
+- `SANDBOX_IMAGE` (use `keelwork/runtime-browser` for browser QA and Media screenshots)
+- `SANDBOX_MEMORY_MB`
 - `SANDBOX_NETWORK`
-- `SANDBOX_RUNTIME`
+- `SANDBOX_RUNTIME` (`runsc`)
 
 **Preview proxy**
 
 - `APP_ORIGIN`
 - `BROKER_TOKEN`
 - `BROKER_URL`
+- `HOST`
 - `PORT`
 - `PREVIEW_BASE_DOMAIN`
 - `PREVIEW_SECRET`
 
 OAuth client ids and secrets (`SUPABASE_AUTH_EXTERNAL_*`) are set in Supabase, not in Keelwork's processes.
 
+## Check the configuration
+
+```sh
+pnpm preflight /path/to/production.env              # every process
+pnpm preflight /path/to/worker.env --process "Agent worker"
+```
+
+It exits non-zero on anything that blocks a deployment (missing or placeholder values, http or localhost URLs, short tokens, malformed `SECRETS_MASTER_KEYS`, the service-role key used as the anon key, `SANDBOX_BROKER_TOKEN` ≠ `BROKER_TOKEN`) and warns about weaker set-ups (no gVisor, services bound beyond 127.0.0.1, Stripe test keys). It never prints values.
+
 ## Before opening sign-ups (in this order)
 
-1. CI is green on the first push.
+1. CI is green on the first push, and `pnpm preflight` passes for every process.
 2. `/api/ready` returns 200 and is wired to monitoring.
 3. Sign-up, email verification and MFA work against live Supabase.
 4. One full build per backend: idea → plan → approve → agents → preview → Code view edit → tests → deploy to a test Cloudflare account → preview check → live check → rollback.

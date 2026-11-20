@@ -157,3 +157,10 @@ test("describe: schedules, steps, conditions and the diagram in plain words", as
   assert.equal(workflowHealth([{ workflow_id: "w", status: "queued", created_at: now }], "w").health, "idle");
   assert.equal(workflowHealth([], "w").health, "idle");
 });
+
+test("describe: template references read as placeholders", async () => {
+  const { humanize, diagram } = await import("./describe");
+  assert.equal(humanize("Thanks, {{trigger.body.name}} — {{ steps.fetch.output.json.orders }} orders"), "Thanks, [name] — [orders] orders");
+  const t = WORKFLOW_TEMPLATES.find((x) => x.key === "lead-follow-up")!;
+  assert.equal(diagram(t.trigger, t.schedule, t.definition)[2]!.detail, "Thanks for getting in touch, [name]");
+});

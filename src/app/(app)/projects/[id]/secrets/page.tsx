@@ -11,11 +11,12 @@ export const metadata = { title: "Secrets" };
 export default async function SecretsPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ name?: string; connect?: string }> }) {
   const { id } = await params;
   const sp = await searchParams;
-  const prefill = sp.name && /^[A-Z][A-Z0-9_]{1,63}$/.test(sp.name) ? sp.name : "";
   const connecting = INTEGRATIONS.find((i) => i.id === sp.connect);
   const { supabase, project, can } = await loadProject(id);
   const { data } = await supabase.from("project_secrets").select("name, environment, updated_at, key_version").eq("project_id", project.id).order("name");
   const manage = can("secret.manage");
+  // Connecting: start with the named key, or the first one this project doesn't have yet.
+  const prefill = sp.name && /^[A-Z][A-Z0-9_]{1,63}$/.test(sp.name) ? sp.name : connecting?.secrets.find((k) => !(data ?? []).some((x) => x.name === k.name))?.name ?? "";
   const ready = vaultReady();
   return (
     <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
