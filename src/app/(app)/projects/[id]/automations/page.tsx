@@ -1,5 +1,7 @@
 import { loadProject } from "@/lib/project";
 import { WORKFLOW_TEMPLATES } from "@/lib/automation/templates";
+import { WorkflowDiagram } from "@/components/automation/diagram";
+import type { Definition } from "@/lib/automation/definition";
 import { ActionForm } from "@/components/action-form";
 import { EmptyState, Notice, StatusPill, timeAgo } from "@/components/page-header";
 import { saveWorkflow, createFromTemplate, setEnabled, runNow, cancelRun, rotateWebhookSecret } from "./actions";
@@ -27,11 +29,12 @@ export default async function AutomationsPage({ params, searchParams }: { params
       {write ? (
         <section className="panel p-5" aria-labelledby="starters">
           <h2 id="starters" className="text-lg">Start from a template</h2>
-          <div className="mt-3 grid gap-3 md:grid-cols-3">
+          <div className="mt-3 grid gap-3 md:grid-cols-2 xl:grid-cols-3">
             {WORKFLOW_TEMPLATES.map((t) => (
               <ActionForm key={t.key} action={createFromTemplate} submitLabel="Use template" submitClassName="btn btn-secondary min-h-10" className="rounded-2xl border border-border p-4">
                 <input type="hidden" name="projectId" value={project.id} /><input type="hidden" name="template" value={t.key} />
                 <p className="font-semibold">{t.name}</p><p className="mt-1 text-sm text-muted">{t.description}</p>
+                <div className="mt-2 overflow-x-auto"><WorkflowDiagram trigger={t.trigger} schedule={t.schedule} definition={t.definition} compact /></div>
               </ActionForm>
             ))}
           </div>
@@ -52,6 +55,7 @@ export default async function AutomationsPage({ params, searchParams }: { params
                     <StatusPill status={w.enabled ? "live" : "paused"} /><span className="sr-only">{w.enabled ? "on" : "off"}</span>
                     <span className="text-xs text-muted">v{w.version}{w.next_run_at ? ` · next ${new Date(w.next_run_at).toISOString().slice(0, 16).replace("T", " ")} UTC` : ""}</span>
                   </div>
+                  <div className="mt-3 overflow-x-auto"><WorkflowDiagram trigger={w.trigger_kind} schedule={w.schedule} definition={w.definition as Definition} /></div>
                   <div className="mt-3 flex flex-wrap gap-2">
                     {write ? <a href={`?edit=${w.id}#editor`} className="btn btn-secondary min-h-10">Edit</a> : null}
                     {manage ? (

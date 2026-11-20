@@ -21,13 +21,14 @@ test("cron: parsing, minimum interval and next run", () => {
   assert.equal(nextRun("0 7 * * MON-FRI", new Date("2026-11-19T06:59:30Z")).toISOString(), "2026-11-19T07:00:00.000Z");
 });
 
-test("the three starter templates validate", () => {
+test("every starter template validates", () => {
   for (const t of WORKFLOW_TEMPLATES) {
     const r = validateDefinition(t.definition);
     assert.ok(r.ok, `${t.key}: ${!r.ok ? r.errors.join("; ") : ""}`);
     if (t.schedule) parseCron(t.schedule);
   }
-  assert.equal(WORKFLOW_TEMPLATES.length, 3);
+  assert.equal(WORKFLOW_TEMPLATES.length, 7);
+  assert.equal(new Set(WORKFLOW_TEMPLATES.map((t) => t.key)).size, 7);
   assert.deepEqual(secretNamesUsed(WORKFLOW_TEMPLATES[2]!.definition), ["CRM_API_KEY"]);
 });
 
@@ -135,4 +136,24 @@ test("webhook signatures: valid, tampered, wrong secret, stale and replay hash",
   const again = verifyWebhook("whsec_abc", h, body, now);
   assert.ok(ok.ok && again.ok && ok.signatureHash === again.signatureHash, "the same delivery has the same replay hash");
   assert.match(webhookSecretName("3f1c2b8e-1a2b-4c3d-8e9f-0a1b2c3d4e5f"), /^WEBHOOK_[0-9A-F]{32}$/);
+});
+
+test("describe: schedules, steps, conditions and the diagram in plain words", async () => {
+  const { describeSchedule, diagram, connectorsUsed, workflowHealth } = await import("./describe");
+  assert.equal(describeSchedule("0 7 * * 1-5"), "Weekdays at 07:00 UTC");
+  assert.equal(describeSchedule("0 8 * * 1"), "Every Monday at 08:00 UTC");
+  assert.equal(describeSchedule("*/15 * * * *"), "Every 15 minutes");
+  assert.equal(describeSchedule("30 9 1 * *"), "On day 1 of each month at 09:30 UTC");
+  assert.equal(describeSchedule("5 4 * 2 *"), "Schedule 5 4 * 2 * (UTC)");
+  const t = WORKFLOW_TEMPLATES.find((x) => x.key === "lead-follow-up")!;
+  const d = diagram(t.trigger, t.schedule, t.definition);
+  assert.deepEqual(d.map((n) => n.kind), ["trigger", "delay", "email"]);
+  assert.equal(d[1]!.detail, "1 day");
+  assert.equal(d[2]!.condition, "only if email is filled in");
+  assert.deepEqual(d[2]!.after, ["wait"]);
+  assert.deepEqual(connectorsUsed(WORKFLOW_TEMPLATES.find((x) => x.key === "payment-received")!.definition), ["resend", "slack"]);
+  const now = new Date().toISOString();
+  assert.equal(workflowHealth([{ workflow_id: "w", status: "failed", created_at: now }], "w").health, "failing");
+  assert.equal(workflowHealth([{ workflow_id: "w", status: "queued", created_at: now }], "w").health, "idle");
+  assert.equal(workflowHealth([], "w").health, "idle");
 });

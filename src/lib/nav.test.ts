@@ -10,7 +10,7 @@ test("the app shell has the 21 primary sections, uniquely named", () => {
 });
 
 test("project tabs are in the specified order", () => {
-  assert.deepEqual(PROJECT_TABS.map((t) => t.label), ["Build", "Code", "Database", "Backend", "Media", "QA", "Tests", "Incidents", "Security", "Deploy", "Analytics", "Automations", "Integrations", "Secrets"]);
+  assert.deepEqual(PROJECT_TABS.map((t) => t.label), ["Build", "Code", "Database", "Backend", "Media", "QA", "Tests", "Incidents", "Security", "Deploy", "Analytics", "Automations", "Connectors", "Secrets"]);
 });
 
 test("isUuid validates project ids", () => {

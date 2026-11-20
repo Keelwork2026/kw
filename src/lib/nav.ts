@@ -19,8 +19,8 @@ export const SECTIONS: readonly Section[] = [
   { slug: "design", label: "Design Studio", phase: 5, live: true, projectTab: "", description: "Click any element in the preview to restyle it." },
   { slug: "database", label: "Database Studio", phase: 6, live: true, projectTab: "database", description: "Tables, policies and migrations." },
   { slug: "backend", label: "Backend Studio", phase: 6, live: true, projectTab: "backend", description: "API routes and server actions." },
-  { slug: "integrations", label: "API and Integrations", phase: 7, live: true, projectTab: "integrations", description: "Connect services with your own accounts." },
-  { slug: "automation", label: "Automation Studio", phase: 7, live: true, projectTab: "automations", description: "Webhooks, schedules and workflows." },
+  { slug: "integrations", label: "Connectors", phase: 7, live: true, projectTab: "integrations", description: "Connect services with your own accounts." },
+  { slug: "automation", label: "Automations", phase: 7, live: true, projectTab: "automations", description: "Webhooks, schedules and workflows." },
   { slug: "agents", label: "AI Agents", phase: 3, live: true, description: "The specialist team and the models they use." },
   { slug: "testing", label: "Testing Centre", phase: 8, live: true, projectTab: "tests", description: "Tests, type checks, lint and builds." },
   { slug: "security", label: "Security Centre", phase: 8, live: true, projectTab: "security", description: "Secret scanning, reviews and audits." },
@@ -52,7 +52,7 @@ export const PROJECT_TABS = [
   { slug: "deployments", label: "Deploy" },
   { slug: "analytics", label: "Analytics" },
   { slug: "automations", label: "Automations" },
-  { slug: "integrations", label: "Integrations" },
+  { slug: "integrations", label: "Connectors" },
   { slug: "secrets", label: "Secrets" },
 ] as const;
 

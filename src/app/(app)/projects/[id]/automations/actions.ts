@@ -29,6 +29,7 @@ export async function saveWorkflow(_prev: ActionResult, form: FormData): Promise
   const { error } = await supabase.rpc("save_workflow", { p_project: project.id, p_workflow: isUuid(workflowId) ? workflowId : null, p_name: name, p_trigger: trigger, p_schedule: trigger === "schedule" ? schedule : null, p_definition: v.definition });
   if (error) return fail(error.message);
   revalidatePath(`/projects/${project.id}/automations`);
+  revalidatePath("/automation");
   return { ok: true, message: "Saved as a draft. An owner or admin switches it on." };
 }
 
@@ -53,6 +54,7 @@ export async function setEnabled(_prev: ActionResult, form: FormData): Promise<A
   const { error } = await supabase.rpc("set_workflow_enabled", { p_workflow: id, p_enabled: enable, p_next_run_at: next });
   if (error) return fail(error.message);
   revalidatePath(`/projects/${project.id}/automations`);
+  revalidatePath("/automation");
   return { ok: true, message: enable ? `Switched on.${next ? ` Next run ${next.replace("T", " ").slice(0, 16)} UTC.` : ""}` : "Switched off." };
 }
 
@@ -65,6 +67,7 @@ export async function runNow(_prev: ActionResult, form: FormData): Promise<Actio
   const { error } = await supabase.rpc("run_workflow_now", { p_workflow: String(form.get("workflowId")), p_input: { body: input } });
   if (error) return fail(error.message);
   revalidatePath(`/projects/${project.id}/automations`);
+  revalidatePath("/automation");
   return { ok: true, message: "Queued. The automation runner picks it up within seconds when it's deployed." };
 }
 
@@ -73,6 +76,7 @@ export async function cancelRun(_prev: ActionResult, form: FormData): Promise<Ac
   const { error } = await supabase.rpc("cancel_workflow_run", { p_run: String(form.get("runId")) });
   if (error) return fail(error.message);
   revalidatePath(`/projects/${project.id}/automations`);
+  revalidatePath("/automation");
   return { ok: true, message: "Cancelled." };
 }
 
@@ -89,6 +93,7 @@ export async function rotateWebhookSecret(_prev: ActionResult, form: FormData): 
   const { data: endpoint, error } = await supabase.rpc("set_webhook_secret", { p_workflow: id, p_envelope: envelope });
   if (error) return fail(error.message);
   revalidatePath(`/projects/${project.id}/automations`);
+  revalidatePath("/automation");
   const url = `${(process.env.NEXT_PUBLIC_SITE_URL ?? "").replace(/\/$/, "")}/api/hooks/${endpoint}`;
   return { ok: true, message: `Copy this now — it won't be shown again. URL: ${url}  Secret: ${secret}  Sign each request with keelwork-signature: t=<unix seconds>,v1=HMAC-SHA256(secret, "<t>.<body>").` };
 }

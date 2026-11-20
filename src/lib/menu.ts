@@ -51,6 +51,25 @@ export const MENU: readonly MenuGroup[] = [
           { label: "Create a project", hint: "Describe a new app", to: { path: "/new-project" } },
         ],
       },
+      {
+        slug: "integrations", label: "Connectors", hint: "Payments, email, messaging, AI and more — with your own accounts",
+        can: ["Browse connectors by category or search", "See what's connected, what needs setup and what's suggested for your projects", "See exactly what access each key gives before you add it", "Connect one to a project in a few steps"],
+        children: [
+          { label: "All connectors", hint: "Search, filter and connect", to: { path: "/integrations" } },
+          { label: "In this project", hint: "What this project has connected", to: { tab: "integrations" } },
+          { label: "Secrets", hint: "Encrypted keys for connectors", to: { tab: "secrets", at: "set-secret" } },
+        ],
+      },
+      {
+        slug: "automation", label: "Automations", hint: "Workflows on a schedule, a webhook or a button",
+        can: ["See every automation across your projects", "Pause, switch on or run one now", "Spot automations whose last run failed", "Start from a template with a visual workflow", "Read the history and logs of every run"],
+        children: [
+          { label: "My automations", hint: "Active, paused and failing", to: { path: "/automation#mine" } },
+          { label: "Templates", hint: "Ready-made workflows", to: { path: "/automation#templates" } },
+          { label: "Recent runs", hint: "Status and errors", to: { path: "/automation#history" } },
+          { label: "Editor", hint: "Build or change a workflow", to: { tab: "automations", at: "editor" } },
+        ],
+      },
     ],
   },
   {
@@ -115,24 +134,6 @@ export const MENU: readonly MenuGroup[] = [
         children: [
           { label: "API routes", hint: "HTTP endpoints in the app", to: { tab: "backend", at: "routes" } },
           { label: "Server actions", hint: "Form and mutation handlers", to: { tab: "backend", at: "actions" } },
-        ],
-      },
-      {
-        slug: "integrations", label: "API and Integrations", hint: "Connect services with your own accounts",
-        can: ["See which services a project can connect to", "Check which are connected", "Add the keys they need as encrypted secrets"],
-        children: [
-          { label: "Integration catalogue", hint: "Payments, email, maps and more", to: { tab: "integrations" } },
-          { label: "Secrets", hint: "Encrypted keys for integrations", to: { tab: "secrets", at: "set-secret" } },
-        ],
-      },
-      {
-        slug: "automation", label: "Automation Studio", hint: "Webhooks, schedules and workflows",
-        can: ["Start a workflow from a template", "Trigger by hand, by signed webhook or on a schedule", "Chain HTTP, email, Slack, transform and delay steps", "Watch each run and retry failures"],
-        children: [
-          { label: "Templates", hint: "Ready-made workflows", to: { tab: "automations", at: "starters" } },
-          { label: "Your automations", hint: "Switch on, run now, edit", to: { tab: "automations", at: "wfs" } },
-          { label: "Editor", hint: "Build or change a workflow", to: { tab: "automations", at: "editor" } },
-          { label: "Run history", hint: "Every run and its steps", to: { tab: "automations", at: "history" } },
         ],
       },
     ],

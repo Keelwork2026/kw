@@ -4,11 +4,15 @@ import { ENVIRONMENTS } from "@/lib/secrets/vault";
 import { ActionForm } from "@/components/action-form";
 import { EmptyState, Notice, timeAgo } from "@/components/page-header";
 import { setSecret, deleteSecret } from "./actions";
+import { INTEGRATIONS } from "@/lib/integrations/catalog";
 
 export const metadata = { title: "Secrets" };
 
-export default async function SecretsPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function SecretsPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ name?: string; connect?: string }> }) {
   const { id } = await params;
+  const sp = await searchParams;
+  const prefill = sp.name && /^[A-Z][A-Z0-9_]{1,63}$/.test(sp.name) ? sp.name : "";
+  const connecting = INTEGRATIONS.find((i) => i.id === sp.connect);
   const { supabase, project, can } = await loadProject(id);
   const { data } = await supabase.from("project_secrets").select("name, environment, updated_at, key_version").eq("project_id", project.id).order("name");
   const manage = can("secret.manage");
@@ -36,11 +40,21 @@ export default async function SecretsPage({ params }: { params: Promise<{ id: st
         ) : <div className="p-5"><EmptyState icon="key" title="No secrets yet" action={{ label: "Add a secret", href: "#set-secret" }}>API keys and tokens your app needs, encrypted at rest and never shown again. Agents ask for them when they need one.</EmptyState></div>}
       </section>
       <section className="card" aria-labelledby="set-secret">
-        <h2 id="set-secret" className="text-lg">Set or replace a secret</h2>
+        <h2 id="set-secret" className="text-lg">{connecting ? `Connect ${connecting.name}` : "Set or replace a secret"}</h2>
+        {connecting ? (
+          <div className="mt-2 rounded-xl bg-surface-2 p-3 text-sm">
+            <p>{connecting.name} needs {connecting.secrets.length === 1 ? "this key" : `these ${connecting.secrets.length} keys`}. Add each one:</p>
+            <ul className="mt-1 grid gap-1">{connecting.secrets.map((k) => {
+              const have = (data ?? []).some((x) => x.name === k.name);
+              return <li key={k.name}>{have ? "✓ " : ""}<a className="font-mono text-xs font-semibold text-accent" href={`?connect=${connecting.id}&name=${k.name}#set-secret`}>{k.name}</a> <span className="text-xs text-muted">— {k.hint}</span></li>;
+            })}</ul>
+            <p className="mt-2 text-xs text-muted">Where to get it: {connecting.setup} {connecting.access}</p>
+          </div>
+        ) : null}
         {!ready ? <div className="mt-3"><Notice>Secrets can&apos;t be added: this installation has no SECRETS_MASTER_KEYS.</Notice></div> : !manage ? <p className="mt-2 text-sm text-muted">Only owners and admins can change secrets.</p> : (
           <ActionForm action={setSecret} submitLabel="Save secret" className="mt-3 grid gap-3">
             <input type="hidden" name="projectId" value={project.id} />
-            <div><label className="label" htmlFor="name">Name</label><input id="name" name="name" required pattern="[A-Za-z][A-Za-z0-9_]{1,63}" placeholder="STRIPE_SECRET_KEY" className="input font-mono" autoComplete="off" /></div>
+            <div><label className="label" htmlFor="name">Name</label><input id="name" name="name" required pattern="[A-Za-z][A-Za-z0-9_]{1,63}" placeholder="STRIPE_SECRET_KEY" defaultValue={prefill} key={prefill} className="input font-mono" autoComplete="off" /></div>
             <div><label className="label" htmlFor="environment">Environment</label><select id="environment" name="environment" className="input">{ENVIRONMENTS.map((e) => <option key={e}>{e}</option>)}</select></div>
             <div><label className="label" htmlFor="value">Value</label><input id="value" name="value" type="password" required autoComplete="off" className="input font-mono" /></div>
             <p className="text-xs text-muted">Deploy credentials (CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID, VERCEL_TOKEN) are used only by the deploy service and never passed to your app.</p>
