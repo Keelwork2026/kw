@@ -10,7 +10,7 @@ export const school: AppTemplate = {
   features: ["Student records", "Attendance", "Fees and balances", "Parent messages", "Term calendar"],
   effort: "About 3 hours of agent work", stack: "Next.js, Supabase, roles for teachers and bursars",
   keywords: ["school", "school management", "students", "attendance", "fees", "parents", "teachers", "education", "admin", "pupils"],
-  brand: "Harmony", palette: PAL.sky, shell: "admin", user: { name: "Mrs Adaku Eze", role: "School administrator" },
+  brand: "Your School", palette: PAL.sky, shell: "admin", user: { name: "Mrs Linda Edwards", role: "School administrator" },
   screens: [
     { slug: "overview", label: "Overview", icon: "chart", title: "First term, week 11", modules: [
       { m: "kpis", items: [{ label: "Students", value: "486" }, { label: "Present today", value: "94%", delta: "29 absent", tone: "info" }, { label: "Fees collected", value: "₦38.2M", delta: "81% of term" }, { label: "Outstanding", value: "₦8.9M", tone: "warn", delta: "74 families" }] },
@@ -18,20 +18,20 @@ export const school: AppTemplate = {
     ] },
     { slug: "students", label: "Students", icon: "users", title: "Students", modules: [
       { m: "table", title: "All students", search: "Search by name or ID", action: "Add student", columns: ["Name", "Class", "Guardian", "Fees", "Status"], status: 4, filter: 1, tones: { Active: "good", "On leave": "warn", Graduated: "neutral" }, rows: [
-        ["Chiamaka Obi", "JSS2", "Mr Obi", "Paid", "Active"], ["Daniel Musa", "SS1", "Mrs Musa", "₦85,000 due", "Active"], ["Esther Ojo", "SS3", "Mr Ojo", "Paid", "Active"], ["Farouk Sani", "JSS1", "Mr Sani", "₦170,000 due", "On leave"], ["Grace Ibe", "SS2", "Mrs Ibe", "Paid", "Active"],
+        ["Chloe O'Brien", "JSS2", "Mr O'Brien", "Paid", "Active"], ["Daniel Mason", "SS1", "Mrs Mason", "₦85,000 due", "Active"], ["Esther Ortiz", "SS3", "Mr Ortiz", "Paid", "Active"], ["Frank Sullivan", "JSS1", "Mr Sullivan", "₦170,000 due", "On leave"], ["Grace Hughes", "SS2", "Mrs Hughes", "Paid", "Active"],
       ] },
     ] },
     { slug: "attendance", label: "Attendance", icon: "check", title: "Today's attendance", modules: [
       { m: "kanban", title: "SS1 Science — tap to mark arrivals", columns: [
-        { name: "Not marked", cards: [{ title: "Bola Adeyemi", meta: "SS1 Science" }, { title: "Ikenna Udo", meta: "SS1 Science" }] },
-        { name: "Present", cards: [{ title: "Daniel Musa", meta: "08:02" }, { title: "Halima Garba", meta: "07:55" }] },
-        { name: "Late", cards: [{ title: "Tosin Bello", meta: "08:24" }] },
+        { name: "Not marked", cards: [{ title: "Ben Johnson", meta: "SS1 Science" }, { title: "Ethan Ward", meta: "SS1 Science" }] },
+        { name: "Present", cards: [{ title: "Daniel Mason", meta: "08:02" }, { title: "Heather Garcia", meta: "07:55" }] },
+        { name: "Late", cards: [{ title: "Trevor Bell", meta: "08:24" }] },
       ] },
     ] },
     { slug: "messages", label: "Parents", icon: "chat", title: "Parent messages", modules: [
       { m: "inbox", title: "Messages", reply: "Reply to the parent…", items: [
-        { title: "Farouk's leave", meta: "Mr Sani · today", badge: "New", preview: "Farouk will be away until the 28th…", body: ["Good morning. Farouk is travelling with family and will be back on the 28th. Please share any assignments."] },
-        { title: "Fees instalment", meta: "Mrs Musa · yesterday", preview: "Can we pay the balance in two parts?", body: ["Can we pay the remaining ₦85,000 in two parts, this month and next?"] },
+        { title: "Frank's leave", meta: "Mr Sullivan · today", badge: "New", preview: "Frank will be away until the 28th…", body: ["Good morning. Frank is travelling with family and will be back on the 28th. Please share any assignments."] },
+        { title: "Fees instalment", meta: "Mrs Mason · yesterday", preview: "Can we pay the balance in two parts?", body: ["Can we pay the remaining ₦85,000 in two parts, this month and next?"] },
       ] },
     ] },
   ],
@@ -46,7 +46,7 @@ export const pharmacy: AppTemplate = {
   features: ["Stock list", "Expiry alerts", "Purchase orders", "Sales summary", "Supplier contacts"],
   effort: "About 2–3 hours of agent work", stack: "Next.js, Supabase, barcode-friendly inputs",
   keywords: ["pharmacy", "inventory", "stock", "medicines", "drugs", "chemist", "expiry", "health", "supplies"],
-  brand: "Medstock", palette: PAL.teal, shell: "admin", user: { name: "Pharm. Yemi Ola", role: "Superintendent pharmacist" },
+  brand: "Your Pharmacy", palette: PAL.teal, shell: "admin", user: { name: "Pharm. Jenny Lee", role: "Superintendent pharmacist" },
   screens: [
     { slug: "stock", label: "Stock", icon: "database", title: "Stock", modules: [
       { m: "kpis", items: [{ label: "Products", value: "1,206" }, { label: "Low stock", value: "17", tone: "warn" }, { label: "Expiring in 60 days", value: "9", tone: "bad" }, { label: "Sales today", value: "₦412,300" }] },
@@ -56,9 +56,9 @@ export const pharmacy: AppTemplate = {
     ] },
     { slug: "orders", label: "Orders", icon: "workflow", title: "Purchase orders", modules: [
       { m: "kanban", title: "Orders", columns: [
-        { name: "Draft", cards: [{ title: "PO-1182 · Emzor", meta: "Paracetamol, ORS", value: "₦184k" }] },
-        { name: "Sent", cards: [{ title: "PO-1181 · Fidson", meta: "Amoxicillin ×40", value: "₦96k" }] },
-        { name: "Received", cards: [{ title: "PO-1180 · GSK", meta: "Checked by Yemi", value: "₦310k" }] },
+        { name: "Draft", cards: [{ title: "PO-1182 · Cardinal Health", meta: "Paracetamol, ORS", value: "₦184k" }] },
+        { name: "Sent", cards: [{ title: "PO-1181 · McKesson", meta: "Amoxicillin ×40", value: "₦96k" }] },
+        { name: "Received", cards: [{ title: "PO-1180 · GSK", meta: "Checked by Jenny", value: "₦310k" }] },
       ] },
     ] },
     { slug: "sales", label: "Sales", icon: "chart", title: "Sales", modules: [
@@ -76,7 +76,7 @@ export const invoicing: AppTemplate = {
   features: ["Invoice list", "Create invoice", "Clients", "Cash-flow chart", "Payment reminders"],
   effort: "About 1–2 hours of agent work", stack: "Next.js, Supabase, PDF generation",
   keywords: ["invoice", "invoicing", "billing", "accounting", "payments", "freelancer", "small business", "receipts", "finance"],
-  brand: "Paperless", palette: PAL.ink, shell: "admin", user: { name: "Zara Bello", role: "Owner, Bello Design" },
+  brand: "Your Business", palette: PAL.ink, shell: "admin", user: { name: "Sara Bell", role: "Owner, Bell Design" },
   screens: [
     { slug: "invoices", label: "Invoices", icon: "card", title: "Invoices", modules: [
       { m: "kpis", items: [{ label: "Outstanding", value: "₦1,840,000", delta: "6 invoices", tone: "info" }, { label: "Overdue", value: "₦420,000", tone: "bad", delta: "2 invoices" }, { label: "Paid this month", value: "₦2,960,000" }, { label: "Avg. days to pay", value: "18" }] },
@@ -105,24 +105,24 @@ export const logistics: AppTemplate = {
   features: ["Dispatch board", "Shipments table", "Driver schedule", "Customer tracking", "Delivery metrics"],
   effort: "About 3 hours of agent work", stack: "Next.js, Supabase realtime, SMS once connected",
   keywords: ["logistics", "delivery", "courier", "shipping", "dispatch", "tracking", "drivers", "fleet", "parcels"],
-  brand: "Swiftmile", palette: PAL.amber, shell: "admin", user: { name: "Kunle Ade", role: "Dispatch lead" },
+  brand: "Your Courier", palette: PAL.amber, shell: "admin", user: { name: "Kyle Adams", role: "Dispatch lead" },
   screens: [
     { slug: "dispatch", label: "Dispatch", icon: "workflow", title: "Today's deliveries", modules: [
       { m: "kpis", items: [{ label: "Deliveries today", value: "312" }, { label: "On time", value: "91%", delta: "↑ 3 pts" }, { label: "Drivers out", value: "24" }, { label: "Delayed", value: "11", tone: "warn" }] },
       { m: "kanban", title: "Shipments", columns: [
         { name: "Ready", cards: [{ title: "SM-88412", meta: "Ikeja → Lekki · 2 parcels" }, { title: "SM-88415", meta: "Yaba → Surulere" }] },
-        { name: "Picked up", cards: [{ title: "SM-88402", meta: "Driver: Sule · VI" }] },
-        { name: "Out for delivery", cards: [{ title: "SM-88391", meta: "Driver: Ngozi · ETA 14:20" }] },
-        { name: "Delivered", cards: [{ title: "SM-88377", meta: "Signed by M. Ade · 11:48" }] },
+        { name: "Picked up", cards: [{ title: "SM-88402", meta: "Driver: Steve · VI" }] },
+        { name: "Out for delivery", cards: [{ title: "SM-88391", meta: "Driver: Nicole · ETA 14:20" }] },
+        { name: "Delivered", cards: [{ title: "SM-88377", meta: "Signed by M. Adams · 11:48" }] },
       ] },
     ] },
     { slug: "shipments", label: "Shipments", icon: "database", title: "All shipments", modules: [
       { m: "table", title: "Shipments", search: "Search tracking number", columns: ["Tracking", "From", "To", "Driver", "Status"], status: 4, filter: 4, tones: { Delivered: "good", "In transit": "info", Delayed: "warn", Failed: "bad" }, rows: [
-        ["SM-88412", "Ikeja", "Lekki", "—", "In transit"], ["SM-88402", "Apapa", "VI", "Sule", "In transit"], ["SM-88391", "Yaba", "Ikoyi", "Ngozi", "Delayed"], ["SM-88377", "Surulere", "Ajah", "Sule", "Delivered"], ["SM-88350", "Ikeja", "Ikorodu", "Bayo", "Failed"],
+        ["SM-88412", "Ikeja", "Lekki", "—", "In transit"], ["SM-88402", "Apapa", "VI", "Steve", "In transit"], ["SM-88391", "Yaba", "Ikoyi", "Nicole", "Delayed"], ["SM-88377", "Surulere", "Ajah", "Steve", "Delivered"], ["SM-88350", "Ikeja", "Ikorodu", "Brian", "Failed"],
       ] },
     ] },
     { slug: "track", label: "Track (public)", icon: "search", title: "Track a parcel", modules: [
-      { m: "form", title: "Where's my parcel?", submit: "Track", success: { title: "Out for delivery", body: "SM-88391 is with Ngozi and should arrive between 14:00 and 15:00." }, steps: [{ title: "Tracking", fields: [{ label: "Tracking number", type: "text", required: true, placeholder: "SM-00000" }, { label: "Phone number on the order", type: "tel", required: true }] }] },
+      { m: "form", title: "Where's my parcel?", submit: "Track", success: { title: "Out for delivery", body: "SM-88391 is with Nicole and should arrive between 14:00 and 15:00." }, steps: [{ title: "Tracking", fields: [{ label: "Tracking number", type: "text", required: true, placeholder: "SM-00000" }, { label: "Phone number on the order", type: "tel", required: true }] }] },
     ] },
   ],
 };
@@ -136,7 +136,7 @@ export const saasAdmin: AppTemplate = {
   features: ["MRR dashboard", "Customer lookup", "Plans and subscriptions", "Release checklist", "Audit feed"],
   effort: "About 2–3 hours of agent work", stack: "Next.js, Supabase, Stripe billing once connected",
   keywords: ["saas", "admin", "subscriptions", "mrr", "customers", "billing", "churn", "software", "startup", "console"],
-  brand: "Orbit", palette: PAL.night, shell: "admin", user: { name: "Dami Ola", role: "Founder" },
+  brand: "Your SaaS", palette: PAL.night, shell: "admin", user: { name: "Dan Lee", role: "Founder" },
   screens: [
     { slug: "revenue", label: "Revenue", icon: "chart", title: "Revenue", modules: [
       { m: "kpis", items: [{ label: "MRR", value: "$48,920", delta: "↑ 6.2% this month" }, { label: "Customers", value: "612" }, { label: "Churn", value: "1.9%", delta: "↓ 0.4 pts" }, { label: "Trials", value: "84", tone: "info", delta: "21% convert" }] },
@@ -149,7 +149,7 @@ export const saasAdmin: AppTemplate = {
     ] },
     { slug: "releases", label: "Releases", icon: "rocket", title: "Release 4.12", modules: [
       { m: "progress", title: "Checklist", items: [{ title: "Migrations reviewed", meta: "2 of 2", pct: 100 }, { title: "Tests passing", meta: "1,284 of 1,290", pct: 99 }, { title: "Docs updated", meta: "3 of 5 pages", pct: 60 }, { title: "Staged rollout", meta: "10% of accounts", pct: 10 }] },
-      { m: "feed", title: "Audit log", items: [{ who: "Dami", what: "enabled 'bulk export' for 10% of accounts", when: "09:12" }, { who: "Tobi", what: "changed Harbor Dental to Pro", when: "Yesterday" }, { who: "System", what: "retried 3 failed webhooks", when: "Yesterday" }] },
+      { m: "feed", title: "Audit log", items: [{ who: "Dan", what: "enabled 'bulk export' for 10% of accounts", when: "09:12" }, { who: "Toby", what: "changed Harbor Dental to Pro", when: "Yesterday" }, { who: "System", what: "retried 3 failed webhooks", when: "Yesterday" }] },
     ] },
   ],
 };
@@ -163,19 +163,19 @@ export const expenses: AppTemplate = {
   features: ["Claim form", "Approval inbox", "Reimbursement board", "Spend by team", "Audit trail"],
   effort: "About 2 hours of agent work", stack: "Next.js, Supabase, receipt uploads to storage",
   keywords: ["expenses", "approvals", "workflow", "reimbursement", "claims", "finance", "operations", "receipts", "internal tool"],
-  brand: "Approvly", palette: PAL.violet, shell: "admin", user: { name: "Olu Martins", role: "Finance manager" },
+  brand: "Your Company", palette: PAL.violet, shell: "admin", user: { name: "Oliver Martins", role: "Finance manager" },
   screens: [
     { slug: "approve", label: "To approve", icon: "inbox", title: "Waiting for you", modules: [
       { m: "inbox", title: "Claims", reply: "Add a note to the claimant…", items: [
-        { title: "Client lunch — ₦42,500", meta: "Amara Okafor · Sales · today", badge: "New", preview: "Lunch with Halden Logistics at Ember…", body: ["Lunch with Daniel Brooks (Halden Logistics) to discuss the proposal. Receipt attached.", "Cost centre: Sales"] },
-        { title: "Taxi to Ikeja site — ₦9,800", meta: "Emeka Obi · Operations · yesterday", preview: "Two taxi rides for the site visit…", body: ["Two taxi rides for the Ikeja Clinic site inspection. Receipts attached."] },
+        { title: "Client lunch — ₦42,500", meta: "Emily Carter · Sales · today", badge: "New", preview: "Lunch with Halden Logistics at Ember…", body: ["Lunch with Daniel Brooks (Halden Logistics) to discuss the proposal. Receipt attached.", "Cost centre: Sales"] },
+        { title: "Taxi to Ikeja site — ₦9,800", meta: "Eric O'Brien · Operations · yesterday", preview: "Two taxi rides for the site visit…", body: ["Two taxi rides for the Ikeja Clinic site inspection. Receipts attached."] },
       ] },
     ] },
     { slug: "claims", label: "Reimbursements", icon: "workflow", title: "Reimbursements", modules: [
       { m: "kanban", title: "Claims", columns: [
         { name: "Submitted", cards: [{ title: "Conference ticket", meta: "Sofia · Marketing", value: "₦120k" }] },
-        { name: "Approved", cards: [{ title: "Laptop charger", meta: "Ope · Engineering", value: "₦28k" }, { title: "Fuel", meta: "Kunle · Logistics", value: "₦35k" }] },
-        { name: "Paid", cards: [{ title: "Team offsite snacks", meta: "Jide · Product", value: "₦18k" }] },
+        { name: "Approved", cards: [{ title: "Laptop charger", meta: "Owen · Engineering", value: "₦28k" }, { title: "Fuel", meta: "Kyle · Logistics", value: "₦35k" }] },
+        { name: "Paid", cards: [{ title: "Team offsite snacks", meta: "Jake · Product", value: "₦18k" }] },
       ] },
     ] },
     { slug: "submit", label: "New claim", icon: "plus", title: "Submit a claim", modules: [
@@ -198,7 +198,7 @@ export const fitness: AppTemplate = {
   features: ["Membership plans", "Class timetable", "Member list", "Check-in stats"],
   effort: "About 2 hours of agent work", stack: "Next.js, Supabase, Paystack or Stripe once connected",
   keywords: ["gym", "fitness", "membership", "classes", "workout", "studio", "wellness", "trainer", "yoga"],
-  brand: "Pulsefit", palette: PAL.rose, shell: "consumer",
+  brand: "Your Gym", palette: PAL.rose, shell: "consumer",
   screens: [
     { slug: "join", label: "Join", icon: "layout", title: "Memberships", modules: [
       { m: "hero", eyebrow: "Open 5am–10pm · Lekki", title: "Train hard. Recover properly.", sub: "Strength floor, 30 classes a week and coaches who learn your name.", cta: "Choose a membership", secondary: "See classes", art: "team", seed: 3 },
@@ -208,12 +208,12 @@ export const fitness: AppTemplate = {
     ] },
     { slug: "classes", label: "Classes", icon: "clock", title: "This week's classes", modules: [
       { m: "calendar", title: "Timetable", days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], events: [
-        { day: 0, start: "06:00", end: "07:00", title: "HIIT", meta: "Coach Tayo", tone: "bad" }, { day: 1, start: "18:00", end: "19:00", title: "Yoga flow", meta: "Coach Ama", tone: "good" }, { day: 2, start: "07:00", end: "08:00", title: "Strength 101", meta: "Coach Femi", tone: "info" }, { day: 3, start: "18:30", end: "19:30", title: "Spin", meta: "Coach Tayo", tone: "warn" }, { day: 5, start: "09:00", end: "10:30", title: "Bootcamp", meta: "All coaches", tone: "bad" },
+        { day: 0, start: "06:00", end: "07:00", title: "HIIT", meta: "Coach Tyler", tone: "bad" }, { day: 1, start: "18:00", end: "19:00", title: "Yoga flow", meta: "Coach Amanda", tone: "good" }, { day: 2, start: "07:00", end: "08:00", title: "Strength 101", meta: "Coach Mike", tone: "info" }, { day: 3, start: "18:30", end: "19:30", title: "Spin", meta: "Coach Tyler", tone: "warn" }, { day: 5, start: "09:00", end: "10:30", title: "Bootcamp", meta: "All coaches", tone: "bad" },
       ] },
     ] },
     { slug: "members", label: "Staff", icon: "users", title: "Members (staff)", modules: [
       { m: "kpis", items: [{ label: "Active members", value: "418" }, { label: "Check-ins today", value: "136" }, { label: "New this month", value: "37", delta: "↑ 8" }, { label: "Renewals due", value: "22", tone: "warn" }] },
-      { m: "table", title: "Members", search: "Search members", columns: ["Name", "Plan", "Since", "Last visit", "Status"], status: 4, filter: 1, tones: { Active: "good", Frozen: "info", Lapsed: "warn" }, rows: [["Kemi Adeyemi", "Unlimited", "2024", "Today", "Active"], ["Tunde Ola", "Off-peak", "2025", "Yesterday", "Active"], ["Ruth Eze", "Student", "2025", "3 weeks", "Lapsed"], ["Musa Bello", "Unlimited", "2023", "1 month", "Frozen"]] },
+      { m: "table", title: "Members", search: "Search members", columns: ["Name", "Plan", "Since", "Last visit", "Status"], status: 4, filter: 1, tones: { Active: "good", Frozen: "info", Lapsed: "warn" }, rows: [["Kelly Johnson", "Unlimited", "2024", "Today", "Active"], ["Travis Lee", "Off-peak", "2025", "Yesterday", "Active"], ["Ruth Evans", "Student", "2025", "3 weeks", "Lapsed"], ["Mason Bell", "Unlimited", "2023", "1 month", "Frozen"]] },
     ] },
   ],
 };
@@ -227,7 +227,7 @@ export const inventory: AppTemplate = {
   features: ["Stock by location", "Low-stock alerts", "Supplier orders", "Stock movements", "Stock value"],
   effort: "About 2 hours of agent work", stack: "Next.js, Supabase, CSV import",
   keywords: ["inventory", "stock", "warehouse", "retail", "wholesale", "products", "reorder", "suppliers", "sku"],
-  brand: "Shelfwise", palette: PAL.green, shell: "admin", user: { name: "Ifeanyi Okoro", role: "Store manager" },
+  brand: "Your Store", palette: PAL.green, shell: "admin", user: { name: "Kevin Tanaka", role: "Store manager" },
   screens: [
     { slug: "stock", label: "Stock", icon: "database", title: "Stock", modules: [
       { m: "kpis", items: [{ label: "SKUs", value: "2,340" }, { label: "Stock value", value: "₦46.8M" }, { label: "Below reorder point", value: "31", tone: "warn" }, { label: "Out of stock", value: "4", tone: "bad" }] },
@@ -236,7 +236,7 @@ export const inventory: AppTemplate = {
       ] },
     ] },
     { slug: "orders", label: "Supplier orders", icon: "workflow", title: "Supplier orders", modules: [
-      { m: "kanban", title: "Orders", columns: [{ name: "To order", cards: [{ title: "Sugar 1kg ×200", meta: "Dangote · reorder point hit" }] }, { name: "Ordered", cards: [{ title: "Vegetable oil ×60", meta: "Power Oil · ETA Fri", value: "₦540k" }] }, { name: "Received", cards: [{ title: "Rice 50kg ×40", meta: "Checked in · Warehouse", value: "₦2.6M" }] }] },
+      { m: "kanban", title: "Orders", columns: [{ name: "To order", cards: [{ title: "Sugar 1kg ×200", meta: "Domino Sugar · reorder point hit" }] }, { name: "Ordered", cards: [{ title: "Vegetable oil ×60", meta: "Power Oil · ETA Fri", value: "₦540k" }] }, { name: "Received", cards: [{ title: "Rice 50kg ×40", meta: "Checked in · Warehouse", value: "₦2.6M" }] }] },
     ] },
     { slug: "movements", label: "Movements", icon: "history", title: "Stock movements", modules: [
       { m: "feed", title: "Today", items: [{ who: "Warehouse → Ikeja", what: "moved 20 × Rice 50kg", when: "10:42" }, { who: "Yaba shop", what: "sold 14 × Detergent 2kg", when: "10:15" }, { who: "Warehouse", what: "received 40 × Rice 50kg from supplier", when: "08:30" }] },

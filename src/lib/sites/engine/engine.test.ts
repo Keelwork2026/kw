@@ -16,7 +16,7 @@ test("generates a complete, personalised site that passes template QA", () => {
   const s = generateSite(profile);
   assert.equal(s.name, "Bright Smile Dental");
   assert.equal(s.slug, "bright-smile-dental");
-  assert.ok(!JSON.stringify(s).includes("Willow Clinic"), "blueprint brand fully replaced");
+  assert.ok(!JSON.stringify(s).includes("Your Clinic"), "blueprint brand fully replaced");
   const hero = s.pages[0]!.sections.find((x) => x.t === "hero")!;
   assert.ok(hero.t === "hero" && /check-ups/i.test(hero.title + hero.sub));
   assert.equal(s.primaryCta.label, "Book now");

@@ -2,15 +2,15 @@ import type { Site } from "../types";
 import { contactPage, footer, legalPages } from "../common";
 
 export const harbourKitchen: Site = {
-  slug: "harbour-kitchen", name: "Restaurant site with menu & table booking", category: "Restaurant & Hospitality", style: "Warm editorial", voice: "warm",
+  slug: "harbour-kitchen", name: "Restaurant site with menu & table booking", brand: "Your Restaurant", category: "Restaurant & Hospitality", style: "Warm editorial", voice: "warm",
   tagline: "Seasonal seafood restaurant with menus, table booking and private dining.",
   description: "A coastal restaurant site with a full menu, online table requests, private dining enquiries, a story page and opening hours — ready for a neighbourhood restaurant or bistro.",
   palette: { bg: "#fbf6ef", surface: "#ffffff", ink: "#1f2a2e", muted: "#5b6669", accent: "#c4532f", accent2: "#e9a24b", soft: "#f5e6d6", line: "#eadccb", onAccent: "#ffffff" },
-  fonts: { display: "serif", body: "sans" }, logo: { mark: "wave", word: "Harbour Kitchen" }, radius: "soft",
+  fonts: { display: "serif", body: "sans" }, logo: { mark: "wave", word: "Your Restaurant" }, radius: "soft",
   announcement: "Now taking bookings for winter Sunday lunches",
   primaryCta: { label: "Book a table", href: "/book" },
   pages: [
-    { slug: "", nav: "Home", title: "Seasonal seafood by the harbour", description: "Harbour Kitchen serves seasonal seafood and vegetables from local boats and growers. Book a table, see the menu or plan a private dinner.",
+    { slug: "", nav: "Home", title: "Seasonal seafood by the harbour", description: "Your Restaurant serves seasonal seafood and vegetables from local boats and growers. Book a table, see the menu or plan a private dinner.",
       seo: { keywords: ["seafood restaurant", "seasonal menu", "harbour restaurant", "book a table"] },
       sections: [
         { t: "hero", v: "full", eyebrow: "Open Wednesday to Sunday", title: "Today's catch, cooked simply", sub: "A small dining room on the quay serving what the boats and nearby growers bring in each morning. The menu changes as the seasons do.", ctas: [{ label: "Book a table", href: "/book" }, { label: "See the menu", href: "/menu" }], img: { art: "dish", alt: "Plated seared fish with greens and a bright sauce", seed: 2 } },
@@ -40,7 +40,7 @@ export const harbourKitchen: Site = {
         ] },
         { t: "cta", title: "Join us this week", sub: "Book online in a minute, or call us for tables of more than eight.", ctas: [{ label: "Book a table", href: "/book" }, { label: "Private dining", href: "/private-dining" }], img: { art: "dining-room", alt: "Set tables waiting for guests", seed: 4 } },
       ] },
-    { slug: "menu", nav: "Menu", title: "Menu", description: "This week's dinner menu at Harbour Kitchen: seasonal seafood, vegetables, desserts and drinks.",
+    { slug: "menu", nav: "Menu", title: "Menu", description: "This week's dinner menu at Your Restaurant: seasonal seafood, vegetables, desserts and drinks.",
       seo: { keywords: ["restaurant menu", "seafood menu", "vegetarian dishes"] },
       sections: [
         { t: "hero", v: "center", eyebrow: "Dinner · Wednesday to Sunday", title: "This week's menu", sub: "Our menu changes with the catch and the season. Vegetarian and vegan dishes are marked; tell us about allergies and we'll guide you through it.", ctas: [{ label: "Book a table", href: "/book" }] },
@@ -67,7 +67,7 @@ export const harbourKitchen: Site = {
         ] },
         { t: "split", title: "Drinks", body: ["Our list leans towards small producers making honest wine. Around half the list is available by the glass or carafe.", "Prefer not to drink? Our non-alcoholic pairing uses house-made shrubs, ferments and teas."], bullets: ["Wine by the glass and carafe", "Local beer and cider", "Non-alcoholic pairing"], img: { art: "drinks", alt: "Glasses of wine and cocktails on the bar" }, reverse: true },
       ] },
-    { slug: "book", nav: "Book", title: "Book a table", description: "Request a table at Harbour Kitchen for lunch or dinner.", inNav: false,
+    { slug: "book", nav: "Book", title: "Book a table", description: "Request a table at Your Restaurant for lunch or dinner.", inNav: false,
       sections: [
         { t: "booking", kind: "table", title: "Book a table", sub: "Choose a date and time and we'll confirm your table by email. For eight or more guests, see private dining.", fields: [
           { label: "Date", type: "date" }, { label: "Time", type: "select", options: ["12:00", "12:30", "13:00", "13:30", "18:00", "18:30", "19:00", "19:30", "20:00", "20:30"] },
@@ -80,7 +80,7 @@ export const harbourKitchen: Site = {
           ["Are children welcome?", "Always. We have high chairs and a smaller version of most dishes."],
         ] },
       ] },
-    { slug: "private-dining", nav: "Private dining", title: "Private dining and events", description: "Host a celebration, team dinner or wedding meal at Harbour Kitchen.",
+    { slug: "private-dining", nav: "Private dining", title: "Private dining and events", description: "Host a celebration, team dinner or wedding meal at Your Restaurant.",
       sections: [
         { t: "hero", v: "split", eyebrow: "Private dining", title: "Your occasion, our long table", sub: "From a birthday for twelve to exclusive use of the restaurant, we'll shape a menu around your group and look after every detail.", ctas: [{ label: "Make an enquiry", href: "#book" }], img: { art: "dining-room", alt: "Long table set for a private dinner", seed: 7 } },
         { t: "cards", v: "service", title: "Ways to celebrate", items: [
@@ -92,14 +92,14 @@ export const harbourKitchen: Site = {
           { label: "Preferred date", type: "date" }, { label: "Number of guests", type: "number" }, { label: "Occasion", type: "select", options: ["Birthday", "Anniversary", "Work dinner", "Wedding", "Other"] }, { label: "Name", type: "text" }, { label: "Email", type: "email" }, { label: "Phone", type: "tel" },
         ], button: "Send enquiry", aside: ["Set menus or sharing feasts", "Wine pairing on request", "Dietary needs handled with care"] },
       ] },
-    { slug: "about", nav: "Our story", title: "Our story", description: "Who we are, where our food comes from and how we cook at Harbour Kitchen.",
+    { slug: "about", nav: "Our story", title: "Our story", description: "Who we are, where our food comes from and how we cook at Your Restaurant.",
       sections: [
-        { t: "hero", v: "editorial", eyebrow: "Our story", title: "A small restaurant with a short supply chain", sub: "We started Harbour Kitchen to cook the kind of food we love to eat: honest, seasonal and generous. Most of what we serve travels less than an hour to reach us.", ctas: [], img: { art: "chef", alt: "Chef tasting a sauce", seed: 6 } },
+        { t: "hero", v: "editorial", eyebrow: "Our story", title: "A small restaurant with a short supply chain", sub: "We started Your Restaurant to cook the kind of food we love to eat: honest, seasonal and generous. Most of what we serve travels less than an hour to reach us.", ctas: [], img: { art: "chef", alt: "Chef tasting a sauce", seed: 6 } },
         { t: "split", title: "Where our food comes from", body: ["We buy fish directly from day boats landing nearby, so what we serve depends on the weather and the season. Vegetables come from growers we know by name.", "When something runs out, it's off the menu — we'd rather that than compromise."], bullets: ["Day-boat fish, never frozen", "Vegetables from nearby growers", "Bread, ice cream and cures made in-house"], img: { art: "river", alt: "Coastal landscape near the restaurant" } },
         { t: "team", title: "The people behind the pass", items: [{ name: "[[name:head chef name]]", role: "Head chef" }, { name: "[[name:general manager name]]", role: "General manager" }, { name: "[[name:sommelier name]]", role: "Wine and drinks" }, { name: "[[name:pastry chef name]]", role: "Pastry" }] },
       ] },
-    contactPage({ title: "Find us on the quay", sub: "Questions about bookings, allergies or gift vouchers? Send us a message and we'll reply within a day.", description: "Opening hours, address and contact details for Harbour Kitchen.", hours: [["Wed – Thu", "17:30 – 22:00"], ["Fri – Sat", "12:00 – 15:00, 17:30 – 22:30"], ["Sunday", "12:00 – 17:00"], ["Mon – Tue", "Closed"]] }),
-    ...legalPages("Harbour Kitchen"),
+    contactPage({ title: "Find us on the quay", sub: "Questions about bookings, allergies or gift vouchers? Send us a message and we'll reply within a day.", description: "Opening hours, address and contact details for Your Restaurant.", hours: [["Wed – Thu", "17:30 – 22:00"], ["Fri – Sat", "12:00 – 15:00, 17:30 – 22:30"], ["Sunday", "12:00 – 17:00"], ["Mon – Tue", "Closed"]] }),
+    ...legalPages("Your Restaurant"),
   ],
   footer: footer({
     blurb: "Seasonal seafood and vegetables, cooked simply, in a small dining room on the quay.",
@@ -107,16 +107,16 @@ export const harbourKitchen: Site = {
       { title: "Visit", links: [{ label: "Menu", href: "/menu" }, { label: "Book a table", href: "/book" }, { label: "Private dining", href: "/private-dining" }] },
       { title: "About", links: [{ label: "Our story", href: "/about" }, { label: "Contact", href: "/contact" }] },
     ],
-    social: ["instagram", "facebook"], newsletter: { title: "News from the kitchen", button: "Sign up" }, legalName: "Harbour Kitchen",
+    social: ["instagram", "facebook"], newsletter: { title: "News from the kitchen", button: "Sign up" }, legalName: "Your Restaurant",
   }),
 };
 
 export const wayfarer: Site = {
-  slug: "wayfarer-journeys", name: "Tour operator site with trips & enquiries", category: "Travel & Tourism", style: "Bright and airy", voice: "friendly",
+  slug: "wayfarer-journeys", name: "Tour operator site with trips & enquiries", brand: "Your Tours", category: "Travel & Tourism", style: "Bright and airy", voice: "friendly",
   tagline: "Small-group tour operator with trip pages, dates and enquiries.",
   description: "A travel company site with destination tours, detailed itineraries, departure dates, a planning guide and an enquiry form — for tour operators and travel planners.",
   palette: { bg: "#f6fafb", surface: "#ffffff", ink: "#12313d", muted: "#557079", accent: "#0f8a8a", accent2: "#f2a541", soft: "#e2f2f1", line: "#d6e6e8", onAccent: "#ffffff" },
-  fonts: { display: "grotesk", body: "sans" }, logo: { mark: "arch", word: "Wayfarer" }, radius: "round",
+  fonts: { display: "grotesk", body: "sans" }, logo: { mark: "arch", word: "Your Tours" }, radius: "round",
   primaryCta: { label: "Plan a trip", href: "/contact" },
   pages: [
     { slug: "", nav: "Home", title: "Small-group journeys, thoughtfully planned", description: "Small-group tours with local guides, comfortable stays and time to explore. Browse trips, dates and itineraries.",
@@ -141,7 +141,7 @@ export const wayfarer: Site = {
         ] },
         { t: "newsletter", title: "New trips and departure dates", sub: "One email a month with new journeys and places that are filling up.", button: "Subscribe" },
       ] },
-    { slug: "trips", nav: "Trips", title: "All trips", description: "Browse every Wayfarer journey by region, style and pace.",
+    { slug: "trips", nav: "Trips", title: "All trips", description: "Browse every trip by region, style and pace.",
       sections: [
         { t: "hero", v: "center", eyebrow: "All journeys", title: "Find your next trip", sub: "Every trip is graded for pace so you know what to expect before you book.", ctas: [] },
         { t: "cards", v: "tour", title: "Trips", filters: ["All", "Walking", "Culture", "Food", "Mountains", "Coast"], items: [
@@ -176,8 +176,8 @@ export const wayfarer: Site = {
           ["How is my booking protected?", "Bookings are protected under [[licence:travel protection scheme and number]]."],
         ] },
       ] },
-    contactPage({ title: "Talk to a trip planner", sub: "Tell us where you'd like to go and when. We reply to every enquiry personally, usually within one working day.", description: "Contact Wayfarer Journeys to plan a trip or ask about departures.", fields: ["Your name", "Email", "Phone (optional)", "Where and when would you like to travel?"], hours: [["Mon – Fri", "09:00 – 18:00"], ["Saturday", "10:00 – 14:00"]] }),
-    ...legalPages("Wayfarer Journeys", { extra: ["Booking information: when you book, we share the names and any dietary or access needs of travellers with the guides and guesthouses on your trip, only so they can look after you."] }),
+    contactPage({ title: "Talk to a trip planner", sub: "Tell us where you'd like to go and when. We reply to every enquiry personally, usually within one working day.", description: "Contact Your Tours to plan a trip or ask about departures.", fields: ["Your name", "Email", "Phone (optional)", "Where and when would you like to travel?"], hours: [["Mon – Fri", "09:00 – 18:00"], ["Saturday", "10:00 – 14:00"]] }),
+    ...legalPages("Your Tours", { extra: ["Booking information: when you book, we share the names and any dietary or access needs of travellers with the guides and guesthouses on your trip, only so they can look after you."] }),
   ],
   footer: footer({
     blurb: "Small-group journeys with local guides and time to explore.",
@@ -185,20 +185,20 @@ export const wayfarer: Site = {
       { title: "Trips", links: [{ label: "All trips", href: "/trips" }, { label: "Coastal villages", href: "/trips/coastal-villages" }, { label: "Planning guide", href: "/guide" }] },
       { title: "Company", links: [{ label: "Contact", href: "/contact" }, { label: "Privacy", href: "/privacy" }] },
     ],
-    social: ["instagram", "facebook", "youtube"], newsletter: { title: "Trip news", button: "Subscribe" }, legalName: "Wayfarer Journeys", reg: "[[licence:travel protection scheme and number]]",
+    social: ["instagram", "facebook", "youtube"], newsletter: { title: "Trip news", button: "Subscribe" }, legalName: "Your Tours", reg: "[[licence:travel protection scheme and number]]",
   }),
 };
 
 export const summit: Site = {
-  slug: "summit-2027", name: "Event site with schedule & tickets", category: "Events", style: "Bold and electric", voice: "bold",
+  slug: "summit-2027", name: "Event site with schedule & tickets", brand: "Your Event", category: "Events", style: "Bold and electric", voice: "bold",
   tagline: "Conference site with speakers, schedule, tickets and venue information.",
   description: "A two-day conference site with speakers, a full schedule, ticket tiers, venue and travel details, sponsorship packages and an FAQ — for conferences, festivals and meetups.",
   palette: { bg: "#0f0e17", surface: "#1b1a27", ink: "#fffffe", muted: "#a7a9be", accent: "#ff6e6c", accent2: "#7f5af0", soft: "#272538", line: "#2e2c40", onAccent: "#0f0e17" },
-  fonts: { display: "grotesk", body: "sans" }, logo: { mark: "diamond", word: "Summit 27" }, radius: "soft",
+  fonts: { display: "grotesk", body: "sans" }, logo: { mark: "diamond", word: "Your Event" }, radius: "soft",
   announcement: "Early tickets available until [[date:early-ticket deadline]]",
   primaryCta: { label: "Get tickets", href: "/tickets" },
   pages: [
-    { slug: "", nav: "Home", title: "Two days of ideas worth acting on", description: "Summit 2027 brings together builders, designers and founders for two days of talks, workshops and conversations.",
+    { slug: "", nav: "Home", title: "Two days of ideas worth acting on", description: "Your Event brings together builders, designers and founders for two days of talks, workshops and conversations.",
       seo: { keywords: ["conference 2027", "tech conference", "design conference", "event tickets"] },
       sections: [
         { t: "hero", v: "split", eyebrow: "[[date:event dates]] · [[venue:city]]", title: "Two days of ideas worth acting on", sub: "Talks, hands-on workshops and long breaks designed for real conversations. Leave with plans, not just notes.", ctas: [{ label: "Get tickets", href: "/tickets" }, { label: "See the schedule", href: "/schedule" }], img: { art: "stage", alt: "Speaker on a lit conference stage" }, stats: [["2", "days"], ["3", "stages"], ["12", "workshops"]] },
@@ -217,12 +217,12 @@ export const summit: Site = {
         { t: "logos", sample: true, title: "Supported by", items: ["Northwind", "Brightline", "Orbit", "Kindred", "Fieldwork"] },
         { t: "cta", title: "Join us in [[venue:city]]", sub: "Tickets include both days, lunch and the evening social.", ctas: [{ label: "Get tickets", href: "/tickets" }, { label: "Become a sponsor", href: "/sponsors" }] },
       ] },
-    { slug: "speakers", nav: "Speakers", title: "Speakers", description: "Meet the speakers and workshop leaders at Summit 2027.",
+    { slug: "speakers", nav: "Speakers", title: "Speakers", description: "Meet the speakers and workshop leaders at Your Event.",
       sections: [
         { t: "hero", v: "center", eyebrow: "Line-up", title: "Speakers and workshop leaders", sub: "More names are announced every month. Subscribe to hear first.", ctas: [{ label: "Apply to speak", href: "/contact" }] },
         { t: "cards", v: "person", title: "Confirmed so far", cols: 4, items: Array.from({ length: 8 }, (_, i) => ({ title: "[[name:speaker name]]", meta: ["Opening keynote", "Workshop: rapid prototyping", "Panel: small teams", "Talk: accessible by default", "Workshop: writing for interfaces", "Talk: pricing your product", "Panel: AI in practice", "Closing keynote"][i], img: { art: "portrait" as const, alt: "Speaker portrait illustration", seed: i * 3 + 1 } })) },
       ] },
-    { slug: "schedule", nav: "Schedule", title: "Schedule", description: "The full Summit 2027 programme across both days and all stages.",
+    { slug: "schedule", nav: "Schedule", title: "Schedule", description: "The full Your Event programme across both days and all stages.",
       sections: [
         { t: "schedule", title: "Programme", days: [
           { day: "Day one", sessions: [
@@ -241,7 +241,7 @@ export const summit: Site = {
           ] },
         ] },
       ] },
-    { slug: "tickets", nav: "Tickets", title: "Tickets", description: "Ticket options for Summit 2027, including group and student tickets.",
+    { slug: "tickets", nav: "Tickets", title: "Tickets", description: "Ticket options for Your Event, including group and student tickets.",
       sections: [
         { t: "pricing", title: "Tickets", sub: "All tickets include both days, lunch, refreshments and the evening social.", plans: [
           { name: "Early", price: "[[price:early ticket price]]", per: "per person", blurb: "Limited early tickets.", features: ["Both days", "Lunch and refreshments", "Evening social", "Session recordings"], cta: { label: "Choose Early", href: "#book" } },
@@ -250,18 +250,18 @@ export const summit: Site = {
         ] },
         { t: "booking", kind: "ticket", title: "Reserve your tickets", sub: "Choose a ticket type and quantity. You'll pay securely on the next step.", fields: [{ label: "Ticket", type: "select", options: ["Early", "Standard", "Team of five", "Student"] }, { label: "Quantity", type: "number" }, { label: "Name", type: "text" }, { label: "Email", type: "email" }], button: "Continue", aside: ["Name changes free until a week before", "Student and access tickets available", "Invoices for companies"] },
       ] },
-    { slug: "venue", nav: "Venue", title: "Venue and travel", description: "Getting to the Summit 2027 venue, accessibility and nearby stays.",
+    { slug: "venue", nav: "Venue", title: "Venue and travel", description: "Getting to the venue, accessibility and nearby stays.",
       sections: [
         { t: "split", title: "Getting there", body: ["The venue is [[venue]], a short walk from the main station. Bike parking is available on site.", "There's no on-site car parking; we recommend public transport."], bullets: ["Step-free access throughout", "Quiet room and prayer room", "Live captions on the main stage"], img: { art: "map", alt: "Map of the venue area" } },
         { t: "faq", title: "Accessibility and practical details", items: [["Is the venue accessible?", "Yes — step-free throughout, with accessible toilets on every floor and reserved seating at each stage."], ["Will talks be recorded?", "Main-stage talks are recorded and shared with ticket holders after the event."], ["Is food included?", "Lunch and refreshments are included on both days, with vegetarian, vegan and allergy-friendly options."]] },
       ] },
-    { slug: "sponsors", nav: "Sponsors", title: "Sponsorship", description: "Sponsorship packages for Summit 2027.",
+    { slug: "sponsors", nav: "Sponsors", title: "Sponsorship", description: "Sponsorship packages for Your Event.",
       sections: [
-        { t: "hero", v: "center", eyebrow: "Partners", title: "Sponsor Summit 2027", sub: "Meet the people building what's next, with packages designed around useful presence — not banner noise.", ctas: [{ label: "Request the sponsor pack", href: "/contact" }] },
+        { t: "hero", v: "center", eyebrow: "Partners", title: "Sponsor Your Event", sub: "Meet the people building what's next, with packages designed around useful presence — not banner noise.", ctas: [{ label: "Request the sponsor pack", href: "/contact" }] },
         { t: "cards", v: "service", title: "Packages", items: [{ title: "Community partner", body: "Logo on the site, two tickets and a hosted lunch table.", price: "[[price:package price]]" }, { title: "Workshop partner", body: "Host a workshop room, four tickets and a stand.", price: "[[price:package price]]" }, { title: "Headline partner", body: "Main-stage introduction, eight tickets and the evening social.", price: "[[price:package price]]" }] },
       ] },
-    contactPage({ title: "Get in touch", sub: "Questions about tickets, speaking or sponsorship? We'll get back to you within two working days.", description: "Contact the Summit 2027 team.", fields: ["Your name", "Email", "Company (optional)", "Your question"] }),
-    ...legalPages("Summit 2027", { extra: ["Event data: if you buy a ticket, we use your name and company for your badge and share them with sponsors only if you choose to have your badge scanned."] }),
+    contactPage({ title: "Get in touch", sub: "Questions about tickets, speaking or sponsorship? We'll get back to you within two working days.", description: "Contact the event team.", fields: ["Your name", "Email", "Company (optional)", "Your question"] }),
+    ...legalPages("Your Event", { extra: ["Event data: if you buy a ticket, we use your name and company for your badge and share them with sponsors only if you choose to have your badge scanned."] }),
   ],
   footer: footer({
     blurb: "Two days of talks, workshops and conversations for people who build.",
@@ -269,7 +269,7 @@ export const summit: Site = {
       { title: "Event", links: [{ label: "Speakers", href: "/speakers" }, { label: "Schedule", href: "/schedule" }, { label: "Tickets", href: "/tickets" }, { label: "Venue", href: "/venue" }] },
       { title: "Get involved", links: [{ label: "Sponsors", href: "/sponsors" }, { label: "Contact", href: "/contact" }] },
     ],
-    social: ["x", "linkedin", "youtube"], newsletter: { title: "Line-up news", button: "Subscribe" }, legalName: "Summit 2027",
+    social: ["x", "linkedin", "youtube"], newsletter: { title: "Line-up news", button: "Subscribe" }, legalName: "Your Event",
     contact: [["Email", "[[email]]"], ["Venue", "[[venue]]"]],
   }),
 };

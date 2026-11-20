@@ -85,8 +85,8 @@ export function generateSite(profile: BusinessProfile, opts: { variant?: number 
   const variant = opts.variant ?? 0;
   const bp = blueprintFor(profile.industry);
   // The blueprint's own brand name becomes the business name everywhere.
-  let site = replaceDeep(structuredClone(bp), bp.name, profile.name);
-  if (bp.logo.word !== bp.name) site = replaceDeep(site, bp.logo.word, profile.name);
+  let site = replaceDeep(structuredClone(bp), bp.brand ?? bp.name, profile.name);
+  if (bp.logo.word !== (bp.brand ?? bp.name)) site = replaceDeep(site, bp.logo.word, profile.name);
   const c = ctaFor(profile.goal, profile.lang);
   const href = primaryHref(site, c.kind);
   site = {

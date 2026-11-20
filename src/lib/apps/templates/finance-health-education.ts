@@ -10,22 +10,22 @@ export const banking: AppTemplate = {
   features: ["Account overview", "Spending insights", "Transaction history", "Transfers with confirmation", "Savings goals", "Statements"],
   effort: "About 3 hours of agent work", stack: "Next.js, Supabase, audited ledger tables with row-level security",
   keywords: ["bank", "banking", "fintech", "wallet", "money", "transfer", "payments", "savings", "transactions", "account", "neobank"],
-  brand: "Kora", palette: PAL.green, shell: "admin", user: { name: "Chidi Nwosu", role: "Personal account" },
+  brand: "Your Bank", palette: PAL.green, shell: "admin", user: { name: "Chris Nguyen", role: "Personal account" },
   screens: [
-    { slug: "home", label: "Home", icon: "layout", title: "Hi Chidi", sub: "Here's where your money is today.", modules: [
+    { slug: "home", label: "Home", icon: "layout", title: "Hi Chris", sub: "Here's where your money is today.", modules: [
       { m: "accounts", items: [{ name: "Everyday account", number: "•••• 4821", balance: "₦1,284,500.00", note: "Available" }, { name: "Savings", number: "•••• 0937", balance: "₦3,920,000.00", note: "12% p.a." }, { name: "USD wallet", number: "•••• 7710", balance: "$1,240.18", note: "Available" }] },
       { m: "split", left: [{ m: "chart", title: "Spending this month", kind: "bar", unit: "k", labels: ["Food", "Transport", "Bills", "Shopping", "Health", "Other"], series: [{ label: "This month", values: [142, 64, 118, 96, 22, 41] }, { label: "Last month", values: [128, 71, 118, 140, 15, 38] }] }],
-        right: [{ m: "feed", title: "Latest", items: [{ who: "Shoprite Lekki", what: "−₦18,450 · Food", when: "Today" }, { who: "Salary — Halden Ltd", what: "+₦850,000", when: "Nov 15" }, { who: "Bolt", what: "−₦4,200 · Transport", when: "Nov 14" }, { who: "IKEDC", what: "−₦25,000 · Bills", when: "Nov 12" }] }] },
+        right: [{ m: "feed", title: "Latest", items: [{ who: "Grocery Outlet", what: "−₦18,450 · Food", when: "Today" }, { who: "Salary — Halden Ltd", what: "+₦850,000", when: "Nov 15" }, { who: "Bolt", what: "−₦4,200 · Transport", when: "Nov 14" }, { who: "IKEDC", what: "−₦25,000 · Bills", when: "Nov 12" }] }] },
     ] },
     { slug: "transactions", label: "Transactions", icon: "history", title: "Transactions", modules: [
       { m: "table", title: "November", search: "Search payee or amount", columns: ["Payee", "Category", "Date", "Amount", "Status"], status: 4, filter: 1, tones: { Completed: "good", Pending: "warn", Reversed: "neutral" }, rows: [
-        ["Shoprite Lekki", "Food", "Nov 18", "−₦18,450", "Completed"], ["Bolt", "Transport", "Nov 18", "−₦3,100", "Pending"], ["Salary — Halden Ltd", "Income", "Nov 15", "+₦850,000", "Completed"],
-        ["Bolt", "Transport", "Nov 14", "−₦4,200", "Completed"], ["IKEDC", "Bills", "Nov 12", "−₦25,000", "Completed"], ["Jumia", "Shopping", "Nov 10", "−₦36,900", "Reversed"], ["MedPlus", "Health", "Nov 8", "−₦7,350", "Completed"],
+        ["Grocery Outlet", "Food", "Nov 18", "−₦18,450", "Completed"], ["Bolt", "Transport", "Nov 18", "−₦3,100", "Pending"], ["Salary — Halden Ltd", "Income", "Nov 15", "+₦850,000", "Completed"],
+        ["Bolt", "Transport", "Nov 14", "−₦4,200", "Completed"], ["IKEDC", "Bills", "Nov 12", "−₦25,000", "Completed"], ["Amazon", "Shopping", "Nov 10", "−₦36,900", "Reversed"], ["Walgreens", "Health", "Nov 8", "−₦7,350", "Completed"],
       ] },
     ] },
     { slug: "transfer", label: "Transfer", icon: "share", title: "Send money", modules: [
       { m: "form", title: "New transfer", sub: "Transfers to other banks arrive within minutes.", submit: "Confirm and send", success: { title: "Transfer sent", body: "Your transfer is on its way and we've emailed you a receipt. (Preview — no money moves.)" }, steps: [
-        { title: "Recipient", fields: [{ label: "Bank", type: "select", options: ["Kora", "Access Bank", "GTBank", "First Bank", "UBA", "Zenith"], required: true }, { label: "Account number", type: "text", required: true, placeholder: "10 digits" }, { label: "Account name", type: "text", placeholder: "Checked automatically" }] },
+        { title: "Recipient", fields: [{ label: "Bank", type: "select", options: ["Your Bank", "Chase", "Bank of America", "Wells Fargo", "Citi", "Capital One"], required: true }, { label: "Account number", type: "text", required: true, placeholder: "10 digits" }, { label: "Account name", type: "text", placeholder: "Checked automatically" }] },
         { title: "Amount", fields: [{ label: "From", type: "select", options: ["Everyday •••• 4821", "Savings •••• 0937"], required: true }, { label: "Amount (₦)", type: "money", required: true }, { label: "Note", type: "text", placeholder: "Optional" }] },
         { title: "Confirm", fields: [{ label: "Transaction PIN", type: "text", required: true, placeholder: "4 digits" }] },
       ] },
@@ -45,7 +45,7 @@ export const loans: AppTemplate = {
   features: ["Multi-step application", "Document checklist", "Review queue", "Portfolio dashboard", "Repayment tracking"],
   effort: "About 3 hours of agent work", stack: "Next.js, Supabase, role-based access for officers",
   keywords: ["loan", "lending", "credit", "application", "microfinance", "underwriting", "fintech", "borrow"],
-  brand: "Lendwell", palette: PAL.navy, shell: "admin", user: { name: "Bisi Oladele", role: "Credit officer" },
+  brand: "Your Lender", palette: PAL.navy, shell: "admin", user: { name: "Karen Olsen", role: "Credit officer" },
   screens: [
     { slug: "apply", label: "Apply", icon: "edit", title: "Apply for a loan", sub: "Takes about 5 minutes. We'll tell you what you're eligible for before you submit.", modules: [
       { m: "form", title: "Business loan application", submit: "Submit application", success: { title: "Application received", body: "Reference LW-20481. An officer will review it within 2 working days and email you." }, steps: [
@@ -56,8 +56,8 @@ export const loans: AppTemplate = {
     ] },
     { slug: "queue", label: "Review queue", icon: "inbox", title: "Applications to review", modules: [
       { m: "table", title: "Pending", search: "Search applicant", columns: ["Applicant", "Amount", "Term", "Risk", "Submitted"], status: 3, filter: 3, tones: { Low: "good", Medium: "warn", High: "bad" }, rows: [
-        ["Adaeze Stores", "₦2,500,000", "12 months", "Low", "Today"], ["Musa Transport", "₦6,000,000", "18 months", "Medium", "Today"], ["Green Leaf Farms", "₦1,200,000", "6 months", "Low", "Yesterday"],
-        ["Quickprint Ltd", "₦4,800,000", "12 months", "High", "Yesterday"], ["Mama Put Kitchen", "₦800,000", "3 months", "Medium", "2 days"],
+        ["Corner Stores", "₦2,500,000", "12 months", "Low", "Today"], ["Metro Transport", "₦6,000,000", "18 months", "Medium", "Today"], ["Green Leaf Farms", "₦1,200,000", "6 months", "Low", "Yesterday"],
+        ["Quickprint Ltd", "₦4,800,000", "12 months", "High", "Yesterday"], ["Main Street Diner", "₦800,000", "3 months", "Medium", "2 days"],
       ] },
     ] },
     { slug: "portfolio", label: "Portfolio", icon: "chart", title: "Portfolio", modules: [
@@ -76,7 +76,7 @@ export const patients: AppTemplate = {
   features: ["Appointment booking", "Secure messages", "Results", "Repeat prescriptions", "Clinic schedule"],
   effort: "About 3 hours of agent work", stack: "Next.js, Supabase with strict row-level security, audit log",
   keywords: ["patient portal", "clinic", "hospital", "health", "medical", "appointments", "doctor", "healthcare", "telehealth", "booking"],
-  brand: "Cedar Health", palette: PAL.sky, shell: "consumer",
+  brand: "Your Clinic", palette: PAL.sky, shell: "consumer",
   screens: [
     { slug: "home", label: "Home", icon: "layout", title: "Your health, in one place", modules: [
       { m: "hero", eyebrow: "Cedar Family Clinic", title: "Book, message and manage your care.", sub: "See your next appointment, message your care team and order repeat prescriptions — without calling the front desk.", cta: "Book an appointment", secondary: "Message my GP", art: "clinic", seed: 3 },
@@ -84,19 +84,19 @@ export const patients: AppTemplate = {
     ] },
     { slug: "book", label: "Book", icon: "plus", title: "Book an appointment", modules: [
       { m: "form", title: "New appointment", sub: "For emergencies call 112.", submit: "Book appointment", success: { title: "You're booked", body: "We've emailed your confirmation and will text you a reminder the day before." }, steps: [
-        { title: "Visit", fields: [{ label: "Type of visit", type: "select", options: ["GP consultation", "Follow-up", "Vaccination", "Blood test", "Antenatal check"], required: true }, { label: "Clinician", type: "select", options: ["Any available", "Dr Funmi Adebayo", "Dr Samuel Reid", "Nurse Kemi Ola"] }] },
+        { title: "Visit", fields: [{ label: "Type of visit", type: "select", options: ["GP consultation", "Follow-up", "Vaccination", "Blood test", "Antenatal check"], required: true }, { label: "Clinician", type: "select", options: ["Any available", "Dr Rachel Kim", "Dr Samuel Reid", "Nurse Kelly Lee"] }] },
         { title: "Time", fields: [{ label: "Date", type: "date", required: true }, { label: "Time", type: "time", required: true }, { label: "Reason (optional)", type: "textarea" }] },
       ] },
     ] },
     { slug: "messages", label: "Messages", icon: "chat", title: "Messages", modules: [
       { m: "inbox", title: "Care team", reply: "Write to your care team…", items: [
-        { title: "Your blood test results", meta: "Dr Funmi Adebayo · Yesterday", badge: "New", preview: "Your results are back and look normal…", body: ["Hello, your results are back and everything is within the normal range. No action needed — we'll recheck at your annual review."] },
+        { title: "Your blood test results", meta: "Dr Rachel Kim · Yesterday", badge: "New", preview: "Your results are back and look normal…", body: ["Hello, your results are back and everything is within the normal range. No action needed — we'll recheck at your annual review."] },
         { title: "Repeat prescription ready", meta: "Pharmacy · Nov 12", preview: "Ready to collect from Monday.", body: ["Your repeat prescription is ready to collect from Monday at the front desk."] },
       ] },
     ] },
     { slug: "appointments", label: "Appointments", icon: "clock", title: "Your appointments", modules: [
       { m: "table", title: "Upcoming and past", columns: ["Visit", "Clinician", "Date", "Time", "Status"], status: 4, filter: 4, tones: { Confirmed: "good", Requested: "warn", Completed: "neutral", Cancelled: "bad" }, rows: [
-        ["Follow-up", "Dr Funmi Adebayo", "Nov 26", "10:30", "Confirmed"], ["Flu vaccination", "Nurse Kemi Ola", "Dec 3", "09:00", "Requested"], ["Blood test", "Nurse Kemi Ola", "Nov 14", "08:15", "Completed"], ["GP consultation", "Dr Samuel Reid", "Oct 30", "15:45", "Completed"],
+        ["Follow-up", "Dr Rachel Kim", "Nov 26", "10:30", "Confirmed"], ["Flu vaccination", "Nurse Kelly Lee", "Dec 3", "09:00", "Requested"], ["Blood test", "Nurse Kelly Lee", "Nov 14", "08:15", "Completed"], ["GP consultation", "Dr Samuel Reid", "Oct 30", "15:45", "Completed"],
       ] },
     ] },
   ],
@@ -111,7 +111,7 @@ export const lms: AppTemplate = {
   features: ["Course catalogue", "Progress tracking", "Live class timetable", "Enrolment", "Teacher messages"],
   effort: "About 2 hours of agent work", stack: "Next.js, Supabase, video links per lesson",
   keywords: ["lms", "learning", "courses", "students", "school", "education", "elearning", "tutoring", "classes", "teachers", "platform for students"],
-  brand: "Lumora", palette: PAL.amber, shell: "consumer",
+  brand: "Your Academy", palette: PAL.amber, shell: "consumer",
   screens: [
     { slug: "courses", label: "Courses", icon: "folder", title: "Courses", modules: [
       { m: "hero", eyebrow: "WAEC · JAMB · IGCSE", title: "Learn at your pace, with teachers who know your exam.", sub: "Short video lessons, practice questions and weekly live classes for secondary school students.", cta: "Browse courses", secondary: "See the timetable", art: "classroom", seed: 2, stats: [["42", "courses"], ["18", "teachers"], ["Weekly", "live classes"]] },
@@ -127,7 +127,7 @@ export const lms: AppTemplate = {
     ] },
     { slug: "timetable", label: "Live classes", icon: "clock", title: "This week's live classes", modules: [
       { m: "calendar", title: "Timetable", days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"], events: [
-        { day: 0, start: "16:00", end: "17:00", title: "Calculus Q&A", meta: "Mr Adewale", tone: "info" }, { day: 1, start: "17:00", end: "18:00", title: "Essay clinic", meta: "Mrs Obi", tone: "good" }, { day: 3, start: "16:00", end: "17:30", title: "Waves practical", meta: "Dr Hassan", tone: "info" }, { day: 5, start: "10:00", end: "12:00", title: "JAMB mock", meta: "All students", tone: "warn" },
+        { day: 0, start: "16:00", end: "17:00", title: "Calculus Q&A", meta: "Mr Walker", tone: "info" }, { day: 1, start: "17:00", end: "18:00", title: "Essay clinic", meta: "Mrs O'Brien", tone: "good" }, { day: 3, start: "16:00", end: "17:30", title: "Waves practical", meta: "Dr Patel", tone: "info" }, { day: 5, start: "10:00", end: "12:00", title: "JAMB mock", meta: "All students", tone: "warn" },
       ] },
     ] },
   ],

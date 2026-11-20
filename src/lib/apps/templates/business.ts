@@ -12,32 +12,32 @@ export const crm: AppTemplate = {
   features: ["Revenue dashboard", "Deal pipeline", "Contacts with filters", "Shared inbox", "Activity feed", "Team roles"],
   effort: "About 2–3 hours of agent work", stack: "Next.js, Supabase (Postgres + auth), row-level security per team",
   keywords: ["crm", "sales", "pipeline", "deals", "leads", "customers", "contacts", "b2b", "sales team", "account management"],
-  brand: "Northwind", palette: PAL.navy, shell: "admin", user: { name: "Amara Okafor", role: "Sales lead" },
+  brand: "Your Company", palette: PAL.navy, shell: "admin", user: { name: "Emily Carter", role: "Sales lead" },
   screens: [
-    { slug: "overview", label: "Overview", icon: "chart", title: "Good morning, Amara", sub: "Q4 so far — 41 days left in the quarter.", modules: [
+    { slug: "overview", label: "Overview", icon: "chart", title: "Good morning, Emily", sub: "Q4 so far — 41 days left in the quarter.", modules: [
       { m: "kpis", items: [{ label: "Closed this quarter", value: "$412,800", delta: "↑ 18% vs Q3" }, { label: "Open pipeline", value: "$1.26M", delta: "34 deals" , tone: "info" }, { label: "Win rate", value: "31%", delta: "↑ 4 pts" }, { label: "Avg. cycle", value: "38 days", delta: "↓ 6 days" }] },
       { m: "split", left: [{ m: "chart", title: "Revenue vs target", kind: "bar", unit: "k", labels: ["Jun", "Jul", "Aug", "Sep", "Oct", "Nov"], series: [{ label: "Closed", values: [96, 118, 104, 142, 156, 112] }, { label: "Target", values: [110, 110, 120, 120, 135, 135] }], ranges: ["3M", "6M"] }],
-        right: [{ m: "feed", title: "Recent activity", items: [{ who: "Tunde", what: "moved Halden Logistics to Proposal", when: "12m" }, { who: "Amara", what: "won Brightline Foods — $48,000", when: "1h" }, { who: "Sofia", what: "logged a call with Meridian Health", when: "3h" }, { who: "Kwame", what: "added 6 contacts from Lagos Tech Week", when: "Yesterday" }] }] },
+        right: [{ m: "feed", title: "Recent activity", items: [{ who: "Travis", what: "moved Halden Logistics to Proposal", when: "12m" }, { who: "Emily", what: "won Brightline Foods — $48,000", when: "1h" }, { who: "Sofia", what: "logged a call with Meridian Health", when: "3h" }, { who: "Derek", what: "added 6 contacts from Lagos Tech Week", when: "Yesterday" }] }] },
     ] },
     { slug: "pipeline", label: "Pipeline", icon: "workflow", title: "Deal pipeline", sub: "Move a deal forward when the next step is agreed.", modules: [
       { m: "kanban", title: "Q4 deals", columns: [
-        { name: "Lead", cards: [{ title: "Coastal Freight", meta: "Inbound · Kwame", value: "$22k" }, { title: "Ilé Interiors", meta: "Referral · Sofia", value: "$9k" }] },
-        { name: "Qualified", cards: [{ title: "Meridian Health", meta: "Demo Thu · Sofia", value: "$64k" }, { title: "Okoye & Partners", meta: "Budget confirmed · Tunde", value: "$31k" }] },
-        { name: "Proposal", cards: [{ title: "Halden Logistics", meta: "Sent Mon · Tunde", value: "$88k" }] },
-        { name: "Won", cards: [{ title: "Brightline Foods", meta: "Signed today · Amara", value: "$48k" }] },
+        { name: "Lead", cards: [{ title: "Coastal Freight", meta: "Inbound · Derek", value: "$22k" }, { title: "Loft Interiors", meta: "Referral · Sofia", value: "$9k" }] },
+        { name: "Qualified", cards: [{ title: "Meridian Health", meta: "Demo Thu · Sofia", value: "$64k" }, { title: "Oakley & Partners", meta: "Budget confirmed · Travis", value: "$31k" }] },
+        { name: "Proposal", cards: [{ title: "Halden Logistics", meta: "Sent Mon · Travis", value: "$88k" }] },
+        { name: "Won", cards: [{ title: "Brightline Foods", meta: "Signed today · Emily", value: "$48k" }] },
       ] },
     ] },
     { slug: "contacts", label: "Contacts", icon: "users", title: "Contacts", modules: [
       { m: "table", title: "All contacts", search: "Search contacts", action: "Add contact", columns: ["Name", "Company", "Stage", "Owner", "Last touch"], status: 2, filter: 2, tones: STAGE, rows: [
-        ["Ngozi Eze", "Meridian Health", "Qualified", "Sofia", "Today"], ["Daniel Brooks", "Halden Logistics", "Proposal", "Tunde", "Yesterday"], ["Fatima Bello", "Brightline Foods", "Won", "Amara", "Today"],
-        ["Chen Wei", "Coastal Freight", "Lead", "Kwame", "2 days"], ["Lola Adeyemi", "Ilé Interiors", "Lead", "Sofia", "5 days"], ["Marcus Hale", "Okoye & Partners", "Qualified", "Tunde", "1 week"], ["Priya Nair", "Vantage Retail", "Lost", "Amara", "3 weeks"],
+        ["Nicole Edwards", "Meridian Health", "Qualified", "Sofia", "Today"], ["Daniel Brooks", "Halden Logistics", "Proposal", "Travis", "Yesterday"], ["Megan Bell", "Brightline Foods", "Won", "Emily", "Today"],
+        ["Chen Wei", "Coastal Freight", "Lead", "Derek", "2 days"], ["Lauren Johnson", "Loft Interiors", "Lead", "Sofia", "5 days"], ["Marcus Hale", "Oakley & Partners", "Qualified", "Travis", "1 week"], ["Priya Nair", "Vantage Retail", "Lost", "Emily", "3 weeks"],
       ] },
     ] },
     { slug: "inbox", label: "Inbox", icon: "inbox", title: "Shared inbox", modules: [
       { m: "inbox", title: "Conversations", reply: "Reply to this thread…", items: [
-        { title: "Halden Logistics", meta: "Daniel Brooks · 9:14", badge: "New", preview: "Thanks for the proposal — two questions on onboarding…", body: ["Hi Tunde,", "Thanks for the proposal. Two questions: can onboarding start in January, and is the 12-month price fixed if we add a second depot?", "Daniel"] },
-        { title: "Meridian Health", meta: "Ngozi Eze · Yesterday", preview: "Thursday at 2pm works for the demo.", body: ["Thursday at 2pm works for the demo. I'll bring our operations manager.", "Ngozi"] },
-        { title: "Brightline Foods", meta: "Fatima Bello · Yesterday", preview: "Signed copy attached.", body: ["Signed copy attached — looking forward to getting started.", "Fatima"] },
+        { title: "Halden Logistics", meta: "Daniel Brooks · 9:14", badge: "New", preview: "Thanks for the proposal — two questions on onboarding…", body: ["Hi Travis,", "Thanks for the proposal. Two questions: can onboarding start in January, and is the 12-month price fixed if we add a second depot?", "Daniel"] },
+        { title: "Meridian Health", meta: "Nicole Edwards · Yesterday", preview: "Thursday at 2pm works for the demo.", body: ["Thursday at 2pm works for the demo. I'll bring our operations manager.", "Nicole"] },
+        { title: "Brightline Foods", meta: "Megan Bell · Yesterday", preview: "Signed copy attached.", body: ["Signed copy attached — looking forward to getting started.", "Megan"] },
       ] },
     ] },
   ],
@@ -52,14 +52,14 @@ export const projects: AppTemplate = {
   features: ["Kanban board", "Project progress", "Weekly schedule", "Task list with filters", "Activity feed"],
   effort: "About 1–2 hours of agent work", stack: "Next.js, Supabase, realtime updates",
   keywords: ["project management", "tasks", "kanban", "board", "sprint", "team", "agency", "todo", "workflow", "trello", "asana", "productivity"],
-  brand: "Atlas", palette: PAL.violet, shell: "admin", user: { name: "Jide Akin", role: "Project lead" },
+  brand: "Your Studio", palette: PAL.violet, shell: "admin", user: { name: "Jake Allen", role: "Project lead" },
   screens: [
     { slug: "board", label: "Board", icon: "layout", title: "Sprint 14 · Nov 17–28", sub: "9 tasks · 3 days in", modules: [
       { m: "kanban", title: "Sprint board", columns: [
-        { name: "To do", cards: [{ title: "Checkout copy review", meta: "Kestrel Shop · Ada" }, { title: "Onboarding emails", meta: "Lumen App · Jide" }, { title: "Footer links audit", meta: "Kestrel Shop · Ope" }] },
-        { name: "In progress", cards: [{ title: "Booking flow screens", meta: "Harbour Clinic · Ada" }, { title: "Pricing page build", meta: "Lumen App · Ope" }] },
-        { name: "Review", cards: [{ title: "Accessibility fixes", meta: "Harbour Clinic · Jide" }] },
-        { name: "Done", cards: [{ title: "Brand colours", meta: "Kestrel Shop · Ada" }, { title: "Sitemap", meta: "Lumen App · Ope" }, { title: "Analytics setup", meta: "Harbour Clinic · Jide" }] },
+        { name: "To do", cards: [{ title: "Checkout copy review", meta: "Kestrel Shop · Amy" }, { title: "Onboarding emails", meta: "Lumen App · Jake" }, { title: "Footer links audit", meta: "Kestrel Shop · Owen" }] },
+        { name: "In progress", cards: [{ title: "Booking flow screens", meta: "Harbour Clinic · Amy" }, { title: "Pricing page build", meta: "Lumen App · Owen" }] },
+        { name: "Review", cards: [{ title: "Accessibility fixes", meta: "Harbour Clinic · Jake" }] },
+        { name: "Done", cards: [{ title: "Brand colours", meta: "Kestrel Shop · Amy" }, { title: "Sitemap", meta: "Lumen App · Owen" }, { title: "Analytics setup", meta: "Harbour Clinic · Jake" }] },
       ] },
     ] },
     { slug: "projects", label: "Projects", icon: "folder", title: "Projects", modules: [
@@ -74,8 +74,8 @@ export const projects: AppTemplate = {
     ] },
     { slug: "tasks", label: "Tasks", icon: "check", title: "All tasks", modules: [
       { m: "table", title: "Tasks", search: "Search tasks", action: "New task", columns: ["Task", "Project", "Owner", "Status", "Due"], status: 3, filter: 2, tones: { "To do": "neutral", "In progress": "info", Review: "warn", Done: "good", Overdue: "bad" }, rows: [
-        ["Checkout copy review", "Kestrel Shop", "Ada", "To do", "Nov 24"], ["Booking flow screens", "Harbour Clinic", "Ada", "In progress", "Nov 21"], ["Pricing page build", "Lumen App", "Ope", "In progress", "Nov 26"],
-        ["Accessibility fixes", "Harbour Clinic", "Jide", "Review", "Nov 20"], ["Footer links audit", "Kestrel Shop", "Ope", "Overdue", "Nov 18"], ["Brand colours", "Kestrel Shop", "Ada", "Done", "Nov 14"],
+        ["Checkout copy review", "Kestrel Shop", "Amy", "To do", "Nov 24"], ["Booking flow screens", "Harbour Clinic", "Amy", "In progress", "Nov 21"], ["Pricing page build", "Lumen App", "Owen", "In progress", "Nov 26"],
+        ["Accessibility fixes", "Harbour Clinic", "Jake", "Review", "Nov 20"], ["Footer links audit", "Kestrel Shop", "Owen", "Overdue", "Nov 18"], ["Brand colours", "Kestrel Shop", "Amy", "Done", "Nov 14"],
       ] },
     ] },
   ],
@@ -90,7 +90,7 @@ export const helpdesk: AppTemplate = {
   features: ["Ticket inbox", "Queues and priorities", "SLA dashboard", "Customer details", "Canned replies"],
   effort: "About 2 hours of agent work", stack: "Next.js, Supabase, email webhooks",
   keywords: ["helpdesk", "support", "tickets", "customer service", "zendesk", "inbox", "sla", "saas"],
-  brand: "Relay", palette: PAL.teal, shell: "admin", user: { name: "Ife Bankole", role: "Support lead" },
+  brand: "Your Support", palette: PAL.teal, shell: "admin", user: { name: "Ivy Bennett", role: "Support lead" },
   screens: [
     { slug: "inbox", label: "Inbox", icon: "inbox", title: "Open tickets", sub: "12 open · 3 waiting on you", modules: [
       { m: "inbox", title: "Tickets", reply: "Write a reply…", items: [
@@ -101,8 +101,8 @@ export const helpdesk: AppTemplate = {
     ] },
     { slug: "queues", label: "Queues", icon: "layers", title: "All tickets", modules: [
       { m: "table", title: "Tickets", search: "Search tickets", columns: ["Subject", "Customer", "Priority", "Assignee", "Waiting"], status: 2, filter: 2, tones: { Urgent: "bad", High: "warn", Normal: "info", Low: "neutral" }, rows: [
-        ["Can't export invoices to CSV", "Harbor Dental", "High", "Ife", "18m"], ["Login loop on Safari", "Kora Labs", "Urgent", "Musa", "42m"], ["How do I add a second admin?", "Plume Studio", "Normal", "Ife", "1h"],
-        ["Webhook retries", "Northline Ltd", "Normal", "Musa", "3h"], ["Change company name", "Bolt Couriers", "Low", "—", "1 day"],
+        ["Can't export invoices to CSV", "Harbor Dental", "High", "Ivy", "18m"], ["Login loop on Safari", "Kora Labs", "Urgent", "Mason", "42m"], ["How do I add a second admin?", "Plume Studio", "Normal", "Ivy", "1h"],
+        ["Webhook retries", "Northline Ltd", "Normal", "Mason", "3h"], ["Change company name", "Bolt Couriers", "Low", "—", "1 day"],
       ] },
     ] },
     { slug: "metrics", label: "Metrics", icon: "chart", title: "Support health", modules: [

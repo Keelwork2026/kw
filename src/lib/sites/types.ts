@@ -109,6 +109,8 @@ export type Site = {
   lang?: Lang;
   profile?: BusinessProfile;
   name: string;
+  /** The placeholder business name used in the sample copy; the site builder swaps it for the real one. */
+  brand?: string;
   category: Category;
   style: string;
   tagline: string;

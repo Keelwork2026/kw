@@ -62,7 +62,7 @@ const VISUALS: Record<Visual, () => React.ReactNode> = {
       <Win title="Database · bookings">
         <table className="w-full text-left text-[11px]">
           <thead className="text-muted"><tr><th className="py-1">id</th><th>member</th><th>class</th><th>status</th></tr></thead>
-          <tbody>{[["1042", "Ada L.", "Vinyasa 07:00", "booked"], ["1043", "Grace H.", "Yin 18:30", "waitlist"], ["1044", "Alan T.", "Power 12:15", "booked"], ["1045", "Mary S.", "Restore 19:00", "cancelled"]].map((r) => (
+          <tbody>{[["1042", "Amy L.", "Vinyasa 07:00", "booked"], ["1043", "Grace H.", "Yin 18:30", "waitlist"], ["1044", "Alan T.", "Power 12:15", "booked"], ["1045", "Mary S.", "Restore 19:00", "cancelled"]].map((r) => (
             <tr key={r[0]} className="border-t border-border"><td className="py-1.5 font-mono">{r[0]}</td><td>{r[1]}</td><td>{r[2]}</td><td><span className={`pill px-2 py-0.5 ${r[3] === "booked" ? "tile-green" : r[3] === "waitlist" ? "tile-yellow" : "bg-surface-2"}`}>{r[3]}</span></td></tr>
           ))}</tbody>
         </table>
