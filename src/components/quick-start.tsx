@@ -12,7 +12,7 @@ import type { ActionResult, FormAction } from "./action-form";
 export function QuickStart({ action, defaultIdea = "", defaultKind = "", heading = "What do you want to build today?" }: { action: FormAction; defaultIdea?: string; defaultKind?: string; heading?: string }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(action, null);
   const [kind, setKind] = useState<string>(defaultKind);
-  const [idea, setIdea] = useState(defaultIdea);
+  const [idea, setIdea] = useState(defaultIdea || (IDEA_KINDS.find((k) => k.key === defaultKind)?.starter ?? ""));
   const area = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 

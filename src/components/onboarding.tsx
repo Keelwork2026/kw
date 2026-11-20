@@ -132,8 +132,9 @@ export function Onboarding({ initial, canRenameOrg, carry, quickStart, complete 
               <legend className="label">How much have you built before?</legend>
               <div className="mt-2 grid gap-3 sm:grid-cols-3">
                 {EXPERIENCE.map((x) => (
-                  <label key={x.value} className={`flex cursor-pointer flex-col rounded-2xl border p-4 transition ${experience === x.value ? "border-accent bg-soft-accent" : "border-border bg-bg hover:border-accent"}`}>
+                  <label key={x.value} className={`relative flex cursor-pointer flex-col rounded-2xl border p-4 pr-10 transition focus-within:ring-2 focus-within:ring-accent/40 ${experience === x.value ? "border-accent bg-soft-accent ring-2 ring-accent" : "border-border bg-bg hover:border-accent"}`}>
                     <input type="radio" name="experience" value={x.value} checked={experience === x.value} onChange={() => setExperience(x.value)} className="sr-only" />
+                    {experience === x.value ? <span aria-hidden className="kw-pop absolute right-3 top-3 grid h-6 w-6 place-items-center rounded-full bg-accent text-white"><Icon name="check" size={14} strokeWidth={2.5} /></span> : null}
                     <span className="font-semibold">{x.title}</span>
                     <span className="mt-1 text-sm text-muted">{x.body}</span>
                   </label>
@@ -169,7 +170,7 @@ export function Onboarding({ initial, canRenameOrg, carry, quickStart, complete 
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3" role="radiogroup" aria-label="What you'll build">
               {KINDS.map((k) => (
                 <button key={k.value} type="button" role="radio" aria-checked={kind === k.value} onClick={() => setKind(k.value)}
-                  className={`flex min-h-14 items-center gap-3 rounded-2xl border px-4 text-left font-semibold transition ${kind === k.value ? "border-accent bg-soft-accent text-soft-accent-ink" : "border-border bg-bg hover:border-accent"}`}>
+                  className={`flex min-h-14 items-center gap-3 rounded-2xl border px-4 text-left font-semibold transition ${kind === k.value ? "border-accent bg-soft-accent text-soft-accent-ink ring-2 ring-accent" : "border-border bg-bg hover:border-accent"}`}>
                   <Icon name={k.icon} />{k.label}
                 </button>
               ))}
