@@ -14,6 +14,7 @@ export default async function SettingsPage() {
     { href: "/settings/audit", title: "Audit log", body: "Every sensitive action in this organization.", show: can("audit.read") },
     { href: "/settings/support", title: "Support access", body: "Approve or revoke time-limited, read-only support access.", show: can("org.manage") },
     { href: "/team", title: "Team", body: "Members, roles and invitations.", show: true },
+    { href: "/settings/policy", title: "Policy reviews", body: "Anything Keelwork declined to build, and asking for a review.", show: true },
   ];
   return (
     <>

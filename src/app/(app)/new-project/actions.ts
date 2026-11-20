@@ -3,15 +3,18 @@ import { redirect } from "next/navigation";
 import { requireOrg } from "@/lib/org";
 import type { ActionResult } from "@/components/action-form";
 import { IDEA_KINDS, nameFromIdea } from "@/lib/idea";
+import { screenRequest, REVIEW_HINT } from "@/lib/policy/server";
 
 export async function createProject(_prev: ActionResult, form: FormData): Promise<ActionResult> {
-  const { supabase, org, can } = await requireOrg();
+  const { supabase, org, can, user } = await requireOrg();
   if (!can("project.write")) return { ok: false, message: "You don't have permission to create projects." };
   const name = String(form.get("name") ?? "").trim();
   const prompt = String(form.get("prompt") ?? "").trim();
   const template = String(form.get("template") ?? "").trim();
   if (!name || name.length > 80) return { ok: false, message: "Give the project a name of 1–80 characters." };
   if (prompt.length > 2000) return { ok: false, message: "Keep the description under 2000 characters." };
+  const screened = await screenRequest(`${name}\n${prompt}`, { orgId: org.id, userId: user.id, source: "project_create" });
+  if (screened.refusal) return { ok: false, message: `${screened.refusal} ${REVIEW_HINT}` };
   const { data, error } = await supabase.rpc("create_project", {
     p_org: org.id, p_name: name, p_description: prompt ? prompt.slice(0, 280) : null,
     p_prompt: prompt || null, p_template: /^[a-z0-9-]{1,48}$/.test(template) ? template : null,
@@ -29,12 +32,14 @@ export async function createProject(_prev: ActionResult, form: FormData): Promis
  * permissions and plan limits as the full form.
  */
 export async function quickStart(_prev: ActionResult, form: FormData): Promise<ActionResult> {
-  const { supabase, org, can } = await requireOrg();
+  const { supabase, org, can, user } = await requireOrg();
   if (!can("project.write")) return { ok: false, message: "You don't have permission to create projects." };
   const idea = String(form.get("idea") ?? "").replace(/\s+$/g, "").trim();
   const kind = IDEA_KINDS.find((k) => k.key === String(form.get("kind") ?? ""));
   if (idea.length < 8) return { ok: false, message: "Describe the idea in a few words (at least 8 characters)." };
   if (IDEA_KINDS.some((k) => k.starter.trim().toLowerCase() === idea.toLowerCase())) return { ok: false, message: "Finish the sentence: say what it should do or who it's for." };
+  const screened = await screenRequest(idea, { orgId: org.id, userId: user.id, source: "project_create" });
+  if (screened.refusal) return { ok: false, message: `${screened.refusal} ${REVIEW_HINT}` };
   if (idea.length > 2000) return { ok: false, message: "Keep the description under 2000 characters." };
   const { data, error } = await supabase.rpc("create_project", {
     p_org: org.id, p_name: nameFromIdea(idea, kind?.label), p_description: idea.slice(0, 280), p_prompt: idea, p_template: null,

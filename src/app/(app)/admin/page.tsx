@@ -39,7 +39,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
 
   return (
     <>
-      <PageHeader title="Platform admin" description="Organization metadata only. To look inside an organization, request support access; an owner must approve it, it's read-only and time-limited, and every step is in their audit log." />
+      <PageHeader title="Platform admin" description="Organization metadata only. To look inside an organization, request support access; an owner must approve it, it's read-only and time-limited, and every step is in their audit log." actions={<Link href="/admin/policy" className="btn btn-secondary">Policy appeals</Link>} />
 
       <nav aria-label="Admin sections" className="mb-6 flex flex-wrap items-center gap-1.5 text-sm">
         <span className="text-xs text-muted">Jump to</span>

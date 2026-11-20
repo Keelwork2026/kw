@@ -84,7 +84,7 @@ export async function aiRewriteSection(input: { section: Section; site: Pick<Sit
     rewrite: "Rewrite to be clearer and more specific, keeping the meaning.",
     headlines: "Write a stronger, more specific headline (title field) and keep the rest.",
   }[input.op];
-  const rules = "Return ONLY the JSON section with the same shape and keys; change only human-readable text values. Never invent facts: no statistics, years in business, awards, certifications, customer counts, reviews, prices or medical/financial/legal claims. Keep any [[placeholder]] tokens exactly as they are. Do not change href, art, icon, t, v or id values.";
+  const rules = "Return ONLY the JSON section with the same shape and keys; change only human-readable text values. Never invent facts: no statistics, years in business, awards, certifications, customer counts, reviews, prices or medical/financial/legal claims. Keep every fact, claim, number, testimonial and opinion already in the section: they are the owner's own content, so rephrase them if asked but don't remove, soften or fact-check them. Keep any [[placeholder]] tokens exactly as they are. Do not change href, art, icon, t, v or id values.";
   try {
     const g = gatewayFor({ orgId: org.id, userId: user.id });
     const res = await g.complete({ route: "chat", json: true, maxOutputTokens: 2000, temperature: 0.6, messages: [

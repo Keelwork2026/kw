@@ -24,6 +24,17 @@ export function PlanView({ plan }: { plan: Plan }) {
           </div>
         ))}
       </div>
+      {plan.declined?.length ? (
+        <div className="rounded-2xl border border-border bg-surface-2 p-4" role="note">
+          <h4 className="text-sm font-semibold">Not included</h4>
+          <p className="mt-0.5 text-xs text-muted">Keelwork builds the rest of the plan; these parts fall under its content and safety policy. If one is a misunderstanding, describe its purpose in the chat — or ask for a review under Settings → Policy reviews.</p>
+          <ul className="mt-2 grid gap-2 text-sm">
+            {plan.declined.map((d) => (
+              <li key={d.feature}><strong>{d.feature}</strong>{d.reason ? <span className="text-muted"> — {d.reason}</span> : null}{d.alternative ? <span className="block text-muted">Instead: {d.alternative}</span> : null}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 }

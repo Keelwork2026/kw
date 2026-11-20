@@ -29,6 +29,16 @@ test("QA catches dead links, lorem ipsum and invented claims", () => {
   assert.ok(rules.some((r) => r.startsWith("testimonials must be marked")));
 });
 
+test("drafts: the person's own claims and testimonials are never flagged; technical problems still are", () => {
+  const mine = structuredClone(SITES[0]!);
+  mine.pages[0]!.sections.push({ t: "cta", title: "The #1 award-winning bakery in Lagos", sub: "Trusted by 50,000 customers. Guaranteed results.", ctas: [{ label: "Order", href: "/nowhere" }] });
+  mine.pages[0]!.sections.push({ t: "testimonials", title: "What customers say", items: [{ quote: "Best bread I've ever had", name: "Ada", role: "Customer" }] });
+  const draft = qaSite(mine, "draft");
+  assert.ok(!draft.some((i) => i.rule === "claims" || i.rule === "content"), draft.map((i) => i.detail).join("; "));
+  assert.ok(draft.some((i) => i.detail === "dead link /nowhere"), "technical checks still run");
+  assert.ok(qaSite(mine).some((i) => i.rule === "claims"), "Keelwork's own templates still may not invent claims");
+});
+
 test("placeholders and links", () => {
   assert.deepEqual(pieces("Call [[phone]] now"), [{ text: "Call " }, { ph: "phone", label: "phone number" }, { text: " now" }]);
   assert.equal(plain("Reg [[reg]]"), "Reg [your company registration number]");

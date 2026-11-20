@@ -44,7 +44,7 @@ export function SiteEditor({ id, initial, version: initialVersion, shareToken, c
 
   const page = site.pages.find((p) => p.slug === pageSlug) ?? site.pages[0]!;
   const section = sel !== null ? page.sections[sel] : undefined;
-  const issues = useMemo(() => qaSite(site), [site]);
+  const issues = useMemo(() => qaSite(site, "draft"), [site]);
 
   const change = useCallback((next: Site) => {
     if (!canEdit) return;
@@ -161,7 +161,7 @@ export function SiteEditor({ id, initial, version: initialVersion, shareToken, c
           {panel === "checks" && (
             <div>
               <h2 className="font-display text-lg font-bold">Checks</h2>
-              {issues.length ? <ul className="mt-3 grid gap-2 text-sm">{issues.map((i, k) => <li key={k} className="rounded-xl bg-surface-2 p-2"><b>{i.page}</b> · {i.rule}: {i.detail}</li>)}</ul> : <p className="mt-2 text-sm text-muted">No broken links, missing SEO, missing alt text or unsupported claims found.</p>}
+              {issues.length ? <ul className="mt-3 grid gap-2 text-sm">{issues.map((i, k) => <li key={k} className="rounded-xl bg-surface-2 p-2"><b>{i.page}</b> · {i.rule}: {i.detail}</li>)}</ul> : <p className="mt-2 text-sm text-muted">No broken links, missing SEO, missing alt text, unfilled placeholders or leftover template examples found.</p>}
               <p className="mt-4 text-xs text-muted">Highlighted “Add your …” spaces and anything marked as a sample still need your real details before you publish.</p>
             </div>
           )}

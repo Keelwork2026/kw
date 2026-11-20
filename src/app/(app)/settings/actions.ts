@@ -177,3 +177,14 @@ export async function dismissOnboarding(): Promise<void> {
   await supabase.from("profiles").update({ onboarded_at: new Date().toISOString() }).eq("id", user.id);
   revalidatePath("/dashboard");
 }
+
+/** Ask platform staff to review a policy decision. */
+export async function appealPolicy(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const id = String(form.get("eventId") ?? "");
+  if (!isUuid(id)) return { ok: false, message: "Invalid request." };
+  const { supabase } = await requireOrg();
+  const { error } = await supabase.rpc("appeal_policy_event", { p_event: id, p_note: clean(form.get("note")) });
+  if (error) return { ok: false, message: friendly(error.message) };
+  revalidatePath("/settings/policy");
+  return { ok: true, message: "Review requested. You'll see the decision here." };
+}

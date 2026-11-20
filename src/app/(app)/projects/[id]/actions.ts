@@ -11,6 +11,7 @@ import { brokerConfig, createBrokerClient, sandboxIdFor } from "@/lib/sandbox/cl
 import { storeSecret } from "@/lib/secrets/server";
 import { isUuid } from "@/lib/nav";
 import type { ActionResult } from "@/components/action-form";
+import { screenRequest, REVIEW_HINT } from "@/lib/policy/server";
 
 function str(form: FormData, k: string) { const v = form.get(k); return typeof v === "string" ? v : ""; }
 function fail(message: string): ActionResult { return { ok: false, message }; }
@@ -54,6 +55,15 @@ async function planFromThread(projectId: string, threadId: string, orgId: string
   if (!last || last.role !== "user") return fail("There's nothing new to plan.");
   const convo = ordered.filter((m) => m.role !== "system").map((m) => ({ role: m.role as "user" | "assistant", content: m.content as string }));
 
+  // Policy: judge what the project would DO, across everything the person has asked for in this thread.
+  const asked = [...convo.filter((m) => m.role === "user").map((m) => m.content), last.content as string].join("\n");
+  const screened = await screenRequest(asked, { orgId, userId, projectId, source: "chat" });
+  if (screened.refusal) {
+    await db.from("messages").insert({ thread_id: threadId, org_id: orgId, role: "assistant", content: `${screened.refusal} ${REVIEW_HINT}`, metadata: { policy_event_id: screened.eventId } });
+    revalidatePath(`/projects/${projectId}`);
+    return fail(`${screened.refusal} ${REVIEW_HINT}`);
+  }
+
   await db.from("projects").update({ status: "planning" }).eq("id", projectId).in("status", ["draft", "live"]);
   try {
     const gw = gatewayFor({ orgId, projectId, userId });
@@ -61,7 +71,7 @@ async function planFromThread(projectId: string, threadId: string, orgId: string
       route,
       json: true,
       maxOutputTokens: 4000,
-      messages: planMessages({ description: last.content as string, history: convo, backendRules: isBackend(backend) ? backendRules(backend) : undefined }),
+      messages: planMessages({ description: last.content as string, history: convo, backendRules: isBackend(backend) ? backendRules(backend) : undefined, policyNote: screened.note || undefined }),
     });
     const parsed = parsePlan(res.text);
     if (!parsed.ok) return fail(`The planner's answer wasn't a valid plan (${parsed.error}), so it isn't shown. Try rephrasing.`);

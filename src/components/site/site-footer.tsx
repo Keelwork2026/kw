@@ -10,7 +10,7 @@ export function SiteFooter() {
     { title: "Solutions", links: SOLUTIONS.map((s) => ({ label: s.title, href: `/solutions/${s.slug}` })) },
     { title: "Templates", links: [{ label: "All templates", href: "/starters" }, { label: "Studio Bookings", href: "/starters/studio-bookings" }, { label: "Pulse Analytics", href: "/starters/pulse-analytics" }, { label: "Clay & Co shop", href: "/starters/clay-and-co" }, { label: "Folio portfolio", href: "/starters/folio" }, { label: "Deal Desk CRM", href: "/starters/deal-desk" }] },
     { title: "Learn", links: [{ label: "Tutorials", href: "/tutorials" }, ...TUTORIALS.slice(0, 3).map((t) => ({ label: t.title, href: `/tutorials/${t.slug}` })), { label: "Changelog", href: "/changelog" }, { label: "Documentation", href: "/docs" }] },
-    { title: "Trust", links: [{ label: "Security", href: "/trust" }, { label: "Privacy overview", href: "/privacy" }, { label: "System status", href: "/status" }, { label: "Your code is yours", href: "/trust#ownership" }] },
+    { title: "Trust", links: [{ label: "Security", href: "/trust" }, { label: "Privacy overview", href: "/privacy" }, { label: "System status", href: "/status" }, { label: "Your code is yours", href: "/trust#ownership" }, { label: "Acceptable use", href: "/acceptable-use" }] },
   ];
   return (
     <footer className="relative overflow-hidden border-t border-border bg-surface" aria-labelledby="footer-h">

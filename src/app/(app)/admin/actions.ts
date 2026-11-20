@@ -33,3 +33,15 @@ export async function revokeMyAccess(_prev: ActionResult, form: FormData): Promi
   revalidatePath("/admin");
   return { ok: true, message: "Access ended." };
 }
+
+/** Platform staff: uphold or overturn an appealed policy decision, with a note for the person. */
+export async function decidePolicy(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const id = String(form.get("eventId") ?? "");
+  const decision = String(form.get("decision") ?? "");
+  if (!isUuid(id) || !["upheld", "overturned"].includes(decision)) return { ok: false, message: "Invalid request." };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("decide_policy_event", { p_event: id, p_decision: decision, p_note: String(form.get("note") ?? "") });
+  if (error) return { ok: false, message: error.message.replace(/^.*?:\s*/, "") };
+  revalidatePath("/admin/policy");
+  return { ok: true, message: decision === "overturned" ? "Overturned — that request will now go through for them." : "Upheld." };
+}

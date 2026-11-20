@@ -36,7 +36,15 @@ function images(s: Section): { alt: string }[] {
   return out;
 }
 
-export function qaSite(site: Site): QaIssue[] {
+/**
+ * mode "template": the standard every template Keelwork ships must meet,
+ * including no invented claims — Keelwork doesn't put words in your mouth.
+ * mode "draft" (the editor): technical checks only — dead links, SEO, alt
+ * text, unfilled placeholders and template samples still showing. Your own
+ * claims, testimonials, numbers and wording are yours and are never flagged.
+ */
+export function qaSite(site: Site, mode: "template" | "draft" = "template"): QaIssue[] {
+  const tpl = mode === "template";
   const issues: QaIssue[] = [];
   const add = (page: string, rule: string, detail: string) => issues.push({ page: page || "home", rule, detail });
   const slugs = new Set(site.pages.map((p) => p.slug));
@@ -44,10 +52,10 @@ export function qaSite(site: Site): QaIssue[] {
 
   if (!slugs.has("")) add("", "structure", "no home page");
   if (slugs.size !== site.pages.length) add("", "structure", "duplicate page slugs");
-  if (site.category !== "Landing Pages" && content.length < 4) add("", "structure", `only ${content.length} content pages (need 4+)`);
+  if (tpl && site.category !== "Landing Pages" && content.length < 4) add("", "structure", `only ${content.length} content pages (need 4+)`);
   if (!slugs.has("privacy") || !slugs.has("terms")) add("", "legal", "privacy policy and terms are required");
   if (!site.footer.contact.length) add("", "footer", "footer has no contact details");
-  if (!site.footer.social.length) add("", "footer", "footer has no social links");
+  if (tpl && !site.footer.social.length) add("", "footer", "footer has no social links");
 
   const resolves = (href: string, pageIds: Set<string>) => {
     if (/^(https?:|mailto:|tel:)/.test(href)) return true;
@@ -67,11 +75,16 @@ export function qaSite(site: Site): QaIssue[] {
     for (const s of page.sections) {
       for (const href of sectionLinks(s)) if (!resolves(href, ids)) add(page.slug, "links", `dead link ${href}`);
       const text = JSON.stringify(s);
-      for (const [re, why] of BANNED) if (re.test(text)) add(page.slug, "content", why);
       for (const img of images(s)) if (img.alt.trim().length < 3) add(page.slug, "a11y", "image without alt text");
-      if (s.t === "testimonials" && !s.sample) add(page.slug, "claims", "testimonials must be marked as samples until real ones are added");
-      if (s.t === "logos" && !s.sample && !s.items.every((i) => i.includes("[["))) add(page.slug, "claims", "client logos must be samples or placeholders");
-      if (s.t === "stats" && !s.sample && !s.items.every(([v]) => v.includes("[["))) add(page.slug, "claims", "statistics must be placeholders or marked as samples");
+      if (tpl) {
+        for (const [re, why] of BANNED) if (re.test(text)) add(page.slug, "content", why);
+        if (s.t === "testimonials" && !s.sample) add(page.slug, "claims", "testimonials must be marked as samples until real ones are added");
+        if (s.t === "logos" && !s.sample && !s.items.every((i) => i.includes("[["))) add(page.slug, "claims", "client logos must be samples or placeholders");
+        if (s.t === "stats" && !s.sample && !s.items.every(([v]) => v.includes("[["))) add(page.slug, "claims", "statistics must be placeholders or marked as samples");
+      } else {
+        if (text.includes("[[")) add(page.slug, "to fill in", `a placeholder in the ${s.t} section still needs your details`);
+        if ("sample" in s && s.sample) add(page.slug, "sample content", `the ${s.t} section still shows the template's examples — replace them with your own or remove the section`);
+      }
     }
     if (page.slug === "") for (const l of [site.primaryCta]) if (!resolves(l.href, ids)) add(page.slug, "links", `primary call to action ${l.href} is dead`);
   }
