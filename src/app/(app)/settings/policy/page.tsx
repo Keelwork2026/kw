@@ -43,7 +43,7 @@ export default async function PolicyReviewsPage() {
           })}
         </ul>
       ) : (
-        <EmptyState icon="shield" title="Nothing declined">Keelwork hasn't declined anything in this organization. If it ever does, you'll see exactly what and why here, and can ask for a review.</EmptyState>
+        <EmptyState icon="shield" title="Nothing declined">Keelwork hasn&apos;t declined anything in this organization. If it ever does, you&apos;ll see exactly what and why here, and can ask for a review.</EmptyState>
       )}
     </>
   );
