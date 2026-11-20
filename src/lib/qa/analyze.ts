@@ -207,7 +207,18 @@ export function securityLive(pages: PageSnap[], apis: ApiSnap[], routes: Route[]
 /* Performance                                                          */
 /* ------------------------------------------------------------------ */
 
-export function performance(pages: PageSnap[], assets: AssetSnap[], browser?: BrowserSnap): Result[] {
+/** Reads per-route "First Load JS" sizes (KB) from `next build`'s route table. */
+export function parseFirstLoadJs(output: string): { route: string; kb: number }[] {
+  const out: { route: string; kb: number }[] = [];
+  const unit = (v: string, u: string) => (u.toLowerCase() === "mb" ? parseFloat(v) * 1024 : u.toLowerCase() === "b" ? parseFloat(v) / 1024 : parseFloat(v));
+  for (const line of output.replace(/\x1b\[[0-9;]*m/g, "").split("\n")) {
+    const m = /^[\s│├└┌]*[○●ƒλ◐]\s+(\/\S*)\s+([\d.]+)\s*(B|kB|KB|MB)\s+([\d.]+)\s*(B|kB|KB|MB)\s*$/.exec(line);
+    if (m) out.push({ route: m[1]!, kb: Math.round(unit(m[4]!, m[5]!)) });
+  }
+  return out;
+}
+
+export function performance(pages: PageSnap[], assets: AssetSnap[], browser?: BrowserSnap, opts: { buildOutput?: string } = {}): Result[] {
   const out: Result[] = [];
   for (const p of pages.filter((x) => x.status && x.status < 400 && x.ms !== null)) {
     const ms = p.ms!;
@@ -219,11 +230,21 @@ export function performance(pages: PageSnap[], assets: AssetSnap[], browser?: Br
     if (d.images.length) out.push(mk({ key: `perf-cls:${p.path}`, name: `Images reserve their space: ${p.path}`, category: "performance", method: "static", objective: "Images don't shift the layout as they load.", expected: "Width and height on images", actual: unsized.length ? `${unsized.length} of ${d.images.length} image(s) without dimensions` : "All images sized", status: unsized.length ? "failed" : "passed", severity: "low", target: p.path,
       finding: F("unsized-images", "low", "probable", `${unsized.length} image(s) on ${p.path} have no width or height.`, "The page jumps as images load (layout shift), which is annoying and can cause mis-taps.", "Set width and height (or use next/image), so the browser reserves space.", "Watch the page load on a slow connection.") }));
   }
+  // Bundle size is judged on the production build (from `next build`'s route
+  // table), never on the sandbox's development server, whose bundles are
+  // unminified and several times larger.
   const scripts = assets.filter((a) => a.kind === "script" && a.bytes !== null);
-  if (scripts.length) {
+  const prod = parseFirstLoadJs(opts.buildOutput ?? "");
+  const budget = 300;
+  if (prod.length) {
+    const worst = [...prod].sort((x, y) => y.kb - x.kb)[0]!;
+    const over = prod.filter((r) => r.kb > budget);
+    out.push(mk({ key: "perf-js", name: "JavaScript size is reasonable", category: "performance", method: "automated", objective: "Pages don't ship more JavaScript than they need.", expected: `First-load JavaScript under ${budget} KB per page (production build, compressed; Keelwork's default budget)`, actual: over.length ? `${over.length} page(s) over budget; largest ${worst.route} at ${worst.kb} KB` : `Largest page ${worst.route} at ${worst.kb} KB`, status: over.length ? "failed" : "passed", severity: worst.kb > budget * 2 ? "high" : "medium",
+      evidence: [...prod].sort((x, y) => y.kb - x.kb).slice(0, 6).map((r) => ({ kind: "measure" as const, name: `First Load JS ${r.route}`, value: r.kb, unit: "KB", note: "From the production build output" })),
+      finding: F("heavy-js", worst.kb > budget * 2 ? "high" : "medium", "confirmed", `${over.map((r) => `${r.route} (${r.kb} KB)`).join(", ")} load more than ${budget} KB of JavaScript.`, "Large bundles are slow to download and run on phones.", "Load heavy libraries only where they're used (dynamic import) and keep components server-side where possible.", "Run the build check and QA again.") }));
+  } else if (scripts.length) {
     const kb = Math.round(scripts.reduce((s, a) => s + (a.bytes ?? 0), 0) / 1024);
-    out.push(mk({ key: "perf-js", name: "JavaScript size is reasonable", category: "performance", method: "automated", objective: "Pages don't ship more JavaScript than they need.", expected: "Under 500 KB across the scripts on the first page", actual: `${kb} KB in ${scripts.length} script(s) (uncompressed, development build)`, status: kb <= 500 ? "passed" : "failed", severity: kb > 1500 ? "high" : "medium", evidence: scripts.sort((a, b) => (b.bytes ?? 0) - (a.bytes ?? 0)).slice(0, 5).map((a) => ({ kind: "measure" as const, name: a.url, value: Math.round((a.bytes ?? 0) / 1024), unit: "KB" })),
-      finding: F("heavy-js", kb > 1500 ? "high" : "medium", "probable", `The first page loads ${kb} KB of JavaScript in the sandbox.`, "Large bundles are slow to download and run on phones.", "Load heavy libraries only where they're used (dynamic import) and keep components server-side where possible. Re-check against the production build, which is smaller.", "Compare the production build's bundle sizes.") }));
+    out.push(mk({ key: "perf-js", name: "JavaScript size is reasonable", category: "performance", method: "automated", objective: "Pages don't ship more JavaScript than they need.", expected: `First-load JavaScript under ${budget} KB per page (production build)`, actual: `Not measured: the production build's sizes weren't available, and the ${kb} KB served by the development server isn't representative.`, status: "not_run", severity: "info" }));
   }
   const vitals = browser?.available ? browser.pages.filter((b) => b.lcp !== null) : [];
   if (vitals.length) for (const b of vitals) {

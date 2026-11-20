@@ -212,3 +212,16 @@ test("hashHex: always 16 lowercase hex characters (issue fingerprints)", async (
   for (let i = 0; i < 5000; i++) assert.match(hashHex(`security|header-${i}|/${i % 7}`), /^[0-9a-f]{16}$/);
   for (const s of ["security|check-audit|", "security|header-xcto|/", "security|header-referrer|/"]) assert.match(hashHex(s), /^[0-9a-f]{16}$/);
 });
+
+test("performance: bundle size comes from the production build, never the dev server", async () => {
+  const { parseFirstLoadJs, performance } = await import("./analyze");
+  const out = ["Route (app)                                 Size  First Load JS", "┌ ○ /                                      123 B         102 kB", "├ ○ /_not-found                            995 B         103 kB", "├ ƒ /dashboard                            90 kB          410 kB", "└ ƒ /api/health                            123 B         102 kB", "+ First Load JS shared by all             102 kB"].join("\n");
+  assert.deepEqual(parseFirstLoadJs(out).map((r) => r.route), ["/", "/_not-found", "/dashboard", "/api/health"]);
+  const devAssets = [{ url: "/_next/static/chunks/main.js", kind: "script" as const, bytes: 3_000_000, ms: 5, status: 200 }];
+  const dev = performance([], devAssets).find((r) => r.key === "perf-js")!;
+  assert.equal(dev.status, "not_run", "a dev-server bundle is never judged");
+  const prod = performance([], devAssets, undefined, { buildOutput: out }).find((r) => r.key === "perf-js")!;
+  assert.equal(prod.status, "failed");
+  assert.match(prod.actual, /\/dashboard at 410 KB/);
+  assert.equal(performance([], devAssets, undefined, { buildOutput: out.replace("410 kB", "200 kB") }).find((r) => r.key === "perf-js")!.status, "passed");
+});

@@ -205,7 +205,7 @@ async function execute(ctx: WorkerContext, run: Run, note: (s: string) => void) 
     if (want("functional", "errors")) all.push(...functionalLive(probe.pages, profile.routes, probe.notFound ?? undefined).filter((r) => cats.has(r.category)));
     if (want("accessibility")) all.push(...accessibility(probe.pages));
     if (want("security", "api", "performance")) all.push(...securityLive(probe.pages, probe.apis, profile.routes, BASE.startsWith("https")).filter((r) => cats.has(r.category)));
-    if (want("performance")) all.push(...performance(probe.pages, probe.assets, browser));
+    if (want("performance")) all.push(...performance(probe.pages, probe.assets, browser, { buildOutput: latest.get("build")?.output ?? undefined }));
     if (want("load")) all.push(...load(probe.load, settings.load.enabled ? "The load test didn't produce measurements." : "Load testing is off in this project's QA settings."));
     if (want("responsive", "crossbrowser", "browser", "accessibility")) all.push(...responsive(probe.pages, browser).filter((r) => cats.has(r.category)));
     if (want("ux", "content")) all.push(...ux(probe.pages, profile).filter((r) => cats.has(r.category)));
