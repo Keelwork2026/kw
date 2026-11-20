@@ -47,7 +47,8 @@ export async function signUp(_prev: ActionResult, form: FormData): Promise<Actio
 
   const carry = onboardingParams({ prompt: str(form, "prompt"), template: str(form, "template"), name: str(form, "name") });
   const next = new URLSearchParams({ ...(carry.prompt ? { prompt: carry.prompt } : {}), ...(carry.template ? { template: carry.template } : {}), ...(carry.name ? { name: carry.name } : {}) });
-  const nextPath = `/new-project${next.size ? `?${next}` : ""}`;
+  // New accounts start with the short welcome flow; an idea or template chosen before sign-up is carried through it.
+  const nextPath = `/welcome${next.size ? `?${next}` : ""}`;
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signUp({
@@ -57,7 +58,7 @@ export async function signUp(_prev: ActionResult, form: FormData): Promise<Actio
   });
   if (error) return { ok: false, message: "We couldn't create that account. Try a different email, or sign in." };
   if (data.session) redirect(nextPath);
-  return { ok: true, message: "Check your inbox to confirm your email, then you'll land in your first project." };
+  return { ok: true, message: "Check your inbox to confirm your email, then we'll get you set up in about a minute." };
 }
 
 export async function forgotPassword(_prev: ActionResult, form: FormData): Promise<ActionResult> {

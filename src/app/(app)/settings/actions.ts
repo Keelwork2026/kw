@@ -119,3 +119,61 @@ export async function recordMfaEvent(kind: "enrolled" | "removed"): Promise<void
   const supabase = await createClient();
   await supabase.rpc("record_security_event", { p_action: kind === "enrolled" ? "auth.mfa_enrolled" : "auth.mfa_removed", p_metadata: {} });
 }
+
+const EXPERIENCE = ["new", "some", "developer"] as const;
+const clean = (v: FormDataEntryValue | null) => String(v ?? "").replace(/[\u0000-\u001f\u007f]/g, "").trim();
+
+/** Your name and coding experience (experience only changes how much in-app guidance is shown). */
+export async function updateProfile(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const { supabase, user } = await requireOrg();
+  const name = clean(form.get("displayName"));
+  const exp = clean(form.get("experience"));
+  if (!name || name.length > 80) return { ok: false, message: "Use a name of 1–80 characters." };
+  if (exp && !EXPERIENCE.includes(exp as (typeof EXPERIENCE)[number])) return { ok: false, message: "Choose one of the experience options." };
+  const { error } = await supabase.from("profiles").update({ display_name: name, experience: exp || null, updated_at: new Date().toISOString() }).eq("id", user.id);
+  if (error) return { ok: false, message: "Couldn't save your profile. Try again." };
+  revalidatePath("/", "layout");
+  return { ok: true, message: "Profile saved." };
+}
+
+/** Renames the current organization (owners and admins). */
+export async function renameOrganization(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const { supabase, org, can } = await requireOrg();
+  if (!can("org.manage")) return { ok: false, message: "Only owners and admins can rename the organization." };
+  const name = clean(form.get("orgName"));
+  if (!name || name.length > 80) return { ok: false, message: "Use a name of 1–80 characters." };
+  if (name === org.name) return { ok: true, message: "That's already its name." };
+  const { error } = await supabase.rpc("rename_organization", { p_org: org.id, p_name: name });
+  if (error) return { ok: false, message: friendly(error.message) };
+  revalidatePath("/", "layout");
+  return { ok: true, message: `Renamed to “${name}”.` };
+}
+
+/**
+ * Saves the welcome flow's answers (each optional) and marks onboarding done,
+ * so it's offered once and never forced. Skipping saves nothing but the date.
+ */
+export async function completeOnboarding(input: { displayName?: string; experience?: string; orgName?: string }): Promise<{ ok: boolean; message?: string }> {
+  const { supabase, user, org, can } = await requireOrg();
+  const name = clean(input.displayName ?? null);
+  const exp = clean(input.experience ?? null);
+  const orgName = clean(input.orgName ?? null);
+  const patch: Record<string, string | null> = { onboarded_at: new Date().toISOString(), updated_at: new Date().toISOString() };
+  if (name && name.length <= 80) patch.display_name = name;
+  if (EXPERIENCE.includes(exp as (typeof EXPERIENCE)[number])) patch.experience = exp;
+  const { error } = await supabase.from("profiles").update(patch).eq("id", user.id);
+  if (error) return { ok: false, message: "Couldn't save your answers. You can set them later in Settings." };
+  if (orgName && orgName.length <= 80 && orgName !== org.name && can("org.manage")) {
+    const r = await supabase.rpc("rename_organization", { p_org: org.id, p_name: orgName });
+    if (r.error) return { ok: false, message: "Saved, but the workspace couldn't be renamed. Try again in Settings." };
+  }
+  revalidatePath("/", "layout");
+  return { ok: true };
+}
+
+/** "Not now" on the dashboard's setup card: records that onboarding was offered, saves nothing else. */
+export async function dismissOnboarding(): Promise<void> {
+  const { supabase, user } = await requireOrg();
+  await supabase.from("profiles").update({ onboarded_at: new Date().toISOString() }).eq("id", user.id);
+  revalidatePath("/dashboard");
+}

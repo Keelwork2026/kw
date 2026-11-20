@@ -9,11 +9,13 @@ import { QuickStart } from "@/components/quick-start";
 import { quickStart } from "../new-project/actions";
 import { loadJourneyState } from "@/lib/journey-state";
 import { suggestions } from "@/lib/journey";
+import { dismissOnboarding } from "../settings/actions";
+import { Icon } from "@/components/icons";
 
 export const metadata = { title: "Dashboard" };
 
 export default async function DashboardPage() {
-  const { supabase, org, can } = await requireOrg();
+  const { supabase, org, can, user } = await requireOrg();
   const [members, projects, incidents, approvals, live, billing] = await Promise.all([
     supabase.from("org_members").select("user_id", { count: "exact", head: true }).eq("org_id", org.id).eq("status", "active"),
     supabase.from("projects").select("id, name, status, description, updated_at", { count: "exact" }).eq("org_id", org.id).neq("status", "archived").order("updated_at", { ascending: false }).limit(6),
@@ -29,6 +31,7 @@ export default async function DashboardPage() {
     count("sandboxes"), count("project_secrets"), count("deployments"), count("invitations"),
   ]);
   const now = new Date();
+  const { data: me } = await supabase.from("profiles").select("onboarded_at").eq("id", user.id).maybeSingle();
   const lastProject = (projects.data?.[0] as { id: string; name: string; status: string; description: string | null; updated_at: string } | undefined) ?? null;
   const lastNext = lastProject ? suggestions(await loadJourneyState(supabase, lastProject, can("project.write")), 1)[0] ?? null : null;
   const steps: Step[] = [
@@ -43,6 +46,19 @@ export default async function DashboardPage() {
   return (
     <>
       <PageHeader title={org.name} description={workspaceSummary({ projects: projects.count ?? projects.data?.length ?? 0, approvals: approvals.count ?? 0, incidents: incidents.count ?? 0, live: live.count ?? 0 })} actions={can("project.write") ? <Link href="/new-project" className="btn btn-secondary">New project with details</Link> : null} />
+      {me && !me.onboarded_at ? (
+        <section aria-labelledby="setup-title" className="mb-6 flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-surface p-5">
+          <span className="kw-empty-icon !h-11 !w-11 !rounded-xl" aria-hidden><Icon name="sparkles" /></span>
+          <div className="min-w-0 flex-1">
+            <h2 id="setup-title" className="text-lg">Finish setting up — about a minute</h2>
+            <p className="text-sm text-muted">Tell us what you&apos;re building and how much guidance you want, and we&apos;ll point you to the right tools.</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Link href="/welcome" className="btn btn-gradient">Continue</Link>
+            <form action={dismissOnboarding}><button type="submit" className="btn btn-secondary">Not now</button></form>
+          </div>
+        </section>
+      ) : null}
       {can("project.write") ? <QuickStart action={quickStart} /> : null}
       <Momentum last={lastProject} next={lastNext} progress={progress(steps)} ideas={ideasForDay(now)} />
       <GettingStarted steps={steps} />

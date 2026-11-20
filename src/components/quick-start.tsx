@@ -9,10 +9,10 @@ import type { ActionResult, FormAction } from "./action-form";
  * a kind fills in an opening phrase; Enter starts, Shift+Enter adds a line.
  * The planner talks it through before anything is built.
  */
-export function QuickStart({ action }: { action: FormAction }) {
+export function QuickStart({ action, defaultIdea = "", defaultKind = "", heading = "What do you want to build today?" }: { action: FormAction; defaultIdea?: string; defaultKind?: string; heading?: string }) {
   const [state, formAction] = useActionState<ActionResult, FormData>(action, null);
-  const [kind, setKind] = useState<string>("");
-  const [idea, setIdea] = useState("");
+  const [kind, setKind] = useState<string>(defaultKind);
+  const [idea, setIdea] = useState(defaultIdea);
   const area = useRef<HTMLTextAreaElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -31,7 +31,7 @@ export function QuickStart({ action }: { action: FormAction }) {
   return (
     <section aria-labelledby="quick-start-title" className="relative mb-8 overflow-hidden rounded-3xl border border-border bg-surface p-6 sm:p-8">
       <div aria-hidden className="kw-blob-a pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full opacity-40 blur-3xl" style={{ background: "var(--grad-art)" }} />
-      <h2 id="quick-start-title" className="relative font-display text-2xl font-bold sm:text-3xl">What do you want to build today?</h2>
+      <h2 id="quick-start-title" className="relative font-display text-2xl font-bold sm:text-3xl">{heading}</h2>
       <p className="relative mt-1 text-sm text-muted">Describe it in a sentence. The planner asks about the rest, and nothing is built until you approve the plan.</p>
       <form ref={formRef} action={formAction} className="relative mt-5">
         <input type="hidden" name="kind" value={kind} />

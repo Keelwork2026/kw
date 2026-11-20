@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { refreshSession } from "@/lib/supabase/middleware";
 import { buildCsp, makeNonce, SECURITY_HEADERS } from "@/lib/security/headers";
 
-const APP_PREFIXES = ["/dashboard", "/sites", "/projects", "/new-project", "/builder", "/templates", "/design", "/database", "/backend", "/integrations", "/automation", "/agents", "/testing", "/security", "/deployments", "/hosting", "/analytics", "/team", "/marketplace", "/billing", "/settings", "/admin"];
+const APP_PREFIXES = ["/dashboard", "/welcome", "/sites", "/projects", "/new-project", "/builder", "/templates", "/design", "/database", "/backend", "/integrations", "/automation", "/agents", "/testing", "/security", "/deployments", "/hosting", "/analytics", "/team", "/marketplace", "/billing", "/settings", "/admin"];
 
 /** Session refresh, CSP nonce, security headers and auth redirects. */
 export async function middleware(request: NextRequest) {
