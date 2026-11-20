@@ -187,7 +187,7 @@ async function execute(ctx: WorkerContext, run: Run, note: (s: string) => void) 
           const res = await gateway.complete({ route: "chat", json: true, temperature: 0.4, maxOutputTokens: 1200, messages: [{ role: "system", content: prompt.system }, { role: "user", content: prompt.user }] });
           personaResults.push(evaluateWalk(p, parseWalk(res.text), map));
         } catch (e) {
-          personaResults.push(mk({ key: `persona:${p.name}`, name: `Persona: ${p.name}`, category: "personas", method: "simulated", objective: p.goal, expected: "Reaches the goal", actual: `The AI call failed: ${(e as Error).message.slice(0, 200)}`, status: "blocked", severity: "info" }));
+          personaResults.push(mk({ key: `persona:${p.name}`, name: `Persona: ${p.name}`, category: "personas", method: "simulated", objective: p.goal, expected: "Reaches the goal", actual: /no API key|not configured/i.test((e as Error).message) ? "Not run: no AI provider is configured for this installation. An administrator can add a provider key, then run QA again." : `The AI call failed: ${(e as Error).message.slice(0, 200)}`, status: "blocked", severity: "info" }));
         }
       }
     }
