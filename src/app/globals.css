@@ -366,6 +366,7 @@ code, kbd, pre, samp { font-family: var(--font-mono); }
 
 /* Less motion: no travel, no loops, no celebration; changes still show as quick fades. */
 @media (prefers-reduced-motion: reduce) {
+  .kw-eli5, .kw-eli5:hover { transition: none; transform: none; }
   :root { --kw-move: 0px; --kw-lift: 0px; }
   *, *::before, *::after { scroll-behavior: auto !important; }
   .kw-blob-a, .kw-blob-b, .kw-blob-c, .kw-bob-1, .kw-bob-2, .kw-bob-3, .kw-marquee, .kw-caret, .kw-live, .kw-spin, .kw-rise, .kw-ring,
@@ -419,4 +420,3 @@ html[data-simple="on"] .kw-std, html[data-simple="on"] .kw-std-block { display: 
 html[data-simple="on"] main { font-size: 1.0625rem; }
 html[data-simple="on"] main .btn-primary, html[data-simple="on"] main .btn-gradient { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
 html[data-simple="on"] .kw-simple-hint { display: block; }
-@media (prefers-reduced-motion: reduce) { .kw-eli5, .kw-eli5:hover { transition: none; transform: none; } }
