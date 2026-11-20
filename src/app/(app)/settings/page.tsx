@@ -37,7 +37,7 @@ export default async function SettingsPage() {
                 <option value="some">Built a few things</option>
                 <option value="developer">Developer</option>
               </select>
-              <p className="mt-1 text-xs text-muted">Used only to choose how much guidance to show. <a href="/welcome" className="font-semibold text-accent hover:underline">Run the welcome tour again</a></p>
+              <p className="mt-1 text-xs text-muted">Used only to choose how much guidance to show. <Link href="/welcome" className="font-semibold text-accent hover:underline">Run the welcome tour again</Link></p>
             </div>
           </ActionForm>
         </section>
