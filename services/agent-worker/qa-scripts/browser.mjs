@@ -1,14 +1,20 @@
 // Keelwork QA browser suite. Runs inside the project's sandbox with a
 // headless Chromium (Playwright) against the sandbox dev server only.
 import fs from "node:fs";
+import { createRequire } from "node:module";
+import { pathToFileURL } from "node:url";
 
 const cfg = JSON.parse(fs.readFileSync(".keelwork/qa/config.json", "utf8"));
 const result = { available: false, engine: null, reason: null, pages: [] };
 let chromium;
 try {
-  ({ chromium } = await import(process.cwd() + "/.keelwork/qa-browser/node_modules/playwright/index.mjs"));
-} catch (e) {
-  result.reason = "The browser runtime isn't installed in this sandbox.";
+  // The browser image installs Playwright globally (NODE_PATH); ESM imports
+  // don't read NODE_PATH, so resolve it explicitly.
+  const require = createRequire(import.meta.url);
+  const entry = require.resolve("playwright", { paths: [process.env.NODE_PATH || "/usr/local/lib/node_modules", process.cwd() + "/node_modules"] });
+  ({ chromium } = (await import(pathToFileURL(entry).href)).default ?? (await import(pathToFileURL(entry).href)));
+} catch {
+  result.reason = "This sandbox image has no browser runtime. Build keelwork/runtime-browser (services/sandbox-broker/runtime-browser.Dockerfile) and start the sandbox broker with SANDBOX_IMAGE=keelwork/runtime-browser to enable browser testing.";
 }
 if (chromium) {
   let browser;

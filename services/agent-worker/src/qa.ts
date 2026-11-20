@@ -26,7 +26,6 @@ import { CATEGORY_INFO, normalizeSettings, OPEN_ISSUE, type Category, type Issue
 type Run = { id: string; project_id: string; org_id: string; mode: Mode; categories: string[]; scope: Scope; requested_by: string | null; trigger: string };
 const SCRIPTS = path.resolve(process.cwd(), "services/agent-worker/qa-scripts");
 const BASE = "http://127.0.0.1:3000";
-const PLAYWRIGHT = "1.49.1";
 class Stopped extends Error {}
 
 export async function processQa(ctx: WorkerContext) {
@@ -117,7 +116,10 @@ async function execute(ctx: WorkerContext, run: Run, note: (s: string) => void) 
   let liveReason = "";
   try {
     await ctx.broker.serve(sb).catch(() => undefined);
-    const wait = await ctx.broker.exec(sb, ["node", "-e", `(async()=>{for(let i=0;i<60;i++){try{const r=await fetch(${JSON.stringify(BASE)},{signal:AbortSignal.timeout(5000)});if(r.status<600){process.exit(0)}}catch{}await new Promise(r=>setTimeout(r,2000))}process.exit(1)})()`]);
+    // QA files live in .keelwork/, which ignores itself so they're never committed.
+    await ctx.broker.writeFile(sb, ".keelwork/.gitignore", "*\n");
+    await ctx.broker.writeFile(sb, ".keelwork/qa/wait.mjs", `for (let i = 0; i < 60; i++) { try { const r = await fetch(${JSON.stringify(BASE)}, { signal: AbortSignal.timeout(5000) }); if (r.status < 600) process.exit(0); } catch {} await new Promise((r) => setTimeout(r, 2000)); } process.exit(1);\n`);
+    const wait = await ctx.broker.exec(sb, ["node", ".keelwork/qa/wait.mjs"]);
     live = wait.exitCode === 0;
     if (!live) liveReason = "The app's dev server didn't respond within 2 minutes. Open the project, start the sandbox and check the build log.";
   } catch (e) {
@@ -148,27 +150,14 @@ async function execute(ctx: WorkerContext, run: Run, note: (s: string) => void) 
   }
   done++;
 
-  // 4. Browser suite
+  // 4. Browser suite (needs the browser sandbox image; never installed silently)
   await progress(phases[4]!);
   let browser: BrowserSnap = { available: false, reason: live ? "Browser checks weren't selected for this run." : liveReason, pages: [] };
   if (live && want("browser", "responsive", "crossbrowser", "performance", "accessibility")) {
-    const installed = (await ctx.broker.exec(sb, ["test", "-f", ".keelwork/qa-browser/node_modules/playwright/index.mjs"]).catch(() => null))?.exitCode === 0;
-    let ready = installed;
-    if (!installed && run.mode !== "quick") {
-      note("Installing the browser runtime in the sandbox (first time only)…");
-      const add = await ctx.broker.exec(sb, ["pnpm", "add", `playwright@${PLAYWRIGHT}`, "--dir", ".keelwork/qa-browser", "--silent"]).catch((e) => ({ exitCode: 1, stdout: "", stderr: String(e), timedOut: false }));
-      const inst = add.exitCode === 0 ? await ctx.broker.exec(sb, ["node", ".keelwork/qa-browser/node_modules/playwright/cli.js", "install", "chromium"]).catch((e) => ({ exitCode: 1, stdout: "", stderr: String(e), timedOut: false })) : add;
-      ready = inst.exitCode === 0;
-      if (!ready) browser.reason = `The browser runtime couldn't be installed in the sandbox (${(inst.stderr || inst.stdout).trim().split("\n").at(-1)?.slice(0, 160) ?? "unknown error"}).`;
-    } else if (!installed) {
-      browser.reason = "The browser runtime isn't installed yet. Run Full QA once to install it; Quick QA skips the install to stay quick.";
-    }
-    if (ready) {
-      await ctx.broker.writeFile(sb, ".keelwork/qa/browser.mjs", fs.readFileSync(path.join(SCRIPTS, "browser.mjs"), "utf8"));
-      const r = await ctx.broker.exec(sb, ["node", ".keelwork/qa/browser.mjs"]);
-      note(r.stdout.trim().slice(-300) || r.stderr.trim().slice(-300));
-      try { browser = JSON.parse(await ctx.broker.readFile(sb, ".keelwork/qa/browser.json")); } catch { browser = { available: false, reason: "The browser suite didn't produce results.", pages: [] }; }
-    }
+    await ctx.broker.writeFile(sb, ".keelwork/qa/browser.mjs", fs.readFileSync(path.join(SCRIPTS, "browser.mjs"), "utf8"));
+    const r = await ctx.broker.exec(sb, ["node", ".keelwork/qa/browser.mjs"]).catch((e) => ({ exitCode: 1, stdout: "", stderr: String((e as Error).message), timedOut: false }));
+    note(r.stdout.trim().slice(-300) || r.stderr.trim().slice(-300));
+    try { browser = JSON.parse(await ctx.broker.readFile(sb, ".keelwork/qa/browser.json")); } catch { browser = { available: false, reason: `The browser suite didn't produce results (${r.stderr.trim().split("\n").at(-1)?.slice(0, 160) ?? "no output"}).`, pages: [] }; }
   }
   done++;
 
