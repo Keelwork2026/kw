@@ -20,6 +20,23 @@ export function Monogram({ i, size = 44 }: { i: Pick<Integration, "name" | "colo
   return <span aria-hidden className="grid shrink-0 place-items-center rounded-xl font-bold text-white" style={{ width: size, height: size, background: i.color, fontSize: size * 0.38 }}>{letters}</span>;
 }
 
+/** The service's own logo, served same-origin by /api/connectors/logo; the monogram stands in while it loads or if there is none. */
+export function ConnectorLogo({ i, size = 44 }: { i: Pick<Integration, "id" | "name" | "color" | "logo">; size?: number }) {
+  const [failed, setFailed] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+  if (!i.logo || failed) return <Monogram i={i} size={size} />;
+  const pad = Math.round(size * 0.18);
+  return (
+    <span aria-hidden className="relative grid shrink-0 place-items-center overflow-hidden rounded-xl border border-border bg-white" style={{ width: size, height: size }}>
+      {loaded ? null : <span className="absolute inset-0"><Monogram i={i} size={size} /></span>}
+      {/* eslint-disable-next-line @next/next/no-img-element -- tiny same-origin icons; next/image adds nothing here */}
+      <img src={`/api/connectors/logo/${i.id}`} alt="" width={size - pad * 2} height={size - pad * 2} loading="lazy" decoding="async"
+        onLoad={(e) => { if (e.currentTarget.naturalWidth < 2) setFailed(true); else setLoaded(true); }} onError={() => setFailed(true)}
+        className={`relative object-contain transition-opacity ${loaded ? "opacity-100" : "opacity-0"}`} style={{ width: size - pad * 2, height: size - pad * 2 }} />
+    </span>
+  );
+}
+
 /** Connector marketplace: search, status and category filters, suggestions, and a detail panel per connector. */
 export function ConnectorHub({ views, categories, projects, recent, canManage }: Props) {
   const [q, setQ] = useState("");
@@ -52,7 +69,7 @@ export function ConnectorHub({ views, categories, projects, recent, canManage }:
     <li key={v.integration.id}>
       <button type="button" onClick={(e) => show(v.integration.id, e.currentTarget)} aria-haspopup="dialog" className="panel flex h-full w-full flex-col p-4 text-left transition hover:-translate-y-0.5 hover:border-accent">
         <span className="flex items-start gap-3">
-          <Monogram i={v.integration} />
+          <ConnectorLogo i={v.integration} />
           <span className="min-w-0 flex-1"><span className="block font-semibold">{v.integration.name}</span><span className="block text-xs text-muted">{v.integration.category}</span></span>
           <span className={`pill shrink-0 text-[11px] ${STATE_CLASS[v.state]}`}>{STATE_LABEL[v.state]}</span>
         </span>
@@ -73,15 +90,20 @@ export function ConnectorHub({ views, categories, projects, recent, canManage }:
       <div className="rounded-[22px] border border-border bg-surface p-4">
         <div className="relative"><Icon name="search" size={18} className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted" />
           <label htmlFor="cq" className="sr-only">Search connectors</label>
-          <input id="cq" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search: payments, email, Paystack, WhatsApp…" className="input min-h-12 pl-11" autoComplete="off" /></div>
+          <input id="cq" type="search" value={q} onChange={(e) => setQ(e.target.value)} placeholder={`Search ${views.length} connectors: payments, email, Shopify, Notion…`} className="input min-h-12 pl-11" autoComplete="off" /></div>
         <div className="mt-3 flex flex-wrap items-center gap-2">
           <div role="group" aria-label="Status" className="flex flex-wrap gap-1.5">
             {([["all", `All · ${views.length}`], ["connected", `Connected · ${counts.connected}`], ["setup", `Needs setup · ${counts.setup}`], ["available", `Available · ${counts.available}`]] as const).map(([k, l]) => (
               <button key={k} type="button" aria-pressed={filter === k} onClick={() => setFilter(k)} className={`min-h-9 rounded-full border px-3 text-sm font-semibold ${filter === k ? "border-accent bg-accent text-accent-contrast" : "border-border text-muted hover:text-text"}`}>{l}</button>
             ))}
           </div>
-          <label className="ml-auto flex items-center gap-2 text-sm text-muted">Category
-            <select value={cat} onChange={(e) => setCat(e.target.value)} className="input min-h-9 py-1 text-sm"><option value="">All</option>{categories.map((c) => <option key={c}>{c}</option>)}</select></label>
+        </div>
+        <div role="group" aria-label="Category" className="mt-2 flex flex-wrap gap-1.5">
+          {["", ...categories].map((c) => (
+            <button key={c || "all"} type="button" aria-pressed={cat === c} onClick={() => setCat(c)} className={`min-h-8 rounded-full border px-3 text-xs font-semibold ${cat === c ? "border-text bg-text text-surface" : "border-border text-muted hover:text-text"}`}>
+              {c || "Every category"} <span className="font-normal opacity-70">{c ? views.filter((v) => v.integration.category === c).length : ""}</span>
+            </button>
+          ))}
         </div>
       </div>
 
@@ -92,10 +114,10 @@ export function ConnectorHub({ views, categories, projects, recent, canManage }:
           {section("c-setup", "Needs setup", "Some keys are in place; the rest are missing.", views.filter((v) => v.state === "setup"))}
           {recent.length ? (
             <section aria-labelledby="c-recent" className="mt-8"><h2 id="c-recent" className="text-xl">Recently connected</h2>
-              <ul className="mt-3 grid gap-2">{recent.map((r) => <li key={r.id + r.projectId} className="flex items-center gap-3 text-sm"><Monogram i={views.find((v) => v.integration.id === r.id)!.integration} size={28} /><span><strong>{r.name}</strong> in {r.project}</span><time className="ml-auto text-xs text-muted" dateTime={r.since}>{r.since.slice(0, 10)}</time></li>)}</ul>
+              <ul className="mt-3 grid gap-2">{recent.map((r) => <li key={r.id + r.projectId} className="flex items-center gap-3 text-sm"><ConnectorLogo i={views.find((v) => v.integration.id === r.id)!.integration} size={28} /><span><strong>{r.name}</strong> in {r.project}</span><time className="ml-auto text-xs text-muted" dateTime={r.since}>{r.since.slice(0, 10)}</time></li>)}</ul>
             </section>
           ) : null}
-          {categories.map((c) => <div key={c}>{section(`c-${c.replace(/\W+/g, "-")}`, c, "", views.filter((v) => v.integration.category === c))}</div>)}
+          {categories.map((c) => { const list = views.filter((v) => v.integration.category === c); return <div key={c}>{section(`c-${c.replace(/\W+/g, "-")}`, c, `${list.length} connector${list.length === 1 ? "" : "s"}`, list)}</div>; })}
         </>
       ) : (
         <section aria-live="polite" className="mt-6">
@@ -118,7 +140,7 @@ function ConnectorPanel({ v, projects, canManage, onClose }: { v: ConnectorView;
     <div className="fixed inset-0 z-50 flex justify-end bg-black/40" onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <div ref={ref} role="dialog" aria-modal="true" aria-labelledby="cp-title" tabIndex={-1} onKeyDown={(e) => { if (e.key === "Escape") onClose(); }} className="h-full w-[min(30rem,100%)] overflow-y-auto bg-surface p-6 shadow-2xl outline-none">
         <div className="flex items-start gap-3">
-          <Monogram i={i} size={52} />
+          <ConnectorLogo key={i.id} i={i} size={52} />
           <div className="min-w-0 flex-1"><h2 id="cp-title" className="text-2xl">{i.name}</h2><p className="text-sm text-muted">{i.category} · {STATE_LABEL[v.state]}</p></div>
           <button type="button" onClick={onClose} aria-label="Close" className="grid h-9 w-9 place-items-center rounded-lg hover:bg-surface-2"><Icon name="close" size={18} /></button>
         </div>
@@ -130,7 +152,7 @@ function ConnectorPanel({ v, projects, canManage, onClose }: { v: ConnectorView;
         {projects.length ? (canManage ? (
           <div className="mt-2 flex flex-wrap items-end gap-2">
             <label className="grid flex-1 gap-1 text-sm">Project<select value={target} onChange={(e) => setTarget(e.target.value)} className="input">{projects.map((p) => <option key={p.id} value={p.id}>{p.name}{v.connected.some((c) => c.id === p.id) ? " (connected)" : ""}</option>)}</select></label>
-            <a href={`/projects/${target}/secrets?connect=${i.id}#set-secret`} className="btn btn-primary min-h-11">Add keys</a>
+            <a href={i.secrets.length ? `/projects/${target}/secrets?connect=${i.id}#set-secret` : `/projects/${target}/secrets#set-secret`} className="btn btn-primary min-h-11">Add keys</a>
           </div>
         ) : <p className="mt-1 text-sm text-muted">Only owners and admins can add keys.</p>) : <p className="mt-1 text-sm text-muted">Create a project first — connectors belong to a project.</p>}
         <p className="mt-2 text-xs text-muted">Keys are encrypted with a fresh key per value and never shown again — not to you, the agents or Keelwork staff.</p>
@@ -138,10 +160,14 @@ function ConnectorPanel({ v, projects, canManage, onClose }: { v: ConnectorView;
         <h3 className="mt-6 font-semibold">What access this gives</h3>
         <p className="mt-1 text-sm">{i.access}</p>
         <h3 className="mt-5 font-semibold">Keys it needs</h3>
+        {i.secrets.length ? null : <p className="mt-1 text-sm">None fixed — you choose the names. Use capitals and underscores, for example <code className="text-xs">ACME_API_KEY</code>.</p>}
         <ul className="mt-1 grid gap-1 text-sm">{i.secrets.map((s) => <li key={s.name}><code className="text-xs">{s.name}</code> <span className="text-muted">— {s.hint}{s.name.startsWith("NEXT_PUBLIC_") ? " (visible in the browser by design)" : " (server only)"}</span></li>)}</ul>
         <h3 className="mt-5 font-semibold">Where to get them</h3>
         <p className="mt-1 text-sm">{i.setup}</p>
-        <a href={i.docs} target="_blank" rel="noopener noreferrer" className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-accent">{i.name} docs <Icon name="external" size={14} /></a>
+        {i.custom ? null : <p className="mt-2 flex flex-wrap gap-4">
+          {i.docs !== i.site ? <a href={i.docs} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-accent">{i.name} docs <Icon name="external" size={14} /></a> : null}
+          <a href={i.site} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-accent">Visit {i.name} <Icon name="external" size={14} /></a>
+        </p>}
 
         {v.connected.length || v.partial.length ? <>
           <h3 className="mt-6 font-semibold">In your projects</h3>

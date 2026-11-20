@@ -41,7 +41,7 @@ export function connectorViews(projects: HubProject[], secrets: HubSecret[], wor
     const names = integration.secrets.map((s) => s.name);
     const connected: ConnectorView["connected"] = [];
     const partial: ConnectorView["partial"] = [];
-    for (const p of projects) {
+    for (const p of names.length ? projects : []) {
       const held = byProject.get(p.id);
       if (!held) continue;
       const have = names.filter((n) => held.has(n));

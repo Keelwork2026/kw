@@ -12,7 +12,7 @@ export const metadata = { title: "Secrets" };
 export default async function SecretsPage({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<{ name?: string; connect?: string }> }) {
   const { id } = await params;
   const sp = await searchParams;
-  const connecting = INTEGRATIONS.find((i) => i.id === sp.connect);
+  const connecting = INTEGRATIONS.find((i) => i.id === sp.connect && i.secrets.length > 0);
   const { supabase, project, can } = await loadProject(id);
   const { data } = await supabase.from("project_secrets").select("name, environment, updated_at, key_version").eq("project_id", project.id).order("name");
   const manage = can("secret.manage");

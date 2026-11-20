@@ -1,3 +1,5 @@
+import { CATEGORIES, DIRECTORY, EXTRA, type Category, type DirectoryRow } from "./directory";
+
 /**
  * Connectors use the PROJECT's own accounts. A connector is "connected" when
  * the project holds every secret it needs, and "needs setup" when it holds
@@ -8,7 +10,11 @@
  * which the agents write when you ask for the feature.
  */
 export type Integration = {
-  id: string; name: string; category: string; description: string; usedBy: string; docs: string;
+  id: string; name: string; category: Category;
+  /** The service's own website. */
+  site: string;
+  /** A page whose icon is the product's logo; served through /api/connectors/logo/[id]. None means the monogram is shown. */
+  logo?: string; description: string; usedBy: string; docs: string;
   secrets: { name: string; hint: string }[];
   deployOnly?: boolean;
   /** Brand-neutral tile colour for the monogram icon. */
@@ -19,9 +25,14 @@ export type Integration = {
   setup: string;
   /** Used by a built-in Keelwork feature, not only by your app's code. */
   native?: boolean;
+  /** No fixed keys: the project names its own secrets. Never shows as connected. */
+  custom?: boolean;
 };
 
-export const INTEGRATIONS: Integration[] = [
+/** Hand-written detail for the connectors Keelwork has documented closely. Name, category, site and logo come from the directory. */
+type Detail = Omit<Integration, "name" | "category" | "site" | "logo"> & { name?: string; category?: string };
+
+const DETAILED: Detail[] = [
   // Used by Keelwork features
   { id: "resend", name: "Resend", category: "Email", description: "Transactional email.", usedBy: "Email steps in automations, and your app", docs: "https://resend.com/docs", secrets: [{ name: "RESEND_API_KEY", hint: "Starts with re_" }], color: "#111111", access: "Sends email from your verified domains. It can't read your inbox.", setup: "Resend → API Keys → Create (choose \"Sending access\").", native: true },
   { id: "slack", name: "Slack", category: "Messaging", description: "Post messages to a channel.", usedBy: "Slack steps in automations", docs: "https://api.slack.com/messaging/webhooks", secrets: [{ name: "SLACK_WEBHOOK_URL", hint: "https://hooks.slack.com/services/…" }], color: "#4a154b", access: "Posts to the one channel the webhook was made for. It can't read messages.", setup: "Slack → Apps → Incoming Webhooks → Add to a channel.", native: true },
@@ -66,9 +77,50 @@ export const INTEGRATIONS: Integration[] = [
   { id: "calendly", name: "Calendly", category: "Scheduling", description: "Show booking links and receive booking events.", usedBy: "Your app", docs: "https://developer.calendly.com", secrets: [{ name: "CALENDLY_TOKEN", hint: "Personal access token" }], color: "#006bff", access: "Reads your event types and scheduled events.", setup: "Calendly → Integrations → API & Webhooks." },
 ];
 
-export const CONNECTOR_CATEGORIES = [...new Set(INTEGRATIONS.map((i) => i.category))];
+const PALETTE = ["#2f5bea", "#0f766e", "#b4235a", "#7c3aed", "#c2410c", "#0e7490", "#4d7c0f", "#9f1239", "#1d4ed8", "#a16207"];
+function tint(id: string): string {
+  let h = 0;
+  for (const c of id) h = (h * 31 + c.charCodeAt(0)) >>> 0;
+  return PALETTE[h % PALETTE.length]!;
+}
+
+const SETUP: Record<DirectoryRow["kind"], string> = {
+  key: "In the service's dashboard, open its API or developer settings and create a key for this app.",
+  token: "In the service's dashboard, open its API or developer settings and create an access token for this app.",
+  oauth: "Register an OAuth app in the service's developer console, set its redirect URL to your app, and copy the client ID and secret.",
+  google: "Google Cloud Console → APIs & Services: enable the API, then Credentials → Create OAuth client ID (Web application).",
+  "google-sa": "Google Cloud Console → IAM → Service Accounts → Keys, enable the API, then share the data with the service account's email.",
+  microsoft: "Microsoft Entra admin center → App registrations → New registration, add the Graph permissions it needs, then Certificates & secrets.",
+  aws: "AWS IAM → create a user or role with only the permissions the app needs, then create an access key.",
+  azure: "Azure portal → Microsoft Entra ID → App registrations, then assign the app a role on your subscription.",
+  url: "Copy the connection string from the service's console. Use a user with only the access the app needs.",
+  webhook: "Create an incoming webhook for the channel in the service's settings and copy its URL.",
+  custom: "Add the service's keys on a project's Secrets tab under names you choose, then tell the agents what the service is and which keys to use.",
+  explicit: "Create the keys in the service's dashboard under its API or developer settings.",
+};
+const ACCESS = "What the key can do depends on the scopes or permissions you choose when you create it. Pick the narrowest that covers your feature, and use test or sandbox keys until launch.";
+
+function fromRow(r: DirectoryRow): Integration {
+  const d = DETAILED.find((x) => x.id === r.id);
+  if (d) return { ...d, name: r.name, category: r.category, site: r.site, logo: r.logo };
+  return {
+    id: r.id, name: r.name, category: r.category, site: r.site, logo: r.logo, description: r.description, secrets: r.secrets,
+    usedBy: r.kind === "custom" ? "Your app, under the names you choose" : "Your app",
+    docs: r.site, color: tint(r.id), access: r.kind === "custom" ? "Whatever the keys you add allow. Keelwork's agents don't connect to MCP servers directly yet; they write API calls in your app instead." : ACCESS,
+    setup: SETUP[r.kind], ...(r.kind === "custom" ? { custom: true } : {}),
+  };
+}
+
+export const INTEGRATIONS: Integration[] = [...DIRECTORY, ...EXTRA].map(fromRow)
+  .sort((a, b) => CATEGORIES.indexOf(a.category) - CATEGORIES.indexOf(b.category) || a.name.localeCompare(b.name));
+
+export const CONNECTOR_CATEGORIES: string[] = [...CATEGORIES];
+
+/** Every detailed connector must appear in the directory, so none silently disappears. */
+export const UNLISTED_DETAILS = DETAILED.filter((d) => !INTEGRATIONS.some((i) => i.id === d.id)).map((d) => d.id);
 
 export function connectionStatus(integration: Integration, connected: Set<string>): { connected: boolean; missing: string[] } {
+  if (integration.custom || !integration.secrets.length) return { connected: false, missing: [] };
   const missing = integration.secrets.map((s) => s.name).filter((n) => !connected.has(n));
   return { connected: missing.length === 0, missing };
 }
