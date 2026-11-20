@@ -49,7 +49,7 @@ test("apps: every template is complete and its brief is usable", () => {
       if (m.m === "progress") for (const i of m.items) assert.ok(i.pct >= 0 && i.pct <= 100);
     }
     const brief = appBrief(a);
-    assert.ok(brief.length <= 2000 && brief.includes(a.brand) && /never invent/.test(brief), a.slug);
+    assert.ok(brief.length <= 2000 && brief.includes(a.name) && !brief.includes(a.brand) && /never invent/.test(brief), a.slug);
   }
 });
 
