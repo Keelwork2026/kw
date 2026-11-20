@@ -2,6 +2,8 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
+import { SIMPLE_GROUPS, SIMPLE_ITEMS, simpleSub } from "@/lib/simple/content";
+import { Simple } from "@/components/simple/simple";
 import { MENU, PROJECT_PATH_RE, TAB_TO_MENU, hrefFor, itemForPath, type MenuItem, type ProjectTab } from "@/lib/menu";
 
 const HINTS_KEY = "kw.menu.hints";
@@ -47,7 +49,7 @@ export function NavMenu({ isAdmin, staffQueue = 0, onNavigate }: { isAdmin: bool
       </div>
       {MENU.map((group) => (
         <section key={group.id} aria-labelledby={`menu-${group.id}`}>
-          <h2 id={`menu-${group.id}`} className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted">{group.label}</h2>
+          <h2 id={`menu-${group.id}`} className="px-3 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-muted"><Simple simple={SIMPLE_GROUPS[group.id]}>{group.label}</Simple></h2>
           <ul className="grid gap-0.5">
             {group.items.map((item) => (
               <Entry key={item.slug} item={item} active={current === item.slug} hints={hints} projectId={projectId} pathname={pathname} onNavigate={onNavigate} />
@@ -87,8 +89,8 @@ function Entry({ item, active, hints, projectId, pathname, onNavigate }: { item:
           title={item.hint}
           className={`flex min-h-10 flex-1 flex-col justify-center rounded-xl px-3 py-1.5 text-sm ${active ? "font-semibold text-text" : "font-medium text-muted group-hover:text-text"}`}
         >
-          <span>{item.label}</span>
-          <span id={hintId} className={hints ? "text-[11px] font-normal leading-4 text-muted" : "sr-only"}>{item.hint}</span>
+          <span><Simple simple={SIMPLE_ITEMS[item.slug]?.label}>{item.label}</Simple></span>
+          <span id={hintId} className={hints ? "text-[11px] font-normal leading-4 text-muted" : "sr-only"}><Simple simple={SIMPLE_ITEMS[item.slug]?.hint}>{item.hint}</Simple></span>
         </Link>
         {item.children?.length ? (
           <button
@@ -110,14 +112,14 @@ function Entry({ item, active, hints, projectId, pathname, onNavigate }: { item:
             return (
               <li key={c.label}>
                 <Link href={to} onClick={onNavigate} title={c.hint} className="flex min-h-8 flex-col justify-center rounded-lg px-2.5 py-1 text-[13px] text-muted hover:bg-surface-2 hover:text-text">
-                  <span>{c.label}</span>
+                  <span><Simple simple={simpleSub(item.slug, c.label)}>{c.label}</Simple></span>
                   {hints ? <span className="text-[11px] leading-4 opacity-80">{c.hint}</span> : <span className="sr-only">{c.hint}</span>}
                 </Link>
               </li>
             );
           })}
           {"tab" in (item.children[0]?.to ?? {}) && !projectId ? (
-            <li className="px-2.5 py-1 text-[11px] text-muted">You&apos;ll pick a project first.</li>
+            <li className="px-2.5 py-1 text-[11px] text-muted"><Simple simple="First, you'll choose which project.">You&apos;ll pick a project first.</Simple></li>
           ) : null}
         </ul>
       ) : null}

@@ -3,6 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { PROJECT_TABS } from "@/lib/nav";
 import { PROJECT_TAB_HINTS } from "@/lib/menu";
+import { SIMPLE_TABS } from "@/lib/simple/content";
+import { Simple, OnlyStandard } from "@/components/simple/simple";
 
 /**
  * Project tabs. Each tab carries a hint (tooltip and screen-reader text);
@@ -30,7 +32,7 @@ export function ProjectTabs({ projectId }: { projectId: string }) {
                   aria-current={isActive ? "page" : undefined}
                   className={`inline-flex min-h-10 items-center rounded-full px-4 text-sm font-semibold ${isActive ? "bg-accent text-accent-contrast shadow-sm" : "border border-border bg-surface hover:bg-surface-2"}`}
                 >
-                  {t.label}<span className="sr-only"> — {hint}</span>
+                  <Simple simple={SIMPLE_TABS[t.slug]?.label}>{t.label}</Simple><span className="sr-only"> — {hint}</span>
                 </Link>
               </li>
             );
@@ -38,7 +40,7 @@ export function ProjectTabs({ projectId }: { projectId: string }) {
         </ul>
       </nav>
       {info ? (
-        <div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm" role="note" aria-label={`${active!.label} tab hint`}>
+        <OnlyStandard><div className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm" role="note" aria-label={`${active!.label} tab hint`}>
           <p className="text-muted"><span className="font-semibold text-text">{active!.label}:</span> {info.hint}. You can {info.can.map((c) => c.charAt(0).toLowerCase() + c.slice(1)).join("; ")}.</p>
           {info.jump?.length ? (
             <nav aria-label={`${active!.label} sections`} className="flex flex-wrap items-center gap-1.5">
@@ -48,7 +50,7 @@ export function ProjectTabs({ projectId }: { projectId: string }) {
               ))}
             </nav>
           ) : null}
-        </div>
+        </div></OnlyStandard>
       ) : null}
     </>
   );

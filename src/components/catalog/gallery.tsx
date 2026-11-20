@@ -3,6 +3,8 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Entry } from "@/lib/catalog";
 import { SEARCH_EXAMPLES, searchCatalog } from "@/lib/catalog/search";
 import { Icon } from "@/components/icons";
+import { Simple, OnlySimple } from "@/components/simple/simple";
+import { SIMPLE_LEVEL } from "@/lib/simple/content";
 
 export type GalleryEntry = Omit<Entry, "brief">;
 type Props = {
@@ -80,10 +82,11 @@ export function TemplateGallery({ entries, thumbs, categories, types, styles, us
           <span className="pill shrink-0 bg-surface-2 text-[11px]">{kindLabel(e)}</span>
         </div>
         <p className="mt-1 line-clamp-2 text-sm text-muted">{e.tagline}</p>
+        <OnlySimple className="mt-2 rounded-lg bg-surface-2 px-2.5 py-1.5 text-xs">{SIMPLE_LEVEL[e.level] ?? e.level}. Pick it to get a copy you can change — words, pictures and colors.</OnlySimple>
         <p className="mt-2 text-xs text-muted">{e.category} · {e.type} · {e.parts.length} {e.kind === "website" ? "pages" : "screens"}{usage?.[e.slug] ? ` · used ${usage[e.slug]}×` : ""}</p>
         <div className="mt-auto flex gap-2 pt-3">
-          <a href={hrefFor(e, signedIn)} className="btn btn-primary min-h-10 flex-1 px-3 text-sm">Use template</a>
-          <button type="button" onClick={(ev) => openCard(e.slug, ev.currentTarget)} className="btn btn-secondary min-h-10 px-3 text-sm">Preview</button>
+          <a href={hrefFor(e, signedIn)} className="btn btn-primary min-h-10 flex-1 px-3 text-sm"><Simple simple="Use this design">Use template</Simple></a>
+          <button type="button" onClick={(ev) => openCard(e.slug, ev.currentTarget)} className="btn btn-secondary min-h-10 px-3 text-sm"><Simple simple="Look inside">Preview</Simple></button>
         </div>
       </div>
     </article>
@@ -200,9 +203,13 @@ function PreviewPanel({ e, list, thumbs, entries, signedIn, onClose, onGo }: { e
             </div>
             {e.kind === "app" ? <p className="mt-3 rounded-lg bg-surface-2 p-3 text-xs text-muted">Interactive preview with sample data — click around, filter, submit forms. Using it gives the agents this design and a brief; you approve the plan before anything is built, and your real data replaces the samples.</p> : null}
             <p className="mt-4 text-sm">{e.description}</p>
+            <OnlySimple className="mt-3 rounded-xl border border-border p-3 text-sm">
+              <p className="font-semibold">What happens if you pick this?</p>
+              <ol className="mt-1 list-decimal pl-5 text-muted"><li>We make a new project with this design.</li><li>The AI helpers show you a plan. Nothing is built until you say yes.</li><li>You change the words, pictures and colors to make it yours.</li></ol>
+            </OnlySimple>
             <dl className="mt-4 grid grid-cols-2 gap-3 text-sm">
               <div><dt className="text-xs text-muted">Type</dt><dd className="font-semibold">{e.type}</dd></div>
-              <div><dt className="text-xs text-muted">Complexity</dt><dd className="font-semibold">{e.level}</dd></div>
+              <div><dt className="text-xs text-muted"><Simple simple="How easy">Complexity</Simple></dt><dd className="font-semibold"><Simple simple={SIMPLE_LEVEL[e.level]}>{e.level}</Simple></dd></div>
               <div><dt className="text-xs text-muted">Style</dt><dd className="font-semibold">{e.styles.join(", ")}</dd></div>
               <div><dt className="text-xs text-muted">Industry</dt><dd className="font-semibold">{e.industry}</dd></div>
             </dl>

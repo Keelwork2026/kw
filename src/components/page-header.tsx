@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { Icon, type IconName } from "./icons";
-export function PageHeader({ title, description, actions }: { title: string; description?: string; actions?: React.ReactNode }) {
+import { Simple, StatusWords } from "./simple/simple";
+import { SIMPLE_TITLES } from "@/lib/simple/content";
+export function PageHeader({ title, description, actions, simple }: { title: string; description?: string; actions?: React.ReactNode; simple?: { title?: string; description?: string } }) {
+  const plain = { ...SIMPLE_TITLES[title], ...simple };
   return (
     <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
       <div>
-        <h1 className="text-3xl md:text-4xl" style={{ letterSpacing: "-0.045em" }}>{title}</h1>
-        {description ? <p className="mt-1 max-w-2xl text-muted">{description}</p> : null}
+        <h1 className="text-3xl md:text-4xl" style={{ letterSpacing: "-0.045em" }}><Simple simple={plain.title}>{title}</Simple></h1>
+        {description || plain.description ? <p className="mt-1 max-w-2xl text-muted"><Simple simple={plain.description}>{description}</Simple></p> : null}
       </div>
       {actions}
     </header>
@@ -52,7 +55,7 @@ const STATUS_TONE: Record<string, string> = {
 export function StatusPill({ status }: { status: string }) {
   // Keyed by status, so a change (queued → running → done) re-plays the entrance and is noticed.
   const working = ["building", "running", "planning", "deploying", "queued"].includes(status);
-  return <span key={status} className={`pill kw-status ${STATUS_TONE[status] ?? "bg-surface-2 text-text"}`}>{working ? <span aria-hidden className="kw-live h-1.5 w-1.5 rounded-full bg-current" /> : null}{status.replace(/_/g, " ")}</span>;
+  return <span key={status} className={`pill kw-status ${STATUS_TONE[status] ?? "bg-surface-2 text-text"}`}>{working ? <span aria-hidden className="kw-live h-1.5 w-1.5 rounded-full bg-current" /> : null}<StatusWords status={status} /></span>;
 }
 
 export function formatMicros(micros: number | string | null | undefined): string {

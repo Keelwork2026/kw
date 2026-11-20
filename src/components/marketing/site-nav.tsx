@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { MENUS, type Menu } from "./menu-data";
 import { Icon } from "./icon";
 import { Logo } from "../logo";
+import { SimpleToggle } from "../simple/toggle";
 
 export function SiteNav() {
   const [open, setOpen] = useState<Menu["id"] | null>(null);
@@ -47,10 +48,12 @@ export function SiteNav() {
             <li><Link href="/solutions/enterprise" className="flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-surface-2">Enterprise</Link></li>
           </ul>
           <div className="ml-auto hidden items-center gap-2 lg:flex">
+            <SimpleToggle />
             <Link href="/sign-in" className="btn btn-secondary">Log in</Link>
             <Link href="/sign-up" className="btn btn-primary">Get started</Link>
           </div>
-          <button type="button" className="btn btn-secondary ml-auto min-h-12 lg:hidden" aria-expanded={mobile} aria-controls="mobile-menu" onClick={() => setMobile(!mobile)}>
+          <SimpleToggle compact className="ml-auto lg:hidden" />
+          <button type="button" className="btn btn-secondary min-h-12 lg:hidden" aria-expanded={mobile} aria-controls="mobile-menu" onClick={() => setMobile(!mobile)}>
             {mobile ? "Close" : "Menu"}
           </button>
         </div>

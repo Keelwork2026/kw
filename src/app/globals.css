@@ -377,3 +377,46 @@ code, kbd, pre, samp { font-family: var(--font-mono); }
   .kw-empty-icon, .kw-pop, .kw-status { animation: kw-backdrop var(--kw-d2) linear backwards !important; }
   .kw-draw path { animation: none !important; stroke-dasharray: none; }
 }
+
+/* ── Simple Mode ("Explain Like I'm 5") ─────────────────────────────────
+   Both wordings are in the page; <html data-simple="on"> picks one. */
+html:not([data-simple="on"]) .kw-simple, html:not([data-simple="on"]) .kw-simple-block { display: none !important; }
+html[data-simple="on"] .kw-std, html[data-simple="on"] .kw-std-block { display: none !important; }
+
+.kw-eli5 {
+  display: inline-flex; align-items: center; gap: 0.45rem; min-height: 2.5rem; padding: 0 0.95rem;
+  border-radius: 999px; font-size: 0.875rem; font-weight: 700; white-space: nowrap;
+  color: var(--soft-accent-ink); background: var(--soft-accent);
+  border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
+  box-shadow: 0 6px 18px -10px color-mix(in srgb, var(--accent) 70%, transparent);
+  transition: transform var(--kw-d1, 120ms) var(--kw-ease, ease), box-shadow var(--kw-d1, 120ms) var(--kw-ease, ease);
+}
+.kw-eli5:hover { transform: translateY(-1px); box-shadow: 0 10px 22px -10px color-mix(in srgb, var(--accent) 80%, transparent); }
+.kw-eli5:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.kw-eli5[aria-pressed="true"] { color: var(--accent-contrast); background: var(--grad-button, var(--accent)); border-color: transparent; }
+.kw-eli5-compact { min-height: 2.75rem; padding: 0 0.75rem; font-size: 0.8125rem; }
+
+.kw-guide {
+  border-radius: 22px; padding: 1.1rem 1.25rem; background: var(--surface);
+  border: 1px solid color-mix(in srgb, var(--accent) 28%, var(--border));
+  box-shadow: 0 24px 60px -40px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.kw-guide-like { border-radius: 14px; padding: 0.7rem 0.9rem; background: var(--surface-2); font-size: 0.95rem; }
+.kw-guide-step { display: flex; align-items: flex-start; gap: 0.7rem; border-radius: 14px; padding: 0.55rem 0.7rem; border: 1px solid var(--border); }
+.kw-guide-now { border-color: var(--accent); background: color-mix(in srgb, var(--soft-accent) 55%, var(--surface)); }
+.kw-guide-later { opacity: 0.7; }
+.kw-guide-num { display: grid; place-items: center; flex-shrink: 0; width: 1.75rem; height: 1.75rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; background: var(--surface-2); }
+.kw-guide-now .kw-guide-num { background: var(--accent); color: var(--accent-contrast); }
+.kw-guide-done .kw-guide-num { background: color-mix(in srgb, var(--success) 18%, var(--surface)); color: var(--success); }
+.kw-guide-reopen { border-radius: 999px; border: 1px dashed var(--accent); padding: 0.35rem 0.8rem; font-size: 0.8125rem; font-weight: 600; color: var(--accent); }
+
+.kw-term { display: inline-flex; align-items: center; gap: 0.3rem; min-height: 2rem; border-radius: 999px; padding: 0 0.7rem; font-size: 0.875rem; font-weight: 600; background: var(--surface-2); border: 1px solid var(--border); }
+.kw-term:hover, .kw-term[aria-expanded="true"] { border-color: var(--accent); }
+.kw-term-i { display: grid; place-items: center; width: 1rem; height: 1rem; border-radius: 999px; font-size: 0.65rem; background: var(--accent); color: var(--accent-contrast); }
+.kw-term-pop { position: absolute; left: 0; top: calc(100% + 6px); z-index: 30; width: min(18rem, 80vw); border-radius: 14px; padding: 0.7rem 0.85rem; font-size: 0.875rem; line-height: 1.45; background: var(--surface); border: 1px solid var(--border); box-shadow: 0 20px 50px -24px rgba(0,0,0,0.35); }
+
+/* In Simple Mode: a little larger and calmer, and the main action stands out. */
+html[data-simple="on"] main { font-size: 1.0625rem; }
+html[data-simple="on"] main .btn-primary, html[data-simple="on"] main .btn-gradient { box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+html[data-simple="on"] .kw-simple-hint { display: block; }
+@media (prefers-reduced-motion: reduce) { .kw-eli5, .kw-eli5:hover { transition: none; transform: none; } }

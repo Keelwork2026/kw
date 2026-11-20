@@ -3,6 +3,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { ConnectorView } from "@/lib/integrations/hub";
 import type { Integration } from "@/lib/integrations/catalog";
 import { Icon } from "@/components/icons";
+import { Simple, OnlySimple } from "@/components/simple/simple";
+import { Explain } from "@/components/simple/guide";
 
 type Props = {
   views: ConnectorView[];
@@ -13,6 +15,7 @@ type Props = {
 };
 type Filter = "all" | "connected" | "setup" | "available";
 const STATE_LABEL = { connected: "Connected", setup: "Needs setup", available: "Available" } as const;
+const SIMPLE_STATE = { connected: "Linked", setup: "Almost linked", available: "Not linked yet" } as const;
 const STATE_CLASS = { connected: "bg-[#e6fbf1] text-[#0b7a4b]", setup: "bg-[#fff4e0] text-[#8a4b00]", available: "bg-surface-2 text-muted" } as const;
 
 export function Monogram({ i, size = 44 }: { i: Pick<Integration, "name" | "color">; size?: number }) {
@@ -71,9 +74,10 @@ export function ConnectorHub({ views, categories, projects, recent, canManage }:
         <span className="flex items-start gap-3">
           <ConnectorLogo i={v.integration} />
           <span className="min-w-0 flex-1"><span className="block font-semibold">{v.integration.name}</span><span className="block text-xs text-muted">{v.integration.category}</span></span>
-          <span className={`pill shrink-0 text-[11px] ${STATE_CLASS[v.state]}`}>{STATE_LABEL[v.state]}</span>
+          <span className={`pill shrink-0 text-[11px] ${STATE_CLASS[v.state]}`}><Simple simple={SIMPLE_STATE[v.state]}>{STATE_LABEL[v.state]}</Simple></span>
         </span>
         <span className="mt-2 block text-sm">{v.integration.description}</span>
+        <span className="kw-simple mt-1 block text-xs text-muted">{v.state === "connected" ? "Already linked. It's working." : v.state === "setup" ? "Half linked. One more key is needed." : `Link ${v.integration.name} so your app can use it.`}</span>
         <span className="mt-auto block pt-2 text-xs text-muted">
           {v.connected.length ? `Connected in ${v.connected.map((c) => c.name).slice(0, 2).join(", ")}${v.connected.length > 2 ? ` +${v.connected.length - 2}` : ""}` : v.reasons[0] ?? v.integration.usedBy}
         </span>
@@ -148,21 +152,26 @@ function ConnectorPanel({ v, projects, canManage, onClose }: { v: ConnectorView;
         <p className="mt-1 text-sm text-muted">Used by: {i.usedBy}.{i.native ? "" : " The agents write the integration in your app when you ask for the feature."}</p>
         {v.reasons.length ? <p className="mt-3 rounded-lg bg-surface-2 p-3 text-sm">Suggested: {v.reasons.join("; ")}.</p> : null}
 
-        <h3 className="mt-6 font-semibold">Connect</h3>
+        <OnlySimple className="mt-4 rounded-xl bg-surface-2 p-3 text-sm">
+          <p><strong>What is this?</strong> A <Explain term="connector">connector</Explain> links your app to {i.name}, so they can work together.</p>
+          <p className="mt-2"><strong>What you do:</strong> go to the {i.name} website, copy the private <Explain term="secret">key</Explain> it gives you, and paste it here. That&apos;s all.</p>
+          <p className="mt-2 text-muted">You can remove it any time. We lock the key away; nobody can read it after you save it.</p>
+        </OnlySimple>
+        <h3 className="mt-6 font-semibold"><Simple simple="Link it to a project">Connect</Simple></h3>
         {projects.length ? (canManage ? (
           <div className="mt-2 flex flex-wrap items-end gap-2">
             <label className="grid flex-1 gap-1 text-sm">Project<select value={target} onChange={(e) => setTarget(e.target.value)} className="input">{projects.map((p) => <option key={p.id} value={p.id}>{p.name}{v.connected.some((c) => c.id === p.id) ? " (connected)" : ""}</option>)}</select></label>
-            <a href={i.secrets.length ? `/projects/${target}/secrets?connect=${i.id}#set-secret` : `/projects/${target}/secrets#set-secret`} className="btn btn-primary min-h-11">Add keys</a>
+            <a href={i.secrets.length ? `/projects/${target}/secrets?connect=${i.id}#set-secret` : `/projects/${target}/secrets#set-secret`} className="btn btn-primary min-h-11"><Simple simple="Add the key">Add keys</Simple></a>
           </div>
         ) : <p className="mt-1 text-sm text-muted">Only owners and admins can add keys.</p>) : <p className="mt-1 text-sm text-muted">Create a project first — connectors belong to a project.</p>}
         <p className="mt-2 text-xs text-muted">Keys are encrypted with a fresh key per value and never shown again — not to you, the agents or Keelwork staff.</p>
 
-        <h3 className="mt-6 font-semibold">What access this gives</h3>
+        <h3 className="mt-6 font-semibold"><Simple simple="What the key lets your app do">What access this gives</Simple></h3>
         <p className="mt-1 text-sm">{i.access}</p>
-        <h3 className="mt-5 font-semibold">Keys it needs</h3>
+        <h3 className="mt-5 font-semibold"><Simple simple="The private keys to paste">Keys it needs</Simple></h3>
         {i.secrets.length ? null : <p className="mt-1 text-sm">None fixed — you choose the names. Use capitals and underscores, for example <code className="text-xs">ACME_API_KEY</code>.</p>}
         <ul className="mt-1 grid gap-1 text-sm">{i.secrets.map((s) => <li key={s.name}><code className="text-xs">{s.name}</code> <span className="text-muted">— {s.hint}{s.name.startsWith("NEXT_PUBLIC_") ? " (visible in the browser by design)" : " (server only)"}</span></li>)}</ul>
-        <h3 className="mt-5 font-semibold">Where to get them</h3>
+        <h3 className="mt-5 font-semibold"><Simple simple="Where to find the key">Where to get them</Simple></h3>
         <p className="mt-1 text-sm">{i.setup}</p>
         {i.custom ? null : <p className="mt-2 flex flex-wrap gap-4">
           {i.docs !== i.site ? <a href={i.docs} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-sm font-semibold text-accent">{i.name} docs <Icon name="external" size={14} /></a> : null}

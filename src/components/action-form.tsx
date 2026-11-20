@@ -1,6 +1,9 @@
 "use client";
 import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
+import { SIMPLE_ACTIONS, simplifyConfirm, simplifyMessage } from "@/lib/simple/content";
+import { Simple } from "@/components/simple/simple";
+import { isSimpleOn } from "@/components/simple/toggle";
 
 export type ActionResult = { ok: boolean; message: string } | null;
 export type FormAction = (prev: ActionResult, formData: FormData) => Promise<ActionResult>;
@@ -36,7 +39,7 @@ export function ActionForm({
       action={formAction}
       className={className}
       onSubmit={(e) => {
-        if (confirm && !window.confirm(confirm)) e.preventDefault();
+        if (confirm && !window.confirm(isSimpleOn() ? simplifyConfirm(confirm) : confirm)) e.preventDefault();
       }}
     >
       {children}
@@ -63,7 +66,7 @@ function Submit({ label, pendingLabel, className, hint }: { label: string; pendi
   return (
     <>
       <button type="submit" className={`${className} ${pending ? "kw-working" : ""}`} disabled={pending} aria-busy={pending}>
-        {pending ? <><span aria-hidden className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-r-transparent" />{pendingLabel}</> : label}
+        {pending ? <><span aria-hidden className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-r-transparent" /><Simple simple={pendingLabel === "Working…" ? "Working on it…" : undefined}>{pendingLabel}</Simple></> : <Simple simple={SIMPLE_ACTIONS[label]}>{label}</Simple>}
       </button>
       {pending && (hint || secs >= 3) ? <span className="kw-fade text-xs text-muted" aria-live="polite">{hint}{hint && secs >= 3 ? " · " : ""}{secs >= 3 ? `${secs}s` : ""}</span> : null}
     </>
@@ -81,7 +84,7 @@ export function FormMessage({ state }: { state: ActionResult }) {
   ) : (
     <p key={state.message} role="alert" className="kw-shake inline-flex items-start gap-1.5 text-sm font-medium text-danger">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-px shrink-0" aria-hidden><path d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 8v5 M12 16h.01" /></svg>
-      {state.message}
+      <Simple simple={simplifyMessage(state.message)}>{state.message}</Simple>
     </p>
   );
 }

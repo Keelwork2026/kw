@@ -5,6 +5,9 @@ import { MobileMenu } from "@/components/mobile-menu";
 import { PageHints } from "@/components/page-hints";
 import { Logo } from "@/components/logo";
 import { Notifications } from "@/components/notifications";
+import { SimpleToggle } from "@/components/simple/toggle";
+import { SimpleGuide } from "@/components/simple/guide";
+import { OnlyStandard } from "@/components/simple/simple";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const { supabase, user, org, orgs } = await requireOrg();
@@ -35,9 +38,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       <div className="hidden md:flex"><Sidebar orgs={orgs} current={org} email={user.email ?? ""} isAdmin={Boolean(isAdmin)} projects={list} staffQueue={staffQueue} waiting={waiting} /></div>
       <header className="flex items-center justify-between border-b border-border bg-surface px-4 py-2 md:hidden">
         <Logo href="/dashboard" />
-        <div className="flex items-center gap-1"><Notifications waiting={waiting} placement="top" /><MobileMenu isAdmin={Boolean(isAdmin)} projects={list} staffQueue={staffQueue} /></div>
+        <div className="flex items-center gap-1.5"><SimpleToggle compact /><Notifications waiting={waiting} placement="top" /><MobileMenu isAdmin={Boolean(isAdmin)} projects={list} staffQueue={staffQueue} /></div>
       </header>
       <main id="main" className="flex-1 overflow-y-auto px-4 py-6 md:px-10 md:py-8">
+        <div className="sticky top-0 z-20 -mt-2 mb-3 hidden justify-end md:flex"><SimpleToggle /></div>
         {showing.map((a) => (
           <p key={a.id} role="status" className={`mb-4 flex items-start gap-2 rounded-2xl border px-4 py-3 text-sm font-medium ${a.level === "info" ? "border-border bg-surface-2" : "border-[#f0d99a] bg-[#fff6d6] text-[#5c4100]"}`}>
             <span className="pill shrink-0 bg-text text-bg">{a.level === "maintenance" ? "Maintenance" : a.level === "warning" ? "Heads up" : "Keelwork"}</span>{a.message}
@@ -49,7 +53,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
             <p className="mt-0.5">{orgState.suspended_reason} You can still read your projects, export them and manage billing; builds, automations, deployments and changes are paused. If you think this is a mistake, contact us through the <Link className="font-semibold underline" href="/trust">Trust page</Link>.</p>
           </div>
         ) : null}
-        <PageHints />{children}
+        <SimpleGuide /><OnlyStandard><PageHints /></OnlyStandard>{children}
       </main>
     </div>
   );

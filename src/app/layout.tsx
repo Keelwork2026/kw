@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { cookies } from "next/headers";
 import { themeFromCookie, THEME_COOKIE } from "@/lib/theme";
+import { SIMPLE_COOKIE } from "@/lib/simple/content";
 import { Inter, Space_Grotesk, Instrument_Serif, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -15,9 +16,12 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const theme = themeFromCookie((await cookies()).get(THEME_COOKIE)?.value);
+  const jar = await cookies();
+  const theme = themeFromCookie(jar.get(THEME_COOKIE)?.value);
+  // Simple Mode is set before the first paint, so the right wording shows straight away.
+  const simple = jar.get(SIMPLE_COOKIE)?.value === "1";
   return (
-    <html lang="en" data-theme={theme === "system" ? undefined : theme} className={`${inter.variable} ${grotesk.variable} ${serif.variable} ${mono.variable}`}>
+    <html lang="en" data-theme={theme === "system" ? undefined : theme} data-simple={simple ? "on" : undefined} className={`${inter.variable} ${grotesk.variable} ${serif.variable} ${mono.variable}`}>
       <body className="min-h-dvh bg-bg text-text">{children}</body>
     </html>
   );
