@@ -48,12 +48,12 @@ export function SiteNav() {
             <li><Link href="/solutions/enterprise" className="flex min-h-11 items-center rounded-full px-3 text-sm font-semibold hover:bg-surface-2">Enterprise</Link></li>
           </ul>
           <div className="ml-auto hidden items-center gap-2 lg:flex">
-            <SimpleToggle compact className="xl:hidden" />
-            <SimpleToggle className="hidden xl:inline-flex" />
+            <span className="xl:hidden"><SimpleToggle compact /></span>
+            <span className="hidden xl:inline"><SimpleToggle /></span>
             <Link href="/sign-in" className="btn btn-secondary whitespace-nowrap">Log in</Link>
             <Link href="/sign-up" className="btn btn-primary">Get started</Link>
           </div>
-          <SimpleToggle compact className="ml-auto lg:hidden" />
+          <span className="ml-auto lg:hidden"><SimpleToggle compact /></span>
           <button type="button" className="btn btn-secondary min-h-12 lg:hidden" aria-expanded={mobile} aria-controls="mobile-menu" onClick={() => setMobile(!mobile)}>
             {mobile ? "Close" : "Menu"}
           </button>
