@@ -15,6 +15,8 @@ const CHIPS = [
   { label: "SaaS dashboard", color: "#ff8a4c", text: "A SaaS dashboard with sign-in, teams and usage charts" },
   { label: "Online shop", color: "#3fb37f", text: "An online shop with a catalogue, cart and checkout" },
   { label: "Habit tracker", color: "#ffc46b", text: "A habit tracker with streaks and an evening nudge" },
+  { label: "Generate Image", color: "#38a3ff", text: "An AI image generator: describe a picture, choose a style and size, and save the results to a gallery" },
+  { label: "Generate Video", color: "#c45cff", text: "An AI video generator: describe a short clip or start from an image, then preview and download it" },
 ];
 
 /** The homepage prompt. Submitting carries the idea through sign-up into the first project. */
