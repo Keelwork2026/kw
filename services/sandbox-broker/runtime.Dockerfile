@@ -11,7 +11,10 @@ RUN corepack disable && npm install -g pnpm@10.28.0 && rm -rf /root/.npm \
  && apt-get update && apt-get install -y --no-install-recommends git ca-certificates \
  && rm -rf /var/lib/apt/lists/* \
  && printf '%s\n' '.pnpm-store/' '.pnpm-home/' '.npm-cache/' '.npm/' '.cache/' '.local/' > /etc/gitignore-sandbox \
- && git config --system core.excludesFile /etc/gitignore-sandbox
+ && git config --system core.excludesFile /etc/gitignore-sandbox \
+ && mkdir -p /workspace && chown 1000:1000 /workspace
+# /workspace is a per-project named volume at run time (docker-args.ts); a new
+# volume takes this directory's ownership, so the sandbox user can write to it.
 # HOME is the project folder (/workspace), so package-manager stores and caches
 # land beside the code. The system-wide excludes file above keeps them out of
 # commits, exports and code scans.

@@ -127,7 +127,7 @@ test("realDocker reports unavailable when the daemon isn't reachable", async () 
   assert.equal(await realDocker("/nonexistent/docker").available(), false);
 });
 
-test("sandbox memory: room for the in-memory workspace, clamped", async () => {
+test("sandbox memory: clamped, no swap beyond the limit", async () => {
   const { buildRunArgs } = await import("./docker-args");
   const id = "3f1c2b8e-1a2b-4c3d-8e9f-0a1b2c3d4e5f";
   const mem = (a: string[]) => a[a.indexOf("--memory") + 1];
@@ -150,4 +150,16 @@ test("broker: serve stops the old dev server first, then starts one detached", a
   assert.match(start, /rm -rf \.next/);
   assert.match(start, /pnpm run dev --port 3000 --hostname 0\.0\.0\.0/);
   assert.doesNotMatch(start, /dev -- /);
+});
+
+test("sandbox workspace: a persistent per-project volume by default; tmpfs only on request", async () => {
+  const { buildRunArgs, workspaceVolume } = await import("./docker-args");
+  const id = "3f1c2b8e-1a2b-4c3d-8e9f-0a1b2c3d4e5f";
+  const a = buildRunArgs({ projectId: id });
+  assert.equal(a[a.indexOf("--mount") + 1], `type=volume,source=kw-ws-${id},target=/workspace`);
+  assert.ok(!a.some((x) => x.startsWith("/workspace:")), "no in-memory workspace by default");
+  assert.ok(a.includes("--read-only") && a.includes("ALL") && a.includes("no-new-privileges"), "the rest of the sandbox stays locked down");
+  const t = buildRunArgs({ projectId: id, workspace: "tmpfs" });
+  assert.ok(t.some((x) => x.startsWith("/workspace:rw")) && !t.includes("--mount"));
+  assert.throws(() => workspaceVolume("../etc"), /invalid project id/);
 });

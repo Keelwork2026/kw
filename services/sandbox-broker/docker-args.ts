@@ -9,8 +9,16 @@ export type SandboxOptions = {
   network?: string;
   /** "runsc" for gVisor. */
   runtime?: string;
+  /** Size of /workspace when it's a tmpfs (workspace: "tmpfs"). */
   diskMb?: number;
-  /** Memory limit. The /workspace tmpfs counts against it, so it must exceed the installed app's size. */
+  /**
+   * Where the project's code lives. "volume" (default): a named Docker volume
+   * per project (kw-ws-<id>) that survives container restarts, recreation and
+   * host reboots. "tmpfs": in memory, lost when the container goes — only for
+   * throwaway sandboxes.
+   */
+  workspace?: "volume" | "tmpfs";
+  /** Memory limit. A tmpfs workspace counts against it. */
   memoryMb?: number;
   cpus?: string;
   appOrigin?: string;
@@ -21,6 +29,12 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 export function containerName(projectId: string): string {
   if (!UUID_RE.test(projectId)) throw new Error("invalid project id");
   return `kw-${projectId}`;
+}
+
+/** The persistent volume holding a project's /workspace (code, git history, installed packages). */
+export function workspaceVolume(projectId: string): string {
+  if (!UUID_RE.test(projectId)) throw new Error("invalid project id");
+  return `kw-ws-${projectId}`;
 }
 
 /** Only https origins (or localhost for development) are passed into the sandbox. */
@@ -51,7 +65,10 @@ export function buildRunArgs(o: SandboxOptions): string[] {
     "--pids-limit", "256",
     "--read-only",
     "--tmpfs", "/tmp:rw,noexec,nosuid,size=256m",
-    "--tmpfs", `/workspace:rw,exec,nosuid,size=${disk}m,uid=1000,gid=1000`,
+    ...(o.workspace === "tmpfs"
+      ? ["--tmpfs", `/workspace:rw,exec,nosuid,size=${disk}m,uid=1000,gid=1000`]
+      // A new named volume copies /workspace from the image, owned by uid 1000 (see runtime.Dockerfile).
+      : ["--mount", `type=volume,source=${workspaceVolume(o.projectId)},target=/workspace`]),
     "--workdir", "/workspace",
     "--user", "1000:1000",
     "--cap-drop", "ALL",
