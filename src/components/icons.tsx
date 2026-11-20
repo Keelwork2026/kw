@@ -24,6 +24,7 @@ export const ICONS = {
   error: "M12 21a9 9 0 100-18 9 9 0 000 18z M15 9l-6 6 M9 9l6 6",
   chevronDown: "M6 9l6 6 6-6",
   chevronRight: "M9 6l6 6-6 6",
+  // Dots are drawn heavier (see Icon) so they read at the same weight as lines.
   more: "M5 12h.01 M12 12h.01 M19 12h.01",
   copy: "M9 9h11v11H9z M5 15H4V4h11v1",
   check: "M5 12.5l4.5 4.5L19 7",
@@ -58,7 +59,7 @@ export type IconName = keyof typeof ICONS;
 
 export function Icon({ name, size = 20, label, className = "", strokeWidth = 1.75 }: { name: IconName; size?: number; label?: string; className?: string; strokeWidth?: number }) {
   return (
-    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round"
+    <svg viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth={name === "more" ? Math.max(3, strokeWidth) : strokeWidth} strokeLinecap="round" strokeLinejoin="round"
       className={`inline-block shrink-0 align-[-0.2em] ${className}`} role={label ? "img" : undefined} aria-label={label} aria-hidden={label ? undefined : true} focusable="false">
       <path d={ICONS[name]} />
     </svg>

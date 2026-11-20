@@ -17,6 +17,8 @@ export type ProjectRow = {
 export async function loadProject(id: string): Promise<{
   supabase: SupabaseClient; project: ProjectRow; userId: string;
   can: (permission: string) => boolean; readOnly: boolean;
+  /** The caller's role permission regardless of the project's state (e.g. to offer Restore on an archived project). */
+  permitted: (permission: string) => boolean;
 }> {
   if (!isUuid(id)) notFound();
   const supabase = await createClient();
@@ -32,5 +34,5 @@ export async function loadProject(id: string): Promise<{
   const granted = new Set<string>(perms.filter((_, i) => results[i]?.data === true));
   const archived = project.status === "archived";
   const can = (p: string) => granted.has(p) && (!archived || p === "project.read" || p === "usage.read");
-  return { supabase, project: project as ProjectRow, userId: auth.user.id, can, readOnly: archived || !granted.has("project.write") };
+  return { supabase, project: project as ProjectRow, userId: auth.user.id, can, permitted: (p: string) => granted.has(p), readOnly: archived || !granted.has("project.write") };
 }

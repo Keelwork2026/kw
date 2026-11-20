@@ -2,7 +2,8 @@ import Link from "next/link";
 import { requireOrg } from "@/lib/org";
 import { PageHeader, EmptyState, StatusPill, timeAgo } from "@/components/page-header";
 import { ProjectActions } from "@/components/project-actions";
-import { renameProject, archiveProject } from "./[id]/actions";
+import { renameProject, archiveProject, restoreProject } from "./[id]/actions";
+import { ActionForm } from "@/components/action-form";
 
 export const metadata = { title: "My Projects" };
 
@@ -28,7 +29,12 @@ export default async function ProjectsPage({ searchParams }: { searchParams: Pro
                 {p.description ? <p className="mt-2 line-clamp-2 text-sm text-muted">{p.description}</p> : null}
                 <p className="mt-4 font-mono text-xs text-muted">{p.backend} · {p.deploy_target} · {timeAgo(p.updated_at)}</p>
               </Link>
-              {!showArchived ? <div className="absolute bottom-2 right-2"><ProjectActions project={p} canWrite={can("project.write")} canManage={can("project.manage")} rename={renameProject} archive={archiveProject} /></div> : null}
+              {!showArchived ? <div className="absolute bottom-2 right-2"><ProjectActions project={p} canWrite={can("project.write")} canManage={can("project.manage")} rename={renameProject} archive={archiveProject} /></div>
+                : can("project.manage") ? (
+                  <ActionForm action={restoreProject} submitLabel="Restore" pendingLabel="Restoring…" submitClassName="btn btn-secondary min-h-9 px-3 text-sm" className="absolute bottom-0 right-3 [&>div]:mt-0 [&>div]:justify-end [&>div]:pb-2">
+                    <input type="hidden" name="projectId" value={p.id} />
+                  </ActionForm>
+                ) : null}
             </li>
           ))}
         </ul>

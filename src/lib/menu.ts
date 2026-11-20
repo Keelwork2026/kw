@@ -47,7 +47,7 @@ export const MENU: readonly MenuGroup[] = [
         can: ["Open any project", "See status, backend and host at a glance", "Find archived projects"],
         children: [
           { label: "Active projects", hint: "Everything not archived", to: { path: "/projects" } },
-          { label: "Archived projects", hint: "Read-only, restorable", to: { path: "/projects?archived=1" } },
+          { label: "Archived projects", hint: "Read-only; owners and admins can restore", to: { path: "/projects?archived=1" } },
           { label: "Create a project", hint: "Describe a new app", to: { path: "/new-project" } },
         ],
       },

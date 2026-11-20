@@ -34,6 +34,7 @@ select kwtest.set('p3', public.create_project(kwtest.uuid('org'), 'Three')::text
 select kwtest.throws(format('select public.create_project(%L, ''Four'')', kwtest.get('org')), 'project limit', 'a fourth project exceeds the Free project limit');
 select public.archive_project(kwtest.uuid('p3'));
 select kwtest.lives(format('select public.create_project(%L, ''Four'')', kwtest.get('org')), 'archived projects don''t count towards the limit');
+select kwtest.throws(format('select public.restore_project(%L)', kwtest.get('p3')), 'project limit', 'restoring can''t exceed the plan''s project limit');
 
 -- Usage debits the ledger automatically
 reset role;

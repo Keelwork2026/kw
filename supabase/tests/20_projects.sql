@@ -60,6 +60,18 @@ select kwtest.login('p.member@example.com');
 select kwtest.eq(kwtest.val(format('with u as (update public.projects set name = ''renamed'' where id = %L returning 1) select count(*) from u', kwtest.get('proj')))::int, 0, 'archived projects are read-only');
 select kwtest.throws(format('insert into public.messages(thread_id, role, content, author_id) values (%L, ''user'', ''more'', auth.uid())', kwtest.get('thread')), 'row-level security', 'archived projects take no new messages');
 
+-- Restore
+select kwtest.throws(format('select public.restore_project(%L)', kwtest.get('proj')), 'project.manage', 'members cannot restore projects');
+select kwtest.login('p.owner@example.com');
+select kwtest.eq(kwtest.val(format('select public.restore_project(%L)', kwtest.get('proj'))), 'draft', 'owners restore projects; with no build or deployment it returns to draft');
+select kwtest.ok((select archived_at is null from public.projects where id = kwtest.uuid('proj')), 'restoring clears archived_at');
+select kwtest.throws(format('select public.restore_project(%L)', kwtest.get('proj')), 'not archived', 'only archived projects can be restored');
+reset role;
+select kwtest.ok(exists (select 1 from public.audit_events where action = 'project.restored' and target_id = kwtest.get('proj')), 'restores are audited');
+select kwtest.login('p.member@example.com');
+set role authenticated;
+select kwtest.eq(kwtest.val(format('with u as (update public.projects set name = ''Yoga Studio'' where id = %L returning 1) select count(*) from u', kwtest.get('proj')))::int, 1, 'a restored project is writable again');
+
 -- Usage events
 reset role;
 insert into public.usage_events(org_id, project_id, kind, route, model, input_tokens, output_tokens, cost_micros)

@@ -182,3 +182,18 @@ export async function renameProject(_prev: ActionResult, form: FormData): Promis
   revalidatePath(`/projects/${project.id}`, "layout");
   return { ok: true, message: `Renamed to “${name}”.` };
 }
+
+/** Restores an archived project (owners and admins), within the plan's project limit. */
+export async function restoreProject(_prev: ActionResult, form: FormData): Promise<ActionResult> {
+  const { supabase, project } = await loadProject(str(form, "projectId"));
+  const { error } = await supabase.rpc("restore_project", { p_project: project.id });
+  if (error) {
+    if (/project limit/.test(error.message)) return fail("Your plan's project limit is reached. Archive another project or upgrade on the Billing page, then restore this one.");
+    if (/project\.manage|permission/.test(error.message)) return fail("Only owners and admins can restore projects.");
+    if (/not archived/.test(error.message)) return fail("This project isn't archived.");
+    return fail("Couldn't restore the project. Try again.");
+  }
+  revalidatePath("/projects");
+  revalidatePath("/dashboard");
+  redirect(`/projects/${project.id}`);
+}
