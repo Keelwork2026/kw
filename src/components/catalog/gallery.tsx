@@ -171,15 +171,15 @@ function PreviewPanel({ e, list, thumbs, entries, signedIn, onClose, onGo }: { e
   return (
     <div className="fixed inset-0 z-50 flex items-stretch justify-center bg-black/45 p-0 sm:p-4" onMouseDown={(ev) => { if (ev.target === ev.currentTarget) onClose(); }}>
       <div ref={dialog} role="dialog" aria-modal="true" aria-labelledby="tp-title" tabIndex={-1} onKeyDown={onKey} className="flex w-full max-w-[1400px] flex-col overflow-hidden bg-bg shadow-2xl outline-none sm:rounded-[24px]">
-        <header className="flex flex-wrap items-center gap-2 border-b border-border bg-surface px-4 py-2.5">
-          <button type="button" onClick={onClose} className="btn btn-secondary min-h-9 px-3 text-sm"><Icon name="chevronRight" size={16} className="rotate-180" />Continue exploring</button>
-          <div className="mx-auto flex items-center gap-1">
+        <header className="flex items-center gap-2 overflow-x-auto border-b border-border bg-surface px-3 py-2.5 sm:px-4">
+          <button type="button" onClick={onClose} className="btn btn-secondary min-h-9 shrink-0 px-3 text-sm"><Icon name="chevronRight" size={16} className="rotate-180" /><span className="hidden sm:inline">Continue exploring</span><span className="sm:hidden">Back</span></button>
+          <div className="mx-auto flex shrink-0 items-center gap-1">
             <button type="button" disabled={!prev} onClick={() => prev && onGo(prev.slug)} aria-label={prev ? `Previous: ${prev.name}` : "No previous template"} className="grid h-9 w-9 place-items-center rounded-lg hover:bg-surface-2 disabled:opacity-40"><Icon name="chevronRight" size={18} className="rotate-180" /></button>
-            {src ? <div role="group" aria-label="Device" className="flex rounded-lg border border-border p-0.5">{DEVICES.map((d) => <button key={d.id} type="button" aria-pressed={device === d.id} onClick={() => setDevice(d.id)} className={`min-h-8 rounded-md px-3 text-xs font-semibold ${device === d.id ? "bg-accent text-accent-contrast" : "text-muted"}`}>{d.label}</button>)}</div> : null}
+            {src ? <div role="group" aria-label="Device" className="hidden rounded-lg border border-border p-0.5 sm:flex">{DEVICES.map((d) => <button key={d.id} type="button" aria-pressed={device === d.id} onClick={() => setDevice(d.id)} className={`min-h-8 rounded-md px-3 text-xs font-semibold ${device === d.id ? "bg-accent text-accent-contrast" : "text-muted"}`}>{d.label}</button>)}</div> : null}
             {e.kind === "app" ? <label className="ml-1 flex items-center gap-1 text-xs text-muted">State<select value={state} onChange={(ev) => { setLoaded(false); setState(ev.target.value as typeof state); }} className="input min-h-8 py-0.5 text-xs">{STATES.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}</select></label> : null}
             <button type="button" disabled={!next} onClick={() => next && onGo(next.slug)} aria-label={next ? `Next: ${next.name}` : "No next template"} className="grid h-9 w-9 place-items-center rounded-lg hover:bg-surface-2 disabled:opacity-40"><Icon name="chevronRight" size={18} /></button>
           </div>
-          <button type="button" onClick={onClose} aria-label="Close preview" className="grid h-9 w-9 place-items-center rounded-lg hover:bg-surface-2"><Icon name="close" size={18} /></button>
+          <button type="button" onClick={onClose} aria-label="Close preview" className="grid h-9 w-9 shrink-0 place-items-center rounded-lg hover:bg-surface-2"><Icon name="close" size={18} /></button>
         </header>
         <div className="grid min-h-0 flex-1 lg:grid-cols-[1fr_22rem]">
           <div className="relative min-h-[50vh] overflow-auto bg-surface-2 p-3">

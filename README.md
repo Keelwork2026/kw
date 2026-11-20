@@ -58,7 +58,7 @@ Latest commit checked in CI (GitHub Actions) and on the Mac mini that runs the f
 | CI: lint, strict `tsc`, source checks, unit tests, starter tests, `next build` | **Passed** | `app` job green |
 | CI: database checks on PostgreSQL 16 | **Passed** | 19 migrations; 494 checks in 20 files |
 | CI: backup and restore drill | **Passed** | `restore-drill` job green |
-| Unit and integration tests | **Passed** | 229 tests (`pnpm test`) |
+| Unit and integration tests | **Passed** | 230 tests (`pnpm test`) |
 | Starter template's own tests | **Passed** | 11 tests, including its Content-Security-Policy |
 | Starter dependencies | **Clean** | `pnpm audit`: no known vulnerabilities (postcss and glob pinned to patched versions) |
 | Full stack on the Mac mini (Supabase CLI, Docker via Colima, broker, preview proxy, agent worker, automation runner) | **Passed by hand** | Sign-in; templates gallery with search and in-place preview; interactive app demos; Connectors (search, detail, connect flow to Secrets); Automations (template added as a draft, diagram, counts); Media (real screenshots captured in the sandbox's headless browser and served back); QA Center runs; policy refusal and appeal flow |
