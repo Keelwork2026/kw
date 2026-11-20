@@ -226,20 +226,26 @@ async function execute(ctx: WorkerContext, run: Run, note: (s: string) => void) 
   const journeyCritical = new Set(journeyOut.outcomes.flatMap((o) => o.steps.map((s) => s.page).filter(Boolean)) as string[]);
   const now = new Date().toISOString();
   const issueIdForKey = new Map<string, string>();
+  const issueErrors: string[] = [];
   for (const r of all.filter((x) => x.issue)) {
     const f = r.issue!;
     const prior = byFp.get(f.fingerprint);
     const fields = { title: f.title.slice(0, 300), category: f.category, rule: f.rule, test_key: r.key, severity: f.severity, priority: priorityOf(f.severity, f.confidence, !!f.target && journeyCritical.has(f.target)), confidence: f.confidence, description: f.description.slice(0, 2000), impact: f.impact.slice(0, 1000), recommendation: f.recommendation.slice(0, 2000), verify: f.verify.slice(0, 1000), target: f.target?.slice(0, 400) ?? null, wcag: f.wcag ?? null, evidence: f.evidence, last_run: run.id, last_seen: now, updated_at: now };
     if (!prior) {
-      const { data } = await db.from("qa_issues").insert({ ...fields, ref: nextRef++, project_id: project.id, org_id: project.org_id, fingerprint: f.fingerprint, first_run: run.id, status: "new" }).select("id").single();
-      if (data) issueIdForKey.set(r.key, data.id as string);
+      const { data, error } = await db.from("qa_issues").insert({ ...fields, ref: nextRef, project_id: project.id, org_id: project.org_id, fingerprint: f.fingerprint, first_run: run.id, status: "new" }).select("id").single();
+      if (error) issueErrors.push(`${r.key}: ${error.message}`);
+      else { nextRef++; byFp.set(f.fingerprint, { id: data.id, ref: nextRef - 1, fingerprint: f.fingerprint, status: "new", test_key: r.key, history: [] }); issueIdForKey.set(r.key, data.id as string); }
     } else {
       const regress = ["verified", "fixed", "awaiting_retest"].includes(prior.status as string);
       const status: IssueStatus = regress ? "reopened" : (prior.status as IssueStatus);
-      await db.from("qa_issues").update({ ...fields, status, history: regress ? [...(prior.history as unknown[]), { at: now, by: null, from: prior.status, to: "reopened", note: `Failed again in QA run ${run.id.slice(0, 8)}` }] : prior.history }).eq("id", prior.id);
+      const { error } = await db.from("qa_issues").update({ ...fields, status, history: regress ? [...(prior.history as unknown[]), { at: now, by: null, from: prior.status, to: "reopened", note: `Failed again in QA run ${run.id.slice(0, 8)}` }] : prior.history }).eq("id", prior.id);
+      if (error) issueErrors.push(`${r.key}: ${error.message}`);
       issueIdForKey.set(r.key, prior.id as string);
     }
   }
+  // An issue that couldn't be saved must not vanish silently: it's logged and
+  // the run is marked as having an error, so readiness can't read as clean.
+  if (issueErrors.length) note(`Couldn't save ${issueErrors.length} issue(s): ${issueErrors.slice(0, 5).join("; ")}`);
   // Open issues whose check ran and now passes are verified by this run.
   const passedKeys = new Set(all.filter((r) => r.status === "passed").map((r) => r.key));
   for (const i of existing ?? []) {
@@ -267,6 +273,10 @@ async function execute(ctx: WorkerContext, run: Run, note: (s: string) => void) 
   }
   const { data: issuesNow } = await db.from("qa_issues").select("title, severity, status, category, accepted_expires").eq("project_id", project.id);
   const rd = readiness({ runStatus: "completed", results: all, issues: (issuesNow ?? []) as IssueLite[], settings, overall: sc.overall.value });
+  if (issueErrors.length) {
+    rd.reasons.push(`${issueErrors.length} failed check(s) couldn't be saved as issues; see the run log.`);
+    if (rd.status === "ready" || rd.status === "approved" || rd.status === "conditional") rd.status = "needs_review";
+  }
   const counts = Object.fromEntries(["passed", "failed", "blocked", "skipped", "not_run"].map((s) => [s, all.filter((r) => r.status === s).length]));
   await db.from("qa_runs").update({
     status: "completed", finished_at: new Date().toISOString(), scores: { ...sc, counts }, readiness: rd, comparison,
