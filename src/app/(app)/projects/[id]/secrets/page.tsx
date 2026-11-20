@@ -5,6 +5,7 @@ import { ActionForm } from "@/components/action-form";
 import { EmptyState, Notice, timeAgo } from "@/components/page-header";
 import { setSecret, deleteSecret } from "./actions";
 import { INTEGRATIONS } from "@/lib/integrations/catalog";
+import { Check, Confetti } from "@/components/motion";
 
 export const metadata = { title: "Secrets" };
 
@@ -42,6 +43,11 @@ export default async function SecretsPage({ params, searchParams }: { params: Pr
       </section>
       <section className="card" aria-labelledby="set-secret">
         <h2 id="set-secret" className="text-lg">{connecting ? `Connect ${connecting.name}` : "Set or replace a secret"}</h2>
+        {connecting && connecting.secrets.every((k) => (data ?? []).some((x) => x.name === k.name)) ? (
+          <div role="status" className="mt-2 flex items-center gap-2 rounded-xl bg-[color-mix(in_srgb,var(--success)_12%,transparent)] p-3 text-sm font-semibold text-success">
+            <Confetti id={`connector-${project.id}-${connecting.id}`} pieces={20} /><Check />{connecting.name} is connected to this project.
+          </div>
+        ) : null}
         {connecting ? (
           <div className="mt-2 rounded-xl bg-surface-2 p-3 text-sm">
             <p>{connecting.name} needs {connecting.secrets.length === 1 ? "this key" : `these ${connecting.secrets.length} keys`}. Add each one:</p>

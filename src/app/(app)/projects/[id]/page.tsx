@@ -2,6 +2,8 @@ import Link from "next/link";
 import { loadProject } from "@/lib/project";
 import { ActionForm } from "@/components/action-form";
 import { StatusPill, Notice, timeAgo } from "@/components/page-header";
+import { PlanComposer } from "@/components/builder/plan-composer";
+import { Confetti } from "@/components/motion";
 import { PlanView } from "@/components/builder/plan-view";
 import { AutoRefresh } from "@/components/builder/auto-refresh";
 import { PreviewPane } from "@/components/builder/preview-pane";
@@ -15,7 +17,7 @@ import { Created } from "@/components/project-journey";
 import { NextSteps } from "@/components/next-steps";
 import { loadJourneyState } from "@/lib/journey-state";
 import { suggestions } from "@/lib/journey";
-import { sendMessage, requestPlan, approvePlan, decideApproval, controlRun, setStack, startSandbox } from "./actions";
+import { approvePlan, decideApproval, controlRun, setStack, startSandbox } from "./actions";
 
 export const metadata = { title: "Builder" };
 
@@ -52,6 +54,8 @@ export default async function BuilderPage({ params, searchParams }: { params: Pr
   return (
     <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
       <AutoRefresh active={Boolean(activeRun)} />
+      {justCreated ? <Confetti id={`created-${project.id}`} /> : null}
+      {run && activeRun && Date.now() - new Date(run.created_at).getTime() < 120_000 ? <Confetti id={`build-${run.id}`} pieces={24} /> : null}
       {justCreated ? <div className="xl:col-span-2"><Created name={project.name} hasIdea={Boolean(lastMsg)} aiReady={aiReady} copied={copied} installFailed={sp.install === "failed"} /></div> : null}
       {next.length || !readOnly ? <div className="xl:col-span-2"><NextSteps items={next} projectId={project.id} /></div> : null}
       <div className="grid content-start gap-6">
@@ -82,24 +86,15 @@ export default async function BuilderPage({ params, searchParams }: { params: Pr
         <section className="panel flex max-h-[560px] flex-col" aria-labelledby="chat">
           <h2 id="chat" className="border-b border-border px-5 py-3 text-lg">Chat</h2>
           <ol className="flex-1 space-y-3 overflow-y-auto p-5" aria-live="polite">
-            {messages.data?.length ? messages.data.map((m) => (
-              <li key={m.id} className={`max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${m.role === "user" ? "ml-auto bg-brand text-brand-contrast" : m.role === "assistant" ? "bg-surface-2" : "border border-dashed border-border text-muted"}`}>
+            {messages.data?.length ? messages.data.map((m, i, all) => (
+              <li key={m.id} className={`${i >= all.length - 2 ? "kw-msg " : ""}max-w-[85%] rounded-2xl px-4 py-2.5 text-sm ${m.role === "user" ? "ml-auto bg-brand text-brand-contrast" : m.role === "assistant" ? "bg-surface-2" : "border border-dashed border-border text-muted"}`}>
                 <p className="whitespace-pre-wrap">{m.content}</p>
                 <p className={`mt-1 text-[11px] ${m.role === "user" ? "text-white/70" : "text-muted"}`}>{m.role === "assistant" ? "Software Architect" : m.role === "system" ? "Keelwork" : "You"} · {timeAgo(m.created_at)}</p>
               </li>
             )) : <li className="text-sm text-muted">Describe what you want to build. The Software Architect replies with a plan.</li>}
           </ol>
           {writable ? (
-            <div className="border-t border-border p-4">
-              {lastMsg?.role === "user" && !latestPlan && aiReady ? (
-                <ActionForm action={requestPlan} submitLabel="Plan this idea" pendingLabel="Planning…" submitClassName="btn btn-gradient mb-3"><input type="hidden" name="projectId" value={project.id} /></ActionForm>
-              ) : null}
-              <ActionForm action={sendMessage} submitLabel="Send" pendingLabel="Planning…" submitClassName="btn btn-primary">
-                <input type="hidden" name="projectId" value={project.id} />
-                <label htmlFor="content" className="sr-only">Message</label>
-                <textarea id="content" name="content" rows={3} maxLength={8000} required className="input" placeholder="Add a waitlist page with email confirmation" />
-              </ActionForm>
-            </div>
+            <PlanComposer projectId={project.id} canPlan planNow={lastMsg?.role === "user" && !latestPlan} aiReady={aiReady} />
           ) : <p className="border-t border-border p-4 text-sm text-muted">{readOnly ? "This project is read-only for you." : ""}</p>}
         </section>
 
@@ -163,6 +158,16 @@ export default async function BuilderPage({ params, searchParams }: { params: Pr
             </div>
             {run.status === "queued" ? <p className="mt-2 text-sm text-muted">Queued. The agent worker picks builds up within a few seconds when it&apos;s running; if nothing changes, the worker isn&apos;t deployed yet.</p> : null}
             {run.error ? <p role="alert" className="mt-2 text-sm text-danger">{run.error}</p> : null}
+            {tasks?.length ? (() => {
+              const done = tasks.filter((t) => ["done", "succeeded", "skipped"].includes(t.status)).length;
+              const pct = Math.round((done / tasks.length) * 100);
+              return (
+                <div className="mt-4">
+                  <div className="flex justify-between text-xs text-muted"><span>{done} of {tasks.length} tasks finished</span>{activeRun ? <span>{tasks.filter((t) => t.status === "running").map((t) => t.title).slice(0, 1).join("") || "Waiting for the next task"}</span> : null}</div>
+                  <div className={`kw-progress mt-1.5 h-2 overflow-hidden rounded-full bg-surface-2 ${activeRun ? "kw-working" : ""}`} role="progressbar" aria-valuenow={done} aria-valuemin={0} aria-valuemax={tasks.length} aria-label="Build progress"><div className="h-full rounded-full" style={{ width: `${pct}%`, background: "var(--grad-art)" }} /></div>
+                </div>
+              );
+            })() : null}
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {AGENTS.map((agent) => {
                 const mine = (tasks ?? []).filter((t) => t.agent === agent.id);
@@ -190,7 +195,7 @@ export default async function BuilderPage({ params, searchParams }: { params: Pr
             <h2 id="preview" className="text-lg">Preview</h2>
             <div className="flex flex-wrap gap-2">
               {writable && brokerReady ? (
-                <ActionForm action={startSandbox} submitLabel={sandbox.data?.status === "running" ? "Restart sandbox" : "Start sandbox"} pendingLabel="Starting…" submitClassName="btn btn-secondary min-h-10">
+                <ActionForm action={startSandbox} submitLabel={sandbox.data?.status === "running" ? "Restart sandbox" : "Start sandbox"} pendingLabel="Starting…" pendingHint="Starting the sandbox and the dev server" submitClassName="btn btn-secondary min-h-10">
                   <input type="hidden" name="projectId" value={project.id} />
                   {sandbox.data?.status === "running" ? <input type="hidden" name="restart" value="1" /> : null}
                 </ActionForm>

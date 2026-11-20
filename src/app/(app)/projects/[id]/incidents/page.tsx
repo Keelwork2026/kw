@@ -29,7 +29,7 @@ export default async function IncidentsPage({ params, searchParams }: { params: 
             {can("project.write") && ["open", "fix_proposed"].includes(i.status) ? (
               <div className="mt-3 flex flex-wrap items-end gap-3">
                 {i.status === "open" ? (
-                  <ActionForm action={proposeFix} submitLabel="Propose a fix" pendingLabel="Diagnosing…" submitClassName="btn btn-gradient min-h-10"><input type="hidden" name="projectId" value={project.id} /><input type="hidden" name="incidentId" value={i.id} /></ActionForm>
+                  <ActionForm action={proposeFix} submitLabel="Propose a fix" pendingLabel="Diagnosing…" pendingHint="Reading the logs and the code around the error" submitClassName="btn btn-gradient min-h-10"><input type="hidden" name="projectId" value={project.id} /><input type="hidden" name="incidentId" value={i.id} /></ActionForm>
                 ) : <Link href={`/projects/${project.id}`} className="btn btn-secondary min-h-10">See the fix plan</Link>}
                 <ActionForm action={dismiss} submitLabel="Dismiss" submitClassName="btn btn-secondary min-h-10" className="flex items-end gap-2">
                   <input type="hidden" name="projectId" value={project.id} /><input type="hidden" name="incidentId" value={i.id} />

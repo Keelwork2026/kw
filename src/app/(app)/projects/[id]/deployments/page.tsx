@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Check, Confetti } from "@/components/motion";
 import { loadProject } from "@/lib/project";
 import { ActionForm } from "@/components/action-form";
 import { Notice, StatusPill, EmptyState, timeAgo } from "@/components/page-header";
@@ -22,10 +23,13 @@ export default async function DeploymentsPage({ params }: { params: Promise<{ id
   const missing = project.deploy_target === "vercel" ? ["VERCEL_TOKEN"].filter((n) => !names.has(n)) : ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"].filter((n) => !names.has(n));
   const active = (deployments ?? []).some((d) => ["queued", "collecting", "uploading", "building", "verifying"].includes(d.status));
   const manage = can("project.manage");
+  // Going live in production is a major milestone: celebrate once, right after it happens.
+  const justLive = (deployments ?? []).find((d) => d.environment === "production" && d.status === "live" && d.live_at && Date.now() - new Date(d.live_at).getTime() < 10 * 60_000);
 
   return (
     <div className="grid gap-6">
       <AutoRefresh active={active} />
+      {justLive ? <><Confetti id={`live-${justLive.id}`} /><p role="status" className="flex items-center gap-2 rounded-2xl bg-[color-mix(in_srgb,var(--success)_12%,transparent)] p-4 font-semibold text-success"><Check size={20} />Your app is live{justLive.url ? <> at <a className="underline" href={justLive.url} target="_blank" rel="noopener noreferrer">{justLive.url.replace(/^https?:\/\//, "")}</a></> : null}. The health check passed.</p></> : null}
       <p className="text-sm text-muted">Deploys to <strong>{target.name}</strong> in your own account. A deployment is only called live after its health check passes; if the live check fails, traffic switches back automatically.</p>
       {missing.length ? <Notice>To deploy, add {missing.join(" and ")} on the <Link className="font-semibold underline" href={`/projects/${project.id}/secrets`}>Secrets tab</Link>. Deploy credentials are used only by the deploy service, never passed to your app.</Notice> : null}
       {critical ? <p role="alert" className="notice">{critical} open critical security finding{critical === 1 ? "" : "s"} block deployments. <Link className="font-semibold underline" href={`/projects/${project.id}/security`}>Review them</Link>.</p> : null}

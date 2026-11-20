@@ -237,15 +237,143 @@ code, kbd, pre, samp { font-family: var(--font-mono); }
 .kw-pop { animation: kw-pop .32s cubic-bezier(.2,.9,.3,1.2) both; }
 .kw-draw path { stroke-dasharray: 24; animation: kw-draw .35s .12s ease-out both; }
 
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    animation: none !important;
-    transition: none !important;
-    scroll-behavior: auto !important;
-  }
-  .kw-rise { transform: none; opacity: 1; }
-}
-
 /* In-page anchors from menus land a little below the top edge. */
 [id] { scroll-margin-top: 1.5rem; }
 @media (prefers-reduced-motion: no-preference) { html, main { scroll-behavior: smooth; } }
+
+/* ==================================================================
+   Motion system — one vocabulary for the whole product.
+   Durations:  --kw-d1 (feedback, 120ms) · --kw-d2 (UI state, 200ms)
+               --kw-d3 (entrances, 320ms) · --kw-d4 (celebration, 600ms)
+   Easing:     --kw-ease (standard out) · --kw-ease-pop (slight overshoot,
+               used only for success).
+   Distance:   --kw-move (entrance travel); 0 when people ask for less motion.
+   Every animation here either acknowledges an action, shows a state
+   change, or orients people when something new appears.
+   ================================================================== */
+:root {
+  --kw-d1: 120ms; --kw-d2: 200ms; --kw-d3: 320ms; --kw-d4: 600ms;
+  --kw-ease: cubic-bezier(.2, .8, .2, 1);
+  --kw-ease-in: cubic-bezier(.4, 0, 1, 1);
+  --kw-ease-pop: cubic-bezier(.2, .9, .3, 1.25);
+  --kw-move: 8px;
+  --kw-lift: -2px;
+  --kw-shadow-1: 0 1px 2px rgba(28,27,25,.06), 0 4px 12px -6px rgba(28,27,25,.12);
+  --kw-shadow-2: 0 2px 4px rgba(28,27,25,.06), 0 18px 40px -22px rgba(28,27,25,.35);
+}
+
+@keyframes kw-enter { from { opacity: 0; transform: translateY(var(--kw-move)); } to { opacity: 1; transform: none; } }
+@keyframes kw-enter-x { from { opacity: 0; transform: translateX(calc(var(--kw-move) * 3)); } to { opacity: 1; transform: none; } }
+@keyframes kw-dialog { from { opacity: 0; transform: translateY(var(--kw-move)) scale(.985); } to { opacity: 1; transform: none; } }
+@keyframes kw-backdrop { from { opacity: 0; } to { opacity: 1; } }
+@keyframes kw-drop { from { opacity: 0; transform: translateY(calc(var(--kw-move) * -0.75)) scale(.98); } to { opacity: 1; transform: none; } }
+@keyframes kw-shimmer { from { background-position: 150% 0; } to { background-position: -50% 0; } }
+@keyframes kw-shake { 10%, 90% { transform: translateX(-1px); } 20%, 80% { transform: translateX(2px); } 30%, 50%, 70% { transform: translateX(-3px); } 40%, 60% { transform: translateX(3px); } }
+@keyframes kw-ring { 0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 45%, transparent); } 100% { box-shadow: 0 0 0 12px transparent; } }
+@keyframes kw-dots { 0%, 80%, 100% { opacity: .25; transform: translateY(0); } 40% { opacity: 1; transform: translateY(-2px); } }
+@keyframes kw-confetti { 0% { opacity: 1; transform: translate3d(0,0,0) rotate(0); } 100% { opacity: 0; transform: translate3d(var(--x), var(--y), 0) rotate(var(--r)); } }
+@keyframes kw-sweep { from { transform: translateX(-100%); } to { transform: translateX(100%); } }
+
+/* Lists of cards and table rows everywhere arrive in a quick cascade (first eight; the rest together). */
+.kw-page ul.grid > li, .kw-page ol.grid > li, .kw-page tbody > tr { animation: kw-enter var(--kw-d3) var(--kw-ease) backwards; }
+.kw-page ul.grid > li:nth-child(2), .kw-page ol.grid > li:nth-child(2), .kw-page tbody > tr:nth-child(2) { animation-delay: 30ms; }
+.kw-page ul.grid > li:nth-child(3), .kw-page ol.grid > li:nth-child(3), .kw-page tbody > tr:nth-child(3) { animation-delay: 60ms; }
+.kw-page ul.grid > li:nth-child(4), .kw-page ol.grid > li:nth-child(4), .kw-page tbody > tr:nth-child(4) { animation-delay: 90ms; }
+.kw-page ul.grid > li:nth-child(5), .kw-page ol.grid > li:nth-child(5), .kw-page tbody > tr:nth-child(5) { animation-delay: 120ms; }
+.kw-page ul.grid > li:nth-child(6), .kw-page ol.grid > li:nth-child(6), .kw-page tbody > tr:nth-child(6) { animation-delay: 150ms; }
+.kw-page ul.grid > li:nth-child(7), .kw-page ol.grid > li:nth-child(7), .kw-page tbody > tr:nth-child(7) { animation-delay: 180ms; }
+.kw-page ul.grid > li:nth-child(n+8), .kw-page ol.grid > li:nth-child(n+8), .kw-page tbody > tr:nth-child(n+8) { animation-delay: 210ms; }
+
+/* Pages: each route enters with a short rise; its first blocks follow in a gentle stagger. */
+.kw-page { animation: kw-enter var(--kw-d3) var(--kw-ease) backwards; }
+.kw-page > :nth-child(2) { animation: kw-enter var(--kw-d3) var(--kw-ease) 40ms backwards; }
+.kw-stagger > * { animation: kw-enter var(--kw-d3) var(--kw-ease) backwards; }
+.kw-stagger > :nth-child(2) { animation-delay: 40ms; } .kw-stagger > :nth-child(3) { animation-delay: 80ms; }
+.kw-stagger > :nth-child(4) { animation-delay: 120ms; } .kw-stagger > :nth-child(5) { animation-delay: 160ms; }
+.kw-stagger > :nth-child(6) { animation-delay: 200ms; } .kw-stagger > :nth-child(n+7) { animation-delay: 240ms; }
+
+@layer components {
+  /* Buttons: hover lifts a touch, press sinks, focus rings animate in. Same everywhere. */
+  .btn { transition: transform var(--kw-d1) var(--kw-ease), filter var(--kw-d2) var(--kw-ease), background-color var(--kw-d2) var(--kw-ease), border-color var(--kw-d2) var(--kw-ease), box-shadow var(--kw-d2) var(--kw-ease), color var(--kw-d2) var(--kw-ease); will-change: auto; }
+  @media (hover: hover) { .btn-primary:hover:not(:disabled), .btn-gradient:hover:not(:disabled) { transform: translateY(var(--kw-lift)); box-shadow: var(--kw-shadow-2); } }
+  .btn:active:not(:disabled) { transform: translateY(0) scale(.97); transition-duration: 60ms; }
+  .btn[aria-busy="true"] { cursor: progress; }
+  .kw-icon-btn { transition: background-color var(--kw-d1) var(--kw-ease), color var(--kw-d1) var(--kw-ease), transform var(--kw-d1) var(--kw-ease); }
+  .kw-icon-btn:active:not(:disabled) { transform: scale(.92); }
+
+  /* Cards: anything you can click lifts and shows its edge; static panels don't move. */
+  .card, .panel { transition: border-color var(--kw-d2) var(--kw-ease), box-shadow var(--kw-d2) var(--kw-ease), transform var(--kw-d2) var(--kw-ease), background-color var(--kw-d2) var(--kw-ease); }
+  @media (hover: hover) {
+    a.card:hover, a.panel:hover, button.card:hover:not(:disabled), button.panel:hover:not(:disabled), .kw-hover:hover { transform: translateY(var(--kw-lift)); box-shadow: var(--kw-shadow-2); border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+  }
+  a.card:active, a.panel:active, button.card:active, button.panel:active, .kw-hover:active { transform: scale(.99); }
+  a.card:focus-visible, a.panel:focus-visible, button.panel:focus-visible { border-color: var(--accent); }
+
+  /* Fields: borders and rings ease in; invalid fields say so with colour and a nudge. */
+  .input { transition: border-color var(--kw-d2) var(--kw-ease), box-shadow var(--kw-d2) var(--kw-ease), background-color var(--kw-d2) var(--kw-ease); }
+  .input:hover:not(:focus):not(:disabled) { border-color: color-mix(in srgb, var(--text) 25%, var(--border)); }
+  .input[aria-invalid="true"], .input:user-invalid { border-color: var(--danger); box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 18%, transparent); }
+  .input:user-valid:not(:placeholder-shown):not(select) { border-color: color-mix(in srgb, var(--success) 55%, var(--border)); }
+  input[type="checkbox"], input[type="radio"] { accent-color: var(--brand); transition: transform var(--kw-d1) var(--kw-ease); }
+  input[type="checkbox"]:active, input[type="radio"]:active { transform: scale(.9); }
+  select.input { cursor: pointer; }
+
+  /* Tabs, nav items and filter chips share one active-state transition. */
+  nav a, [role="tab"], [aria-pressed], [role="group"] > button { transition: background-color var(--kw-d2) var(--kw-ease), color var(--kw-d2) var(--kw-ease), border-color var(--kw-d2) var(--kw-ease), box-shadow var(--kw-d2) var(--kw-ease), transform var(--kw-d1) var(--kw-ease); }
+  nav a:active, [role="tab"]:active, [aria-pressed]:active { transform: scale(.97); }
+  [aria-current="page"], [aria-pressed="true"] { animation: kw-select var(--kw-d2) var(--kw-ease); }
+
+  /* Overlays: dialogs rise in, their backdrops fade, menus drop. One look everywhere. */
+  [role="dialog"], [role="alertdialog"] { animation: kw-dialog var(--kw-d3) var(--kw-ease) backwards; }
+  .fixed.inset-0:has(> [role="dialog"]), .fixed.inset-0:has([aria-modal="true"]) { animation: kw-backdrop var(--kw-d2) var(--kw-ease) backwards; }
+  .fixed.inset-0.justify-end > [role="dialog"] { animation-name: kw-enter-x; }
+  details[open] > :not(summary) { animation: kw-drop var(--kw-d2) var(--kw-ease) backwards; }
+  .kw-submenu:not([hidden]) { animation: kw-drop var(--kw-d2) var(--kw-ease) backwards; }
+  summary { cursor: pointer; transition: color var(--kw-d1) var(--kw-ease); }
+  [role="menu"], [role="listbox"] { animation: kw-drop var(--kw-d2) var(--kw-ease) backwards; }
+
+  /* Feedback: statuses and alerts arrive visibly; errors nudge once. */
+  [role="status"]:not(:empty) { animation: kw-enter var(--kw-d2) var(--kw-ease) backwards; }
+  [role="alert"]:not(:empty) { animation: kw-enter var(--kw-d2) var(--kw-ease) backwards; }
+  .kw-shake { animation: kw-enter var(--kw-d2) var(--kw-ease) backwards, kw-shake .4s var(--kw-d2) backwards; }
+  .pill { transition: background-color var(--kw-d2) var(--kw-ease), color var(--kw-d2) var(--kw-ease); }
+  .notice { animation: kw-enter var(--kw-d3) var(--kw-ease) backwards; }
+
+  /* Empty states invite: the icon settles in, the text follows. */
+  .kw-empty-icon { animation: kw-pop var(--kw-d4) var(--kw-ease-pop) backwards; }
+  .kw-empty-icon + * { animation: kw-enter var(--kw-d3) var(--kw-ease) 80ms backwards; }
+
+  /* Loading: skeletons shaped like what's coming. */
+  .kw-skeleton { border-radius: .6rem; background: linear-gradient(90deg, var(--surface-2) 25%, color-mix(in srgb, var(--surface-2) 55%, var(--surface)) 50%, var(--surface-2) 75%); background-size: 200% 100%; animation: kw-shimmer 1.4s linear infinite; }
+  .kw-dots > span { display: inline-block; width: .35rem; height: .35rem; border-radius: 9999px; background: currentColor; animation: kw-dots 1.1s var(--kw-ease) infinite; }
+  .kw-dots > span:nth-child(2) { animation-delay: .15s; } .kw-dots > span:nth-child(3) { animation-delay: .3s; }
+  /* Live work: a slow sweep along a running bar, a ring on the active step. */
+  .kw-working { position: relative; overflow: hidden; }
+  .kw-working::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--surface) 55%, transparent), transparent); animation: kw-sweep 1.6s var(--kw-ease) infinite; }
+  .kw-ring { animation: kw-ring 1.4s var(--kw-ease) infinite; border-radius: 9999px; }
+  .kw-progress > div { transition: width var(--kw-d4) var(--kw-ease); }
+  .kw-confetti { pointer-events: none; position: fixed; inset: 0; z-index: 60; overflow: hidden; }
+  .kw-confetti > i { position: absolute; top: 38%; left: 50%; width: 8px; height: 12px; border-radius: 2px; animation: kw-confetti 1.3s var(--kw-ease) forwards; }
+}
+@keyframes kw-status { from { opacity: 0; transform: scale(.9); } to { opacity: 1; transform: none; } }
+.kw-msg { animation: kw-enter var(--kw-d3) var(--kw-ease) backwards; }
+.kw-status { animation: kw-status var(--kw-d2) var(--kw-ease-pop) backwards; }
+/* Empty states get a soft, still wash behind the icon: an invitation, not a void. */
+.kw-empty-glow { position: absolute; left: 50%; top: 1.5rem; width: 14rem; height: 9rem; transform: translateX(-50%); border-radius: 9999px; pointer-events: none; opacity: .55; filter: blur(32px);
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--wash-rose) 55%, transparent), color-mix(in srgb, var(--wash-violet) 30%, transparent), transparent); }
+.kw-empty > :not(.kw-empty-glow) { position: relative; }
+@keyframes kw-select { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--accent) 35%, transparent); } to { box-shadow: 0 0 0 6px transparent; } }
+
+/* Less motion: no travel, no loops, no celebration; changes still show as quick fades. */
+@media (prefers-reduced-motion: reduce) {
+  :root { --kw-move: 0px; --kw-lift: 0px; }
+  *, *::before, *::after { scroll-behavior: auto !important; }
+  .kw-blob-a, .kw-blob-b, .kw-blob-c, .kw-bob-1, .kw-bob-2, .kw-bob-3, .kw-marquee, .kw-caret, .kw-live, .kw-spin, .kw-rise, .kw-ring,
+  .kw-skeleton, .kw-working::after, .kw-dots > span, .animate-spin, .animate-pulse { animation: none !important; }
+  .kw-rise { transform: none; opacity: 1; }
+  .kw-confetti { display: none; }
+  .kw-shake { animation: kw-enter var(--kw-d2) linear backwards !important; }
+  .btn:active:not(:disabled), .kw-hover:active, a.card:active, a.panel:active, button.panel:active, nav a:active, [aria-pressed]:active { transform: none; }
+  .kw-empty-icon, .kw-pop, .kw-status { animation: kw-backdrop var(--kw-d2) linear backwards !important; }
+  .kw-draw path { animation: none !important; stroke-dasharray: none; }
+}

@@ -22,7 +22,8 @@ export function EmptyState({ title, children, icon = "inbox", action, secondary 
   action?: { label: string; href: string }; secondary?: { label: string; href: string };
 }) {
   return (
-    <div className="panel grid justify-items-center gap-1 px-6 py-10 text-center">
+    <div className="panel kw-empty relative grid justify-items-center gap-1 overflow-hidden px-6 py-10 text-center">
+      <span aria-hidden className="kw-empty-glow" />
       <span className="kw-empty-icon" aria-hidden><Icon name={icon} size={26} /></span>
       <p className="mt-3 font-display text-lg font-bold">{title}</p>
       {children ? <div className="max-w-md text-sm text-muted">{children}</div> : null}
@@ -49,7 +50,9 @@ const STATUS_TONE: Record<string, string> = {
 };
 
 export function StatusPill({ status }: { status: string }) {
-  return <span className={`pill ${STATUS_TONE[status] ?? "bg-surface-2 text-text"}`}>{status.replace(/_/g, " ")}</span>;
+  // Keyed by status, so a change (queued → running → done) re-plays the entrance and is noticed.
+  const working = ["building", "running", "planning", "deploying", "queued"].includes(status);
+  return <span key={status} className={`pill kw-status ${STATUS_TONE[status] ?? "bg-surface-2 text-text"}`}>{working ? <span aria-hidden className="kw-live h-1.5 w-1.5 rounded-full bg-current" /> : null}{status.replace(/_/g, " ")}</span>;
 }
 
 export function formatMicros(micros: number | string | null | undefined): string {

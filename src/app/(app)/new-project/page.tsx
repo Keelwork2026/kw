@@ -7,6 +7,7 @@ import Link from "next/link";
 import { STARTERS, starterHref } from "@/lib/site/starters";
 import { TemplatePreview } from "@/components/site/template-preview";
 import { entryBySlug } from "@/lib/catalog";
+import { ProjectSetupFields } from "@/components/project-setup";
 
 export const metadata = { title: "Create Project" };
 
@@ -22,17 +23,9 @@ export default async function NewProjectPage({ searchParams }: { searchParams: P
   return (
     <>
       <PageHeader title="Create Project" description="Describe what you want. The Software Architect plans it with you before anything is built." />
-      <ActionForm action={createProject} submitLabel="Create and start planning" submitClassName="btn btn-gradient" className="card grid max-w-2xl gap-4">
+      <ActionForm action={createProject} submitLabel="Create and start planning" pendingLabel="Creating your project…" submitClassName="btn btn-gradient" className="card grid max-w-5xl gap-4">
         {carry.template ? <input type="hidden" name="template" value={carry.template} /> : null}
-        <div>
-          <label className="label" htmlFor="name">Project name</label>
-          <input id="name" name="name" required maxLength={80} className="input" placeholder="Studio Bookings" defaultValue={carry.name ?? ""} />
-        </div>
-        <div>
-          <label className="label" htmlFor="prompt">What should it do?</label>
-          <textarea id="prompt" name="prompt" rows={6} maxLength={2000} className="input" defaultValue={carry.prompt ?? ""} placeholder="A booking app for my yoga studio with class passes and card payments" />
-          <p className="mt-1 text-xs text-muted">Up to 2000 characters. You&apos;ll choose the backend and hosting before the first build.</p>
-        </div>
+        <ProjectSetupFields name={carry.name ?? ""} prompt={carry.prompt ?? ""} template={carry.template} />
         {carry.template ? <p className="text-sm text-muted">Starting from the <strong>{entry?.name ?? carry.template}</strong> template.</p> : null}
       </ActionForm>
       <section aria-labelledby="start-from" className="mt-10">
@@ -42,7 +35,7 @@ export default async function NewProjectPage({ searchParams }: { searchParams: P
           {STARTERS.map((s) => (
             <li key={s.slug}>
               <Link href={starterHref(s, true)} className="group block" title={s.tagline}>
-                <TemplatePreview starter={s} className="rounded-xl border border-border transition group-hover:-translate-y-0.5" />
+                <TemplatePreview starter={s} className="rounded-xl border border-border transition duration-200 group-hover:-translate-y-1 group-hover:shadow-[var(--kw-shadow-2)]" />
                 <span className="mt-2 block truncate text-sm font-semibold group-hover:underline">{s.name}</span>
                 <span className="block truncate text-xs text-muted">{s.tagline}</span>
               </Link>

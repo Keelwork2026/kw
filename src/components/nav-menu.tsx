@@ -104,7 +104,7 @@ function Entry({ item, active, hints, projectId, pathname, onNavigate }: { item:
         ) : null}
       </div>
       {item.children?.length ? (
-        <ul id={subId} hidden={!open} className="mb-1 ml-4 mt-0.5 grid gap-0.5 border-l border-border pl-2">
+        <ul id={subId} hidden={!open} className="kw-submenu mb-1 ml-4 mt-0.5 grid gap-0.5 border-l border-border pl-2">
           {item.children.map((c) => {
             const to = hrefFor(c.to, { projectId, pickerSlug: item.slug });
             return (

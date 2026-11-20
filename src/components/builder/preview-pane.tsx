@@ -56,7 +56,7 @@ export function PreviewPane(props: {
       {design && selection ? (
         <div className="design-bar kw-fade rounded-2xl p-4">
           <p className="text-sm"><strong>&lt;{selection.tag}&gt;</strong> “{selection.text.slice(0, 80) || "no text"}”{selection.source ? <> · <code className="font-mono text-xs">{selection.source.file}:{selection.source.line}</code></> : null}</p>
-          <ActionForm action={requestVisualEdit} submitLabel="Ask the agents" pendingLabel="Planning…" submitClassName="btn btn-gradient min-h-10" className="mt-2">
+          <ActionForm action={requestVisualEdit} submitLabel="Ask the agents" pendingLabel="Planning…" pendingHint="The Software Architect is turning your request into a change" submitClassName="btn btn-gradient min-h-10" className="mt-2">
             <input type="hidden" name="projectId" value={props.projectId} />
             <input type="hidden" name="selection" value={JSON.stringify(selection)} />
             <label htmlFor="visual-request" className="sr-only">What should change?</label>

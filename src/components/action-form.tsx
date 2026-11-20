@@ -1,5 +1,5 @@
 "use client";
-import { useActionState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { useFormStatus } from "react-dom";
 
 export type ActionResult = { ok: boolean; message: string } | null;
@@ -18,6 +18,7 @@ export function ActionForm({
   pendingLabel = "Working…",
   submitClassName = "btn btn-primary",
   confirm,
+  pendingHint,
 }: {
   action: FormAction;
   children?: React.ReactNode;
@@ -26,6 +27,8 @@ export function ActionForm({
   pendingLabel?: string;
   submitClassName?: string;
   confirm?: string;
+  /** For long jobs: what's happening and roughly how long it takes, shown while it runs. */
+  pendingHint?: string;
 }) {
   const [state, formAction] = useActionState(action, null);
   return (
@@ -38,19 +41,32 @@ export function ActionForm({
     >
       {children}
       <div className="mt-3 flex flex-wrap items-center gap-3">
-        <Submit label={submitLabel} pendingLabel={pendingLabel} className={submitClassName} />
+        <Submit label={submitLabel} pendingLabel={pendingLabel} className={submitClassName} hint={pendingHint} />
         <FormMessage state={state} />
       </div>
     </form>
   );
 }
 
-function Submit({ label, pendingLabel, className }: { label: string; pendingLabel: string; className: string }) {
+function Submit({ label, pendingLabel, className, hint }: { label: string; pendingLabel: string; className: string; hint?: string }) {
   const { pending } = useFormStatus();
+  const [since, setSince] = useState<number | null>(null);
+  const [now, setNow] = useState(0);
+  useEffect(() => {
+    if (!pending) { setSince(null); return; }
+    const start = Date.now();
+    setSince(start); setNow(start);
+    const t = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(t);
+  }, [pending]);
+  const secs = since ? Math.floor((now - since) / 1000) : 0;
   return (
-    <button type="submit" className={className} disabled={pending} aria-busy={pending}>
-      {pending ? <><span aria-hidden className="mr-2 inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-r-transparent align-[-0.15em]" />{pendingLabel}</> : label}
-    </button>
+    <>
+      <button type="submit" className={`${className} ${pending ? "kw-working" : ""}`} disabled={pending} aria-busy={pending}>
+        {pending ? <><span aria-hidden className="inline-block h-3.5 w-3.5 animate-spin rounded-full border-2 border-current border-r-transparent" />{pendingLabel}</> : label}
+      </button>
+      {pending && (hint || secs >= 3) ? <span className="kw-fade text-xs text-muted" aria-live="polite">{hint}{hint && secs >= 3 ? " · " : ""}{secs >= 3 ? `${secs}s` : ""}</span> : null}
+    </>
   );
 }
 
@@ -63,7 +79,7 @@ export function FormMessage({ state }: { state: ActionResult }) {
       {state.message}
     </p>
   ) : (
-    <p key={state.message} role="alert" className="kw-fade inline-flex items-start gap-1.5 text-sm font-medium text-danger">
+    <p key={state.message} role="alert" className="kw-shake inline-flex items-start gap-1.5 text-sm font-medium text-danger">
       <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mt-px shrink-0" aria-hidden><path d="M12 21a9 9 0 100-18 9 9 0 000 18z M12 8v5 M12 16h.01" /></svg>
       {state.message}
     </p>

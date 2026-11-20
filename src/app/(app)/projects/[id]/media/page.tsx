@@ -63,7 +63,7 @@ export default async function MediaPage({ params }: { params: Promise<{ id: stri
         <h2 id="shots" className="text-xl">Product screenshots</h2>
         <p className="mt-1 text-sm text-muted">Keelwork opens your running preview in a headless browser and saves real PNG screenshots to <code>public/screenshots</code>. Re-capture after big changes so they stay accurate.</p>
         {write ? (
-          <ActionForm action={captureScreenshots} submitLabel="Capture screenshots" pendingLabel="Capturing… (up to a minute)" className="mt-4 grid max-w-xl gap-3">
+          <ActionForm action={captureScreenshots} submitLabel="Capture screenshots" pendingLabel="Capturing…" pendingHint="A headless browser is opening each page — up to a minute" className="mt-4 grid max-w-xl gap-3">
             <input type="hidden" name="projectId" value={project.id} />
             <div><label className="label" htmlFor="paths">Pages</label><input id="paths" name="paths" defaultValue="/" placeholder="/ /pricing /book" className="input font-mono" /><p className="mt-1 text-xs text-muted">Up to 6 paths, separated by spaces.</p></div>
             <fieldset><legend className="label">Screen sizes</legend>

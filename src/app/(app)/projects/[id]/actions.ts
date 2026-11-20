@@ -33,6 +33,53 @@ export async function sendMessage(_prev: ActionResult, form: FormData): Promise<
   return planFromThread(project.id, thread.id, project.org_id, userId, project.backend);
 }
 
+/*
+ * The chat composer runs planning as real, separate steps so the screen can
+ * show honestly which one is happening: save the message, check the request
+ * against the policy, ask the planner, then show the plan.
+ */
+
+/** Step 1: save a message without planning. */
+export async function postMessage(projectId: string, raw: string): Promise<ActionResult> {
+  const content = raw.trim();
+  if (!content) return fail("Write a message first.");
+  if (content.length > 8000) return fail("Keep messages under 8000 characters.");
+  const { supabase, project, can, userId } = await loadProject(projectId);
+  if (!can("project.write")) return fail("You can't write to this project.");
+  const { data: thread } = await supabase.from("threads").select("id").eq("project_id", project.id).order("created_at").limit(1).single();
+  if (!thread) return fail("This project has no chat thread.");
+  const { error } = await supabase.from("messages").insert({ thread_id: thread.id, role: "user", content, author_id: userId });
+  if (error) return fail("Couldn't post your message.");
+  revalidatePath(`/projects/${project.id}`);
+  return { ok: true, message: "Saved." };
+}
+
+/** Step 2: check what the thread asks for against the policy (records and explains a refusal). */
+export async function checkPlanRequest(projectId: string): Promise<ActionResult> {
+  const { supabase, project, can, userId } = await loadProject(projectId);
+  if (!can("project.write")) return fail("You can't write to this project.");
+  const { data: thread } = await supabase.from("threads").select("id").eq("project_id", project.id).order("created_at").limit(1).single();
+  if (!thread) return fail("This project has no chat thread.");
+  const { data: history } = await supabase.from("messages").select("role, content").eq("thread_id", thread.id).eq("role", "user").order("created_at", { ascending: false }).limit(13);
+  if (!history?.length) return fail("There's nothing new to plan.");
+  const screened = await screenRequest(history.map((m) => m.content as string).reverse().join("\n"), { orgId: project.org_id, userId, projectId: project.id, source: "chat" });
+  if (screened.refusal) {
+    await createServiceClient().from("messages").insert({ thread_id: thread.id, org_id: project.org_id, role: "assistant", content: `${screened.refusal} ${REVIEW_HINT}`, metadata: { policy_event_id: screened.eventId } });
+    revalidatePath(`/projects/${project.id}`);
+    return fail(`${screened.refusal} ${REVIEW_HINT}`);
+  }
+  return { ok: true, message: screened.note ? "Checked — the planner will ask about one detail." : "Checked." };
+}
+
+/** Step 3: ask the Software Architect for a plan. */
+export async function planNow(projectId: string): Promise<ActionResult> {
+  const { supabase, project, can, userId } = await loadProject(projectId);
+  if (!can("project.write")) return fail("You can't write to this project.");
+  const { data: thread } = await supabase.from("threads").select("id").eq("project_id", project.id).order("created_at").limit(1).single();
+  if (!thread) return fail("This project has no chat thread.");
+  return planFromThread(project.id, thread.id, project.org_id, userId, project.backend);
+}
+
 /** Asks for a plan from the existing thread (e.g. the idea carried in from sign-up). */
 export async function requestPlan(_prev: ActionResult, form: FormData): Promise<ActionResult> {
   const { supabase, project, can, userId } = await loadProject(str(form, "projectId"));

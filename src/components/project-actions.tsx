@@ -53,7 +53,7 @@ export function ProjectActions({ project, canWrite, canManage, rename, archive, 
               <input id={`${id}-name`} name="name" required maxLength={80} defaultValue={project.name} className="input" autoFocus onFocus={(e) => e.currentTarget.select()} />
             </ActionForm>
           ) : mode === "duplicate" ? (
-            <ActionForm action={duplicate} submitLabel="Duplicate" pendingLabel="Copying… this can take a minute" submitClassName="btn btn-primary" className="grid gap-2 p-2 text-sm">
+            <ActionForm action={duplicate} submitLabel="Duplicate" pendingLabel="Copying…" pendingHint="Copying files and committing — this can take a minute" submitClassName="btn btn-primary" className="grid gap-2 p-2 text-sm">
               <input type="hidden" name="projectId" value={project.id} />
               <p className="font-semibold">Duplicate “{project.name}”</p>
               <p className="text-muted">Copies the brief, the stack and every source file into a new project, then installs its packages. Secrets aren&apos;t copied. The original&apos;s sandbox needs to be running.</p>

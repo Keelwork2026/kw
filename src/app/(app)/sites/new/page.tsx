@@ -17,7 +17,7 @@ export default async function NewSitePage({ searchParams }: { searchParams: Prom
   return (
     <>
       <PageHeader title="Create a website" description="Tell us about your business. Keelwork writes every page from your answers and leaves clearly marked spaces for details only you know." actions={<Link href="/starters" className="btn btn-secondary">Browse templates</Link>} />
-      <ActionForm action={createSiteDraft} submitLabel="Write my website" pendingLabel="Writing your website…" className="grid max-w-3xl gap-6">
+      <ActionForm action={createSiteDraft} submitLabel="Write my website" pendingLabel="Writing your website…" pendingHint="The writer drafts every page from your details — usually under two minutes" className="grid max-w-3xl gap-6">
         <fieldset className="panel grid gap-4 p-6">
           <legend className="px-1 font-display text-lg font-bold">Your business</legend>
           <div><label className="label" htmlFor="name">Business name</label><input id="name" name="name" required maxLength={80} className="input" placeholder="e.g. Bright Smile Dental" /></div>
